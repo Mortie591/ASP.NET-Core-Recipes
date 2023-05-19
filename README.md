@@ -1,4 +1,4 @@
-## ASP.NET-MVC-Recipes
+## ASP.NET-Core-Recipes
 A simple ASP.NET Core application that allows its users to browse, create and share food recipes online.
 
 ### Built With
