@@ -2,9 +2,9 @@
 
 namespace OurRecipes.Data.Models
 {
-    public class User : IdentityUser
+    public class AppIdentityUser : IdentityUser
     {
-        public User()
+        public AppIdentityUser()
         {
         }
         //recipes created by the user

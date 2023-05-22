@@ -7,7 +7,7 @@
             this.Categories = new HashSet<Category>();
             this.Comments = new HashSet<Comment>();
             this.Tags = new HashSet<Tag>();
-            this.Ingredients = new Dictionary<Ingredient,float>();
+            this.Ingredients = new HashSet<Ingredient>();
             this.Instructions = new HashSet<Instruction>();
             this.Nutrients = new HashSet<Nutrient>();
         }
@@ -21,7 +21,7 @@
         public DateTime CreatedOnDate { get; set; }
         public bool IsDeleted { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
-        public virtual IDictionary<Ingredient,float> Ingredients { get; set; }
+        public virtual ICollection<Ingredient> Ingredients { get; set; }
         public virtual ICollection<Instruction> Instructions { get; set; }
         public virtual ICollection<Nutrient> Nutrients { get; set; } //nutrient example - protein:"2.4g"
         public virtual ICollection<Tag> Tags { get; set; }

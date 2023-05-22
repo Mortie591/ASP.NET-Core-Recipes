@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OurRecipes.Data;
+using OurRecipes.Data.Models;
 
 namespace OurRecipes
 {
