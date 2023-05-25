@@ -1,4 +1,6 @@
-﻿namespace OurRecipes.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OurRecipes.Data.Models
 {
     public class Component
     {
@@ -7,6 +9,7 @@
             this.Recipes = new HashSet<Recipe>();
         }
         public int Id { get; set; }
+        [ForeignKey(nameof(Ingredient))]
         public int IngredientId { get; set; }
         public Ingredient Ingredient { get; set; }
         public Unit? Unit { get; set; }
