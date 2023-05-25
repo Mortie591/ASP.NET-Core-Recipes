@@ -6,11 +6,17 @@ namespace OurRecipes.Data.Models
     {
         public AppIdentityUser()
         {
+            this.MyRecipes = new HashSet<Recipe>();
+            this.FavouruteRecipes = new HashSet<Recipe>();
+            this.UserComments = new HashSet<Comment>();
+            this.UserReplies = new HashSet<Reply>();
         }
         //recipes created by the user
-        public ICollection<Recipe> MyRecipes { get; set; }
+        public virtual ICollection<Recipe> MyRecipes { get; set; }
         //recipes liked by the user
-        public ICollection<Recipe> FavouruteRecipes { get; set; }
+        public virtual ICollection<Recipe> FavouruteRecipes { get; set; } //liked recipes
+        public virtual ICollection<Comment> UserComments { get; set; }
+        public virtual ICollection<Reply> UserReplies { get; set; }
 
     }
 }

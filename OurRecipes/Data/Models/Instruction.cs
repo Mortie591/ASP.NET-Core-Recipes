@@ -9,7 +9,7 @@
          * */
         public int Id { get; set; }
         public byte Step { get; set; }
-        public string Name { get; set; }
+        public string Content { get; set; }
         public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

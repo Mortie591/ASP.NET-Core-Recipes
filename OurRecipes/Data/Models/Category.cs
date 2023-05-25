@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Data.Models
+﻿ namespace OurRecipes.Data.Models
 {
     public class Category
     {
@@ -8,6 +8,6 @@
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        ICollection<Recipe> Recipes { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
     }
 }
