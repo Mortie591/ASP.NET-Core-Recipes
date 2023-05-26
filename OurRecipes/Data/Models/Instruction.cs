@@ -1,4 +1,6 @@
-﻿namespace OurRecipes.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OurRecipes.Data.Models
 {
     public class Instruction
     {
@@ -9,6 +11,7 @@
          * */
         public int Id { get; set; }
         public byte Step { get; set; }
+        [Required]
         public string Content { get; set; }
         public virtual ICollection<Recipe> Recipes { get; set; }
     }

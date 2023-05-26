@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OurRecipes.Data;
 
@@ -11,9 +12,11 @@ using OurRecipes.Data;
 namespace OurRecipes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526074305_UpdateComnponentIngredientRelationship")]
+    partial class UpdateComnponentIngredientRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -407,8 +410,10 @@ namespace OurRecipes.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AppIdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("AuthorId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CookTime")
@@ -440,6 +445,8 @@ namespace OurRecipes.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppIdentityUserId");
 
                     b.HasIndex("AuthorId");
 
@@ -689,11 +696,14 @@ namespace OurRecipes.Data.Migrations
 
             modelBuilder.Entity("OurRecipes.Data.Models.Recipe", b =>
                 {
+                    b.HasOne("OurRecipes.Data.Models.AppIdentityUser", null)
+                        .WithMany("FavouruteRecipes")
+                        .HasForeignKey("AppIdentityUserId");
+
                     b.HasOne("OurRecipes.Data.Models.AppIdentityUser", "Author")
                         .WithMany("MyRecipes")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Author");
                 });
@@ -729,7 +739,7 @@ namespace OurRecipes.Data.Migrations
                         .HasForeignKey("RecipeId");
 
                     b.HasOne("OurRecipes.Data.Models.AppIdentityUser", "User")
-                        .WithMany("UserFavourites")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Recipe");
@@ -754,11 +764,11 @@ namespace OurRecipes.Data.Migrations
 
             modelBuilder.Entity("OurRecipes.Data.Models.AppIdentityUser", b =>
                 {
+                    b.Navigation("FavouruteRecipes");
+
                     b.Navigation("MyRecipes");
 
                     b.Navigation("UserComments");
-
-                    b.Navigation("UserFavourites");
 
                     b.Navigation("UserReplies");
                 });

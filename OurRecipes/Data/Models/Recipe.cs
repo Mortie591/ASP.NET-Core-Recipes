@@ -16,20 +16,22 @@ namespace OurRecipes.Data.Models
             this.Components = new HashSet<Component>();
             this.Instructions = new HashSet<Instruction>();
             this.Nutrients = new HashSet<Nutrient>();
+            this.UserFavourites = new HashSet<UserFavourite>();
         }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; }
+        [Required]
         public string Title { get; set; }
-        public string Description { get; set; }
-        public byte Servings { get; set; }
+        public string? Description { get; set; }
+        public byte? Servings { get; set; }
         public ushort? PrepTime { get; set; }
         public ushort? CookTime { get; set; }
         public ushort? TotalTime => (ushort?)(CookTime + PrepTime);
         public ushort Likes { get; set; } //connect with user? -> My Favourite recipes (all liked ones)
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         public DateTime CreatedOnDate { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         public ICollection<Section> Sections { get; set; }
         public virtual ICollection<Component> Components { get; set; }
@@ -37,9 +39,10 @@ namespace OurRecipes.Data.Models
         public virtual ICollection<Nutrient> Nutrients { get; set; } 
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        
         [ForeignKey(nameof(AppIdentityUser))]
-        public string AuthorId { get; set; }
+        public string? AuthorId { get; set; }
         public AppIdentityUser Author { get; set; }
-        public ICollection<AppIdentityUser> LikedBy { get; set; }
+        public ICollection<UserFavourite> UserFavourites { get; set; }
     }
 }

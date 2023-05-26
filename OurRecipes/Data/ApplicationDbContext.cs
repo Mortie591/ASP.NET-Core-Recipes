@@ -11,11 +11,33 @@ namespace OurRecipes.Data
         {
         }
 
+        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<Component> Components { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Instruction> Instructions { get; set; }
+        public DbSet<Nutrient> Nutrients { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Reply> Replies { get; set; }
+        public DbSet<UserFavourite> UserFavourites { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<AppIdentityUser>().HasMany(x => x.FavouruteRecipes).WithMany(x => x.LikedBy);
-            builder.Entity<AppIdentityUser>().HasMany(x => x.MyRecipes).WithOne(x => x.Author);
+
+            builder.Entity<AppIdentityUser>()
+                .HasMany(x => x.MyRecipes)
+                .WithOne(x => x.Author)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            //builder.Entity<Component>()
+            //    .HasOne(x=>x.Ingredient)
+            //    .WithOne(x=>x.Component)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<Recipe>().HasKey(x => x.Id);
+            
             base.OnModelCreating(builder);
         }
     }
