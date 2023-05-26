@@ -14,7 +14,6 @@ namespace OurRecipes.Data.Models
             this.Sections = new HashSet<Section>();
             this.Tags = new HashSet<Tag>();
             this.Components = new HashSet<Component>();
-            this.Instructions = new HashSet<Instruction>();
             this.Nutrients = new HashSet<Nutrient>();
             this.UserFavourites = new HashSet<UserFavourite>();
         }
@@ -35,7 +34,7 @@ namespace OurRecipes.Data.Models
         public virtual ICollection<Category> Categories { get; set; }
         public ICollection<Section> Sections { get; set; }
         public virtual ICollection<Component> Components { get; set; }
-        public virtual ICollection<Instruction> Instructions { get; set; }
+        public string Instructions { get; set; }
         public virtual ICollection<Nutrient> Nutrients { get; set; } 
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

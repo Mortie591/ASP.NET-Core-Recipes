@@ -14,7 +14,7 @@ namespace OurRecipes.Data.Models
         //recipes created by the user
         public virtual ICollection<Recipe> MyRecipes { get; set; }
         //recipes liked by the user
-        public virtual ICollection<UserFavourite> UserFavourites { get; set; } //liked recipes
+        public virtual ICollection<UserFavourite> UserFavourites { get; set; } 
         public virtual ICollection<Comment> UserComments { get; set; }
         public virtual ICollection<Reply> UserReplies { get; set; }
 
