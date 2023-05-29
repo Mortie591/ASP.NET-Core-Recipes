@@ -11,6 +11,7 @@ namespace OurRecipes.Data.Models
         }
         public int Id { get; set; }
         public string Text { get; set; }
+
         [ForeignKey(nameof(Ingredient))]
         public int IngredientId { get; set; }
         [Required]

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Recipes.DataImport.Models
 {
-    internal class JsonImport
+
+    public class TopicDto
     {
+        public string name { get; set; }
     }
+
 }
