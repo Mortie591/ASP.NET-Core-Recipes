@@ -27,12 +27,12 @@ namespace OurRecipes.Data.Models
         public ushort? PrepTime { get; set; }
         public ushort? CookTime { get; set; }
         public ushort? TotalTime => (ushort?)(CookTime + PrepTime);
-        public ushort Likes { get; set; } //connect with user? -> My Favourite recipes (all liked ones)
+        public ushort Likes { get; set; } = 0;//connect with user? -> My Favourite recipes (all liked ones)
         public string? ImageUrl { get; set; }
         public DateTime CreatedOnDate { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public virtual ICollection<Category> Categories { get; set; }
-        public ICollection<Section> Sections { get; set; }
+        public ICollection<Section>? Sections { get; set; }
         public virtual ICollection<Component> Components { get; set; }
         public string Instructions { get; set; }
         public virtual ICollection<Nutrient> Nutrients { get; set; } 
@@ -41,7 +41,7 @@ namespace OurRecipes.Data.Models
         
         [ForeignKey(nameof(AppIdentityUser))]
         public string? AuthorId { get; set; }
-        public AppIdentityUser Author { get; set; }
-        public ICollection<UserFavourite> UserFavourites { get; set; }
+        public AppIdentityUser? Author { get; set; }
+        public ICollection<UserFavourite>? UserFavourites { get; set; }
     }
 }

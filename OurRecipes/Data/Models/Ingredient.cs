@@ -5,9 +5,7 @@ namespace OurRecipes.Data.Models
 {
     public class Ingredient
     {
-        
-        public int Id { get; set; }
-        [Required]
+        [Key]
         public string Name { get; set; }
 
         public string? NamePlural { get; set; }

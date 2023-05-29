@@ -8,6 +8,6 @@ namespace OurRecipes.Data.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public float Quantity { get; set; }
+        public double Quantity { get; set; }
     }
 }

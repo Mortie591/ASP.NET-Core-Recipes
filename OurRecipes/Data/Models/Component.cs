@@ -13,11 +13,11 @@ namespace OurRecipes.Data.Models
         public string Text { get; set; }
 
         [ForeignKey(nameof(Ingredient))]
-        public int IngredientId { get; set; }
+        public string IngredientName { get; set; }
         [Required]
-        public Ingredient Ingredient { get; set; }
-        public Unit? Unit { get; set; }
-        public double Quantity { get; set; }
+        public virtual Ingredient Ingredient { get; set; }
+        public string? Unit { get; set; }
+        public string Quantity { get; set; }
         public virtual ICollection<Recipe> Recipes { get; set; }
 
     }
