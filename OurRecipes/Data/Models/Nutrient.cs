@@ -8,6 +8,8 @@ namespace OurRecipes.Data.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public double Quantity { get; set; }
+        public string Quantity { get; set; }
+        public int? UnitId { get; set; }
+        public virtual Unit? Unit { get; set; }
     }
 }
