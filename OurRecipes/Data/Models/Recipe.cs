@@ -29,6 +29,7 @@ namespace OurRecipes.Data.Models
         public ushort? TotalTime => (ushort?)(CookTime + PrepTime);
         public ushort Likes { get; set; } = 0;//connect with user? -> My Favourite recipes (all liked ones)
         public string? ImageUrl { get; set; }
+        public string? OriginalUrl { get; set; }
         public DateTime CreatedOnDate { get; set; }
         public bool? IsDeleted { get; set; } = false;
         public virtual ICollection<Category> Categories { get; set; }
