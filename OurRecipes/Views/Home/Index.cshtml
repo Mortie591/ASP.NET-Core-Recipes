@@ -1,29 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    
 }
-
-<section id="chefs" class="chefs section-bg">
-    <div class="container" data-aos="fade-up">
-        <div class="section-header">
-            <p>Our <span>Latest</span> Recipes</p>
-            <h2>New additions</h2>
-        </div>
-        <div class="row gy-4">
-            @for (int i = 0; i < 3; i++)
-            {
-                <a href="#" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    <div class="chef-member">
-                        <div class="member-img">
-                            <img src="https://sugarspunrun.com/wp-content/uploads/2019/01/Best-Cheesecake-Recipe-2-1-of-1-7.jpg" class="img-fluid" alt="cheesecake-img">
-                        </div>
-                        <div class="member-info">
-                            <h4>The Best Cheesecake Recipe</h4>
-                            <span>@DateTime.UtcNow.ToShortDateString()</span>
-                            <p>Velit aut quia fugit et et. Dolorum ea voluptate vel tempore tenetur ipsa quae aut. Ipsum exercitationem iure minima enim corporis et voluptate.</p>
-                        </div>
-                    </div>
-                </a>
-            }
-        </div>
-    </div>
-</section><!-- End New recipes section -->
+@Model List<RecipeCardViewModel>;
+    
+   <section id="chefs" class="chefs section-bg">
+       <div class="container" data-aos="fade-up">
+           <div class="section-header">
+               <p>Our <span>Dayly</span> Suggestions</p>
+               <h2>Daily recipes</h2>
+           </div>
+           <div class="row gy-4">
+               @foreach (var element in Model)
+               {
+                   <a href="#" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                       <div class="chef-member">
+                           <div class="member-img">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" class="img-fluid" alt="@element.Title-img">
+                           </div>
+                           <div class="member-info">
+                                <h4>@element.Title</h4>
+                               <span>@DateTime.UtcNow.ToShortDateString()</span>
+                                <p>@element.Rating likes</p>
+                           </div>
+                       </div>
+                   </a>
+               }
+           </div>
+       </div>
+   </section><!-- End New recipes section -->

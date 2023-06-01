@@ -26,6 +26,7 @@ namespace OurRecipes
             //Custom services registration
             builder.Services.AddTransient<IDataImportService, DataImportService>();
             builder.Services.AddTransient<IScraperService, ScraperService>();
+            builder.Services.AddTransient<IRecipeService, RecipeService>();
 
             var app = builder.Build();
 
