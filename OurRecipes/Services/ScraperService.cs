@@ -18,31 +18,65 @@ namespace OurRecipes.Services
         {
         }
 
-        public void PopulateData()
+        public async Task PopulateData()
         {
-           //var recipeDtos =  InitializeScraping();
+           var recipeDtos = await InitializeScraping();
 
-            var recipeDto = GatherRecipe("https://www.bbcgoodfood.com/recipes/ultimate-spaghetti-carbonara-recipe");
-            if (recipeDto != null)
+            foreach(var recipeDto in recipeDtos)
             {
-                Recipe recipe = new Recipe
+                if (recipeDto != null)
                 {
-                    Title = recipeDto.Title,
-                    Description = recipeDto.Description,
-                    Servings = recipeDto.Servings,
-                    PrepTime = recipeDto.PrepTime,
-                    CookTime = recipeDto.CookTime,
-                    ImageUrl = recipeDto?.ImageUrl,
-                    OriginalUrl = recipeDto.OriginalUrl,
-                    CreatedOnDate = DateTime.Now,
-                    Instructions = recipeDto.Instructions,
+                    Recipe recipe = new Recipe
+                    {
+                        Title = recipeDto.Title,
+                        Description = recipeDto.Description,
+                        Servings = recipeDto.Servings==null?"": recipeDto.Servings,
+                        PrepTime = recipeDto.PrepTime,
+                        CookTime = recipeDto.CookTime,
+                        ImageUrl = recipeDto?.ImageUrl,
+                        OriginalUrl = recipeDto.OriginalUrl,
+                        CreatedOnDate = DateTime.Now,
+                        Instructions = recipeDto.Instructions,
+                        Categories = recipeDto.Categories.Select(GetOrCreateCategory).ToList(),
+                        Tags = recipeDto.Tags.Select(GetOrCreateTag).ToList(),
+                        Components = GetOrCreateComponents(recipeDto.Components),
+                        Nutrients = recipeDto.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity, x.Unit)).ToList()
+                    };
 
-                };
+                    if (recipe.Components.Any(c => c.Quantity == null))
+                    {
+                        Console.WriteLine($"{recipe.Title} is invalid");
+                        continue;
+                    }
+                    else
+                    {
+                        if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
+                        {
+                            this.recipes.Add(recipe);
+                        }
+                    }
+                }
             }
+            try
+            {
+                this.context.Units.AddRangeAsync(this.units);
+                this.context.Tags.AddRangeAsync(this.tags);
+                this.context.Nutrients.AddRangeAsync(this.nutrients);
+                this.context.Ingredients.AddRangeAsync(this.ingredients);
+                this.context.Categories.AddRangeAsync(this.categories);
+                this.context.Recipes.AddRangeAsync(this.recipes);
 
+                this.context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+            
         }
         
-        public ICollection<RecipeDto> InitializeScraping()
+        public async Task<ICollection<RecipeDto>> InitializeScraping()
         {
             var recipes = new List<RecipeDto>();
             var collectionUrls = new List<string>();
@@ -59,7 +93,7 @@ namespace OurRecipes.Services
                 var url = $"https://www.bbcgoodfood.com{a}";
                 try
                 {
-                    var recipeDto = GatherRecipe(url);
+                    var recipeDto = await GatherRecipe(url);
                     recipes.Add(recipeDto);
                 }
                 catch (Exception ex)
@@ -78,7 +112,7 @@ namespace OurRecipes.Services
         //    //https://pixabay.com/api/docs/#api_search_images
         //    return null;
         //}
-        private static RecipeDto GatherRecipe(string url)
+        private static async Task<RecipeDto> GatherRecipe(string url)
         {
             var recipeDto = new RecipeDto();
 
@@ -215,8 +249,20 @@ namespace OurRecipes.Services
                     bool secondElementIsUnit = secondElement.Equals(unit, StringComparison.OrdinalIgnoreCase);
                     if (!String.IsNullOrEmpty(quantity) && String.IsNullOrEmpty(unit) && secondElementIsUnit)
                     {
-                        unit = secondElement;
-                        ingredientName = ingredientElements[2]?.InnerText;
+                        if(secondElement.Contains("g") && secondElement.Length == 1 || secondElement.Contains("gram"))
+                        {
+                            unit = secondElement;
+                            ingredientName = ingredientElements[2]?.InnerText;
+                        }else if (!secondElement.Contains("g"))
+                        {
+                            unit = secondElement;
+                            ingredientName = ingredientElements[2]?.InnerText;
+                        }
+                        else
+                        {
+                            ingredientName = secondElement;
+                        }
+                        
                         if (ingredientName.Contains(","))
                         {
                             ingredientName.Replace(",", "");
@@ -284,6 +330,5 @@ namespace OurRecipes.Services
             return urls;
         }
 
-       
     }
 }

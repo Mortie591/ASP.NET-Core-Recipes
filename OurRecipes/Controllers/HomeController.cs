@@ -20,7 +20,6 @@ namespace OurRecipes.Controllers
 
         public IActionResult Index()
         {
-            this.scraperService.PopulateData();
             return View();
         }
 

@@ -2,6 +2,6 @@
 {
     public interface IScraperService
     {
-        public void PopulateData();
+        public Task PopulateData();
     }
 }

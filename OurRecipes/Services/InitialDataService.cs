@@ -1,5 +1,8 @@
-﻿using OurRecipes.Data;
+﻿using AngleSharp.Dom;
+using OurRecipes.Data;
 using OurRecipes.Data.Models;
+using OurRecipes.Services.Models.ImportDtos;
+using OurRecipes.Services.Models.ScraperDtos;
 using System.Text;
 
 namespace OurRecipes.Services
@@ -33,11 +36,32 @@ namespace OurRecipes.Services
             }
             return recipeComponents;
         }
+        protected virtual ICollection<Component> GetOrCreateComponents(ICollection<Models.ScraperDtos.ComponentDto> componentDtos)
+        {
+            var recipeComponents = new HashSet<Component>();
 
+            foreach (Models.ScraperDtos.ComponentDto comp in componentDtos)
+            {
+                Component component = new Component
+                {
+                    Text = comp.Text,
+                    Unit = GetOrCreateUnit(comp.Unit),
+                    Quantity = comp.Quantity,
+                    Ingredient = GetOrCreateIngredient(comp.IngredientName)
+                };
+                recipeComponents.Add(component);
+            }
+            return recipeComponents;
+        }
         //Check for existing records before adding them to DB
         protected virtual Unit GetOrCreateUnit(string unitName)
         {
-            var unit = this.units.FirstOrDefault(x => string.Equals(x.Name, unitName));
+            Unit unit = this.context.Units.FirstOrDefault(x => string.Equals(x.Name, unitName));
+            if (unit != null)
+            {
+                return unit;
+            }
+            unit = this.units.FirstOrDefault(x => string.Equals(x.Name, unitName));
             if (unit == null && !String.IsNullOrEmpty(unitName))
             {
                 unit = new Unit { Name = unitName };
@@ -47,7 +71,12 @@ namespace OurRecipes.Services
         }
         protected virtual Tag GetOrCreateTag(string tagName, string type)
         {
-            var tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName)
+            Tag tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
+            if (tag != null)
+            {
+                return tag;
+            }
+            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName)
             && string.Equals(x.Type, type));
             if (tag == null)
             {
@@ -56,9 +85,30 @@ namespace OurRecipes.Services
             }
             return tag;
         }
+        protected virtual Tag GetOrCreateTag(string tagName)
+        {
+            var tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
+            if(tag != null)
+            {
+                return tag;
+            }
+            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
+            
+            if (tag == null)
+            {
+                tag = new Tag { Name = tagName, Type = tagName };
+                this.tags.Add(tag);
+            }
+            return tag;
+        }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity)
         {
-            var nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
+            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
+            if (nutrient != null)
+            {
+                return nutrient;
+            }
+            nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
             if (nutrient == null)
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity };
@@ -68,7 +118,12 @@ namespace OurRecipes.Services
         }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity, string unitName)
         {
-            var nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
+            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
+            if (nutrient != null)
+            {
+                return nutrient;
+            }
+            nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
             if (nutrient == null)
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity, Unit = GetOrCreateUnit(unitName) };
@@ -87,6 +142,21 @@ namespace OurRecipes.Services
             if (ingredient == null)
             {
                 ingredient = new Ingredient { Name = ingredientName, NamePlural = pluralName };
+                this.ingredients.Add(ingredient);
+            }
+            return ingredient;
+        }
+        protected virtual Ingredient GetOrCreateIngredient(string ingredientName)
+        {
+            Ingredient ingredient = this.context.Ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
+            if (ingredient != null)
+            {
+                return ingredient;
+            }
+            ingredient = this.ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
+            if (ingredient == null)
+            {
+                ingredient = new Ingredient { Name = ingredientName, NamePlural = null };
                 this.ingredients.Add(ingredient);
             }
             return ingredient;
