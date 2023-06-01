@@ -6,40 +6,50 @@ using System.Text;
 
 namespace OurRecipes.Services
 {
-    public class ScraperService
+    public class ScraperService:InitialDataService, IScraperService
     {
-        private readonly ApplicationDbContext context;
+        
         private readonly List<string> urls = new List<String>();
         private readonly List<string> collections = new List<String>() 
         { "breakfast-recipes", "chicken-thigh-recipes" , "quick-and-easy-recipes", "dessert-recipes", "easy-pasta-recipes" };
 
-        public ScraperService(ApplicationDbContext db)
+        public ScraperService(ApplicationDbContext db) 
+            : base(db)
         {
-            this.context = db; 
         }
-        public async Task PopulateData()
-        {
-           var recipeDtos =  await InitializeScraping();
 
-            var recipeDto = recipeDtos.FirstOrDefault();
+        public void PopulateData()
+        {
+           //var recipeDtos =  InitializeScraping();
+
+            var recipeDto = GatherRecipe("https://www.bbcgoodfood.com/recipes/ultimate-spaghetti-carbonara-recipe");
             if (recipeDto != null)
             {
                 Recipe recipe = new Recipe
                 {
+                    Title = recipeDto.Title,
+                    Description = recipeDto.Description,
+                    Servings = recipeDto.Servings,
+                    PrepTime = recipeDto.PrepTime,
+                    CookTime = recipeDto.CookTime,
+                    ImageUrl = recipeDto?.ImageUrl,
+                    OriginalUrl = recipeDto.OriginalUrl,
+                    CreatedOnDate = DateTime.Now,
+                    Instructions = recipeDto.Instructions,
 
                 };
             }
 
         }
         
-        public async Task<ICollection<RecipeDto>> InitializeScraping()
+        public ICollection<RecipeDto> InitializeScraping()
         {
             var recipes = new List<RecipeDto>();
             var collectionUrls = new List<string>();
 
             foreach (var collectionName in collections)
             {
-                var retrievedUrls = await GetRecipeUrlsFromCollectionAsync(collectionName, collectionUrls);
+                var retrievedUrls = GetRecipeUrlsFromCollection(collectionName, collectionUrls);
                 this.urls.AddRange(retrievedUrls);
             }
             Console.WriteLine(this.urls.Count);
@@ -49,7 +59,7 @@ namespace OurRecipes.Services
                 var url = $"https://www.bbcgoodfood.com{a}";
                 try
                 {
-                    var recipeDto =await GatherRecipe(url);
+                    var recipeDto = GatherRecipe(url);
                     recipes.Add(recipeDto);
                 }
                 catch (Exception ex)
@@ -61,7 +71,14 @@ namespace OurRecipes.Services
             Console.WriteLine(recipes.Count);
             return recipes;
         }
-        private static async Task<RecipeDto> GatherRecipe(string url)
+
+        //ImagesService to populate thumbnails where missing
+        //private string GetImageUrl (string title)
+        //{
+        //    //https://pixabay.com/api/docs/#api_search_images
+        //    return null;
+        //}
+        private static RecipeDto GatherRecipe(string url)
         {
             var recipeDto = new RecipeDto();
 
@@ -243,7 +260,7 @@ namespace OurRecipes.Services
             return doc;
         }
 
-        private static async Task<ICollection<string>> GetRecipeUrlsFromCollectionAsync(string collectionName, List<string> urls)
+        private static ICollection<string> GetRecipeUrlsFromCollection(string collectionName, List<string> urls)
         {
             int count = 0;
             while (count < 5)
@@ -266,6 +283,7 @@ namespace OurRecipes.Services
             }
             return urls;
         }
-        
+
+       
     }
 }

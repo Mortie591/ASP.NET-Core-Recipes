@@ -9,16 +9,18 @@ namespace OurRecipes.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IDataImportService dataImportService;
+        private readonly IScraperService scraperService;
 
-        public HomeController(ILogger<HomeController> logger, IDataImportService dataImportService)
+        public HomeController(ILogger<HomeController> logger, IDataImportService dataImportService, IScraperService scraperService)
         {
             _logger = logger;
             this.dataImportService = dataImportService;
+            this.scraperService = scraperService;
         }
 
         public IActionResult Index()
         {
-            //this.dataImportService.ImportRecipes();
+            this.scraperService.PopulateData();
             return View();
         }
 

@@ -7,19 +7,13 @@ using Component = OurRecipes.Data.Models.Component;
 
 namespace OurRecipes.Services
 {
-    public class DataImportService : IDataImportService
+    public class DataImportService : InitialDataService, IDataImportService
     {
-        private readonly ApplicationDbContext context;
-        private readonly List<Recipe> recipes = new List<Recipe>();
-        private readonly List<Unit> units = new List<Unit>();
-        private readonly List<Tag> tags = new List<Tag>();
-        private readonly List<Nutrient> nutrients = new List<Nutrient>();
-        private readonly List<Ingredient> ingredients = new List<Ingredient>();
-        private readonly List<Category> categories = new List<Category>();
-        public DataImportService(ApplicationDbContext db)
+        public DataImportService(ApplicationDbContext db) 
+            : base(db)
         {
-            this.context = db;
         }
+
         public void ImportRecipes()
         {
             //this.context.Database.EnsureDeleted();
@@ -137,72 +131,7 @@ namespace OurRecipes.Services
         }
 
         //Check for existing records before adding them to DB
-        private Unit GetOrCreateUnit(string unitName)
-        {
-            var unit = this.units.FirstOrDefault(x => string.Equals(x.Name, unitName));
-            if (unit == null && !String.IsNullOrEmpty(unitName))
-            {
-                unit = new Unit { Name = unitName };
-                this.units.Add(unit);
-            }
-            return unit;
-        }
-        private Tag GetOrCreateTag(string tagName, string type)
-        {
-            var tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName)
-            && string.Equals(x.Type, type));
-            if (tag == null)
-            {
-                tag = new Tag { Name = tagName, Type = type };
-                this.tags.Add(tag);
-            }
-            return tag;
-        }
-        private Nutrient GetOrCreateNutrient(string nutrientName, string quantity)
-        {
-            var nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
-            if (nutrient == null)
-            {
-                nutrient = new Nutrient { Name = nutrientName, Quantity = quantity };
-                this.nutrients.Add(nutrient);
-            }
-            return nutrient;
-        }
-        private Nutrient GetOrCreateNutrient(string nutrientName, string quantity, string unitName)
-        {
-            var nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
-            if (nutrient == null)
-            {
-                nutrient = new Nutrient { Name = nutrientName, Quantity = quantity, Unit = GetOrCreateUnit(unitName) };
-                this.nutrients.Add(nutrient);
-            }
-            return nutrient;
-        }
-        private Ingredient GetOrCreateIngredient(string ingredientName, string pluralName)
-        {
-            Ingredient ingredient = this.context.Ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
-            if (ingredient != null)
-            {
-                return ingredient;
-            }
-            ingredient = this.ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
-            if (ingredient == null)
-            {
-                ingredient = new Ingredient { Name = ingredientName, NamePlural = pluralName };
-                this.ingredients.Add(ingredient);
-            }
-            return ingredient;
-        }
-        private Category GetOrCreateCategory(string categoryName)
-        {
-            var category = this.categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
-            if (category == null)
-            {
-                category = new Category { Name = categoryName };
-                this.categories.Add(category);
-            }
-            return category;
-        }
+        //inherit from parent class
         private static ICollection<RecipeDto> DeserializeDataFromJSON(string path)
         {
             DirectoryInfo dir = new DirectoryInfo(path);
