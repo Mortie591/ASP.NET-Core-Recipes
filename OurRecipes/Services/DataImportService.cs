@@ -28,7 +28,6 @@ namespace OurRecipes.Services
 
             string path = "Services/SourceData";
             ICollection<RecipeDto> recipesDto = DeserializeDataFromJSON(path);
-            
 
             foreach (RecipeDto recipeDto in recipesDto)
             {
@@ -40,9 +39,9 @@ namespace OurRecipes.Services
                 {
                     Title = recipeDto.Title,
                     Description = recipeDto.Description,
-                    Servings = (byte)recipeDto.Servings,
-                    PrepTime = recipeDto.PrepTime,
-                    CookTime = recipeDto.CookTime,
+                    Servings = recipeDto.Servings.ToString(),
+                    PrepTime = recipeDto.PrepTime==0?"": recipeDto.PrepTime+" "+"mins",
+                    CookTime = recipeDto.CookTime == 0 ? "" : recipeDto.PrepTime + " " + "mins",
                     ImageUrl = recipeDto.ImageUrl,
                     CreatedOnDate = createdOn,
                     Categories = recipeDto.Categories.Select(x => GetOrCreateCategory(x.name)).ToList(),
@@ -57,7 +56,7 @@ namespace OurRecipes.Services
                 {
                     Console.WriteLine($"{recipe.Title} is invalid");
                     continue;
-                }
+                } 
                 else
                 {
                     if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
@@ -181,7 +180,12 @@ namespace OurRecipes.Services
         }
         private Ingredient GetOrCreateIngredient(string ingredientName, string pluralName)
         {
-            var ingredient = this.ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
+            Ingredient ingredient = this.context.Ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
+            if (ingredient != null)
+            {
+                return ingredient;
+            }
+            ingredient = this.ingredients.FirstOrDefault(x => string.Equals(x.Name, ingredientName));
             if (ingredient == null)
             {
                 ingredient = new Ingredient { Name = ingredientName, NamePlural = pluralName };

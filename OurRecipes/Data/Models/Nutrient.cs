@@ -6,7 +6,7 @@ namespace OurRecipes.Data.Models
     {
         //protein:"2.4g"
         public int Id { get; set; }
-        [Required]
+        [Required, MaxLength(100)]
         public string Name { get; set; }
         public string Quantity { get; set; }
         public int? UnitId { get; set; }

@@ -7,7 +7,7 @@ namespace OurRecipes.Data.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required, MaxLength(20)]
         public string Name { get; set; }
     }
 }

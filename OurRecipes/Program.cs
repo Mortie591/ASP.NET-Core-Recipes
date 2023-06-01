@@ -22,7 +22,10 @@ namespace OurRecipes
             builder.Services.AddDefaultIdentity<AppIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            //Custom services registration
             builder.Services.AddTransient<IDataImportService,DataImportService>();
+            //builder.Services.AddTransient<IDataImportService,DataImportService>();
 
             var app = builder.Build();
 

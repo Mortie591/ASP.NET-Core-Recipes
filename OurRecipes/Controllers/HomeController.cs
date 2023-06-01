@@ -18,7 +18,7 @@ namespace OurRecipes.Controllers
 
         public IActionResult Index()
         {
-            this.dataImportService.ImportRecipes();
+            //this.dataImportService.ImportRecipes();
             return View();
         }
 

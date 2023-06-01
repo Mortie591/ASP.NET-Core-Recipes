@@ -7,7 +7,7 @@ namespace OurRecipes.Data.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required, MaxLength(100)]
         public string Name { get; set; }
 
         public string? NamePlural { get; set; }

@@ -13,9 +13,9 @@ namespace OurRecipes.Data.Models
 
         */
         public int Id { get; set; }
-        [Required]
+        [Required,MaxLength(50)]
         public string Name { get; set; }
-        [Required]
+        [Required, MaxLength(50)]
         public string Type { get; set; }
         public virtual ICollection<Recipe> Recipes { get; set; }
 

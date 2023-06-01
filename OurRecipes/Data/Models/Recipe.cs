@@ -20,13 +20,15 @@ namespace OurRecipes.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; }
-        [Required]
+        [Required, MaxLength(100)]
         public string Title { get; set; }
         public string? Description { get; set; }
-        public byte? Servings { get; set; }
-        public ushort? PrepTime { get; set; }
-        public ushort? CookTime { get; set; }
-        public ushort? TotalTime => (ushort?)(CookTime + PrepTime);
+        [MaxLength(20)]
+        public string Servings { get; set; }
+        [MaxLength(20)]
+        public string? PrepTime { get; set; }
+        [MaxLength(20)]
+        public string? CookTime { get; set; }
         public ushort Likes { get; set; } = 0;//connect with user? -> My Favourite recipes (all liked ones)
         public string? ImageUrl { get; set; }
         public string? OriginalUrl { get; set; }

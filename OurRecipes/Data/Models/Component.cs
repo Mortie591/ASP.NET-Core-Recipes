@@ -10,6 +10,7 @@ namespace OurRecipes.Data.Models
             this.Recipes = new HashSet<Recipe>();
         }
         public int Id { get; set; }
+        [Required, MaxLength(250)]
         public string Text { get; set; }
 
         [ForeignKey(nameof(Ingredient))]

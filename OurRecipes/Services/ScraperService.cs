@@ -1,52 +1,76 @@
 ﻿using HtmlAgilityPack;
-using OurRecipes.Services.Models.ImportDtos;
+using OurRecipes.Data;
+using OurRecipes.Data.Models;
+using OurRecipes.Services.Models.ScraperDtos;
 using System.Text;
 
 namespace OurRecipes.Services
 {
     public class ScraperService
     {
-        public void InitializeScraping()
+        private readonly ApplicationDbContext context;
+        private readonly List<string> urls = new List<String>();
+        private readonly List<string> collections = new List<String>() 
+        { "breakfast-recipes", "chicken-thigh-recipes" , "quick-and-easy-recipes", "dessert-recipes", "easy-pasta-recipes" };
+
+        public ScraperService(ApplicationDbContext db)
+        {
+            this.context = db; 
+        }
+        public async Task PopulateData()
+        {
+           var recipeDtos =  await InitializeScraping();
+
+            var recipeDto = recipeDtos.FirstOrDefault();
+            if (recipeDto != null)
+            {
+                Recipe recipe = new Recipe
+                {
+
+                };
+            }
+
+        }
+        
+        public async Task<ICollection<RecipeDto>> InitializeScraping()
         {
             var recipes = new List<RecipeDto>();
+            var collectionUrls = new List<string>();
 
-            var allUrls = new List<string>();
-            var urls = new List<string>();
-
-            var urls1 = GetRecipeUrlsFromCollection("breakfast-recipes", urls);
-            allUrls.AddRange(urls1);
-            var urls2 = GetRecipeUrlsFromCollection("chicken-thigh-recipes", urls);
-            allUrls.AddRange(urls2);
-            var urls3 = GetRecipeUrlsFromCollection("quick-and-easy-recipes", urls);
-            allUrls.AddRange(urls3);
-            //Console.WriteLine(allUrls.Count);
-            //allUrls.ForEach(x=>Console.WriteLine(x));
+            foreach (var collectionName in collections)
+            {
+                var retrievedUrls = await GetRecipeUrlsFromCollectionAsync(collectionName, collectionUrls);
+                this.urls.AddRange(retrievedUrls);
+            }
+            Console.WriteLine(this.urls.Count);
 
             foreach (var a in urls)
             {
                 var url = $"https://www.bbcgoodfood.com{a}";
                 try
                 {
-                    var recipeDto = GatherRecipes(url);
+                    var recipeDto =await GatherRecipe(url);
                     recipes.Add(recipeDto);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"{url} - {ex.Message}");
                 }
-
             }
+
             Console.WriteLine(recipes.Count);
+            return recipes;
         }
-        static RecipeDto GatherRecipes(string url)
+        private static async Task<RecipeDto> GatherRecipe(string url)
         {
             var recipeDto = new RecipeDto();
 
             var doc = GetDocument(url);
-            StringBuilder sb = new StringBuilder();
             var topSection = doc.DocumentNode.SelectSingleNode("//div[@class='container post-header__container post-header__container--masthead-layout']");
+            
             recipeDto.Title = topSection.SelectSingleNode("//h1").InnerHtml;
             recipeDto.OriginalUrl = url;
+            
             var planList = topSection.SelectSingleNode("//ul[@class='post-header__row post-header__planning list list--horizontal']");
 
             var planInfo = planList.SelectNodes("//div[@class='icon-with-text__children']");
@@ -111,7 +135,6 @@ namespace OurRecipes.Services
                 }
             }
 
-
             var rowRecipeInstructions = doc.DocumentNode.SelectSingleNode("//div[@class='row recipe__instructions']").ChildNodes;
             var ingredientsList = rowRecipeInstructions[0].SelectSingleNode("//section/ul").ChildNodes;
             var instructionsList = rowRecipeInstructions[1].SelectSingleNode("//section/div/ul").ChildNodes;
@@ -119,6 +142,7 @@ namespace OurRecipes.Services
             foreach (var el in ingredientsList)
             {
                 var ingredientElements = el.ChildNodes;
+
                 string[] units = new string[] { "g", "tbsp", "tsp", "oz", "lb", "ml" };
                 string quantity = "";
                 string unit = "";
@@ -126,15 +150,16 @@ namespace OurRecipes.Services
 
                 string firstElement = ingredientElements[0].InnerText;
                 string secondElement = "";
+
                 if (ingredientElements.Count > 1)
                 {
                     secondElement = ingredientElements[1].InnerText;
                 }
 
-                bool startsWithNumber = !Char.IsLetter(firstElement[0]);
-                bool elemenetContainsUnit = units.Any(x => firstElement.Contains(x)) ? true : false;
+                bool startsWithNumber = !Char.IsLetter(firstElement[0]); 
+                bool elementContainsUnit = units.Any(x => firstElement.Contains(x));
 
-                if (startsWithNumber && elemenetContainsUnit)
+                if (startsWithNumber && elementContainsUnit)
                 {
                     char[] quantityArr = firstElement.ToCharArray();
                     StringBuilder qtyBuilder = new StringBuilder();
@@ -154,7 +179,7 @@ namespace OurRecipes.Services
                     quantity = qtyBuilder.ToString();
                     unit = unitBuilder.ToString();
                 }
-                else if (startsWithNumber && !elemenetContainsUnit)
+                else if (startsWithNumber && !elementContainsUnit)
                 {
                     var firstElementArr = firstElement.Split(" ").ToArray();
                     quantity = firstElementArr[0];
@@ -162,6 +187,10 @@ namespace OurRecipes.Services
                 else
                 {
                     ingredientName = firstElement;
+                    if (ingredientName.Contains(","))
+                    {
+                        ingredientName.Replace(",", "");
+                    }
                 }
 
                 if (secondElement.Length > 0)
@@ -171,10 +200,18 @@ namespace OurRecipes.Services
                     {
                         unit = secondElement;
                         ingredientName = ingredientElements[2]?.InnerText;
+                        if (ingredientName.Contains(","))
+                        {
+                            ingredientName.Replace(",", "");
+                        }
                     }
                     else
                     {
                         ingredientName = secondElement;
+                        if (ingredientName.Contains(","))
+                        {
+                            ingredientName.Replace(",", "");
+                        }
                     }
                 }
 
@@ -199,41 +236,36 @@ namespace OurRecipes.Services
             return recipeDto;
         }
 
-        static HtmlDocument GetDocument(string url)
+        private static HtmlDocument GetDocument(string url)
         {
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(url);
             return doc;
         }
 
-        static ICollection<string> GetRecipeUrlsFromCollection(string collectionName, List<string> urls)
+        private static async Task<ICollection<string>> GetRecipeUrlsFromCollectionAsync(string collectionName, List<string> urls)
         {
             int count = 0;
             while (count < 5)
             {
-
                 string collectionUrl = $"https://www.bbcgoodfood.com/recipes/collection/{collectionName}?page={++count}";
                 var doc = GetDocument(collectionUrl);
                 var collectionRecipeList = doc.DocumentNode.SelectNodes("//div[@class='dynamic-list dynamic-list--separated']/ul/li/div/article/div/a");
+                
                 if (collectionRecipeList == null) break;
-                var collectionUrls = GetUrls(collectionRecipeList).ToList();
-                urls.AddRange(collectionUrls);
-            }
-            return urls;
-        }
-        static ICollection<string> GetUrls(HtmlNodeCollection urlList)
-        {
-            var urls = new List<string>();
-            for (int i = 0; i < urlList.Count; i += 2)
-            {
-                var a = urlList[i];
-                var href = a.GetAttributeValue("href", "n/a");
-                if (href.Contains("/recipes/"))
+                
+                for (int i = 0; i < collectionRecipeList.Count; i += 2)
                 {
-                    urls.Add(href);
+                    var a = collectionRecipeList[i];
+                    var href = a.GetAttributeValue("href", "n/a");
+                    if (href.Contains("/recipes/"))
+                    {
+                        urls.Add(href);
+                    }
                 }
             }
             return urls;
         }
+        
     }
 }
