@@ -1,4 +1,5 @@
 ﻿using OurRecipes.Data.Models;
+using OurRecipes.Models;
 
 namespace OurRecipes.Services
 {
@@ -6,7 +7,7 @@ namespace OurRecipes.Services
     {
         public Recipe GetRecipeById(string id);
         public Recipe GetRecipeByName(string name);
-        public ICollection<Recipe> GetRandomRecipes();
+        public ICollection<RecipeCardViewModel> GetRandomRecipes();
         public ICollection<Recipe> GetRecipesByIngredient(string ingredientName);
         public ICollection<Recipe> GetRecipesByTag(string tagType);
         public ICollection<Recipe> GetRecipesByCategory(string categoryName);

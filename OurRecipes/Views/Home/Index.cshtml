@@ -6,13 +6,13 @@
    <section id="recipe-cards" class="cards section-bg">
        <div class="container" data-aos="fade-up">
            <div class="section-header">
-               <p>Our <span>Dayly</span> Suggestions</p>
+               <p>Our <span>Daily</span> Suggestions</p>
                <h2>Daily recipes</h2>
            </div>
            <div class="row gy-4">
                @foreach (var element in Model)
                {
-                   <a href="#" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                   <a href="/Recipes/@element.Id" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
                        <div class="card-member">
                            <div class="member-img">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" class="img-fluid" alt="@element.Title-img">
@@ -26,4 +26,4 @@
                }
            </div>
        </div>
-   </section><!-- End New recipes section -->
+   </section><!-- End Daily Recipes section -->

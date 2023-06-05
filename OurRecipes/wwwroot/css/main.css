@@ -188,6 +188,14 @@ section {
 
 
 /*--------------------------------------------------------------
+# Cover images
+--------------------------------------------------------------*/
+.cover-img {
+    max-height: 500px;
+    min-width:100%;
+}
+
+/*--------------------------------------------------------------
 # Scroll top button
 --------------------------------------------------------------*/
 .scroll-top {
@@ -1129,7 +1137,7 @@ section {
 
     .events .swiper-pagination .swiper-pagination-bullet-active {
         background-color: var(--color-primary);
-    }
+    }member-
 
 /*--------------------------------------------------------------
 # Recipe cards
@@ -1225,7 +1233,7 @@ section {
         }
 
 /*--------------------------------------------------------------
-# Book A Table Section
+# Create New Recipe Section
 --------------------------------------------------------------*/
 .authenticate .reservation-img {
     min-height: 500px;

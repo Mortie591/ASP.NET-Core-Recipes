@@ -1,5 +1,7 @@
 ﻿using OurRecipes.Data;
 using OurRecipes.Data.Models;
+using OurRecipes.Models;
+using System.Web;
 
 namespace OurRecipes.Services
 {
@@ -20,10 +22,30 @@ namespace OurRecipes.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<Recipe> GetRandomRecipes()
+        public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
-            var recipes = this.context.Recipes.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
-            return recipes;
+            var recipes = this.context.Recipes.Select(x=>new
+            {
+                x.Id,
+                x.Title,
+                x.Likes,
+                x.ImageUrl
+            }).OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+            
+            var recipeCards = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl
+                };
+                recipeCards.Add(viewModel);
+
+            }
+            return recipeCards;
         }
 
         public Recipe GetRecipeById(string id)

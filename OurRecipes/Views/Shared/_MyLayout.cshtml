@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@using OurRecipes.Data.Models;
+@inject SignInManager<AppIdentityUser> SignInManager
+@inject UserManager<AppIdentityUser> UserManager
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,8 +50,7 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a asp-area="" asp-controller="Recipes" asp-action="MyRecipes">My Recipes</a></li>
-                    <li><a asp-area="" asp-controller="Recipes" asp-action="Favourites">My Favourites</a></li>
+                    
                     <!-- TODO: Update dropdown menu
                     To be added under discover and recipes
                     -->
@@ -77,8 +80,17 @@
                             <li><a href="#">Drinks</a></li>
                         </ul>
                     </li>
-                    <li><a asp-area="" asp-controller="Recipes" asp-action="Easy">Easy</a></li>
-                    <li><a asp-area="" asp-controller="Recipes" asp-action="Snacks">Snacks</a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="MyRecipes">My Recipes</a></li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="Favourites">My Favourites</a></li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="Easy">Easy</a></li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="Snacks">Snacks</a></li>
+                    }
                     <li>
                         <div class="input-group ps-5">
                             <div id="navbar-search-autocomplete" class="form-outline">

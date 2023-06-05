@@ -1,0 +1,80 @@
+﻿<section id="create-recipe" class="section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-header">
+            <p>Create <span>Your New</span> Recipe</p>
+            <h2>New Recipe</h2>
+        </div>
+
+        <div class="row gy-4">
+            <div>
+                <img class="img-fluid cover-img" src="/img/new-recipe-cover.jpg" data-aos-delay="200" />
+            </div>
+
+            <div class="row-lg-8 d-flex justify-content-center">
+                <form action="forms/book-a-table.php" method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4">
+                        <div class="col-lg-4 col-md-6">
+                            <input type="text" name="title" class="form-control" id="title" placeholder="Recipe Title" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <select type="text" name="servings" class="form-control" id="servings" placeholder="Number of servings">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                </select>
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <input type="text" name="prep-time" class="form-control" id="prep-time" placeholder="Preparation time (in minutes)" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <input type="text" name="cook-time" class="form-control" id="cook-time" placeholder="Cook time (in minutes)" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <!--TODO: Get Categories-->
+                            <select type="text" name="category" class="form-control" id="categories" placeholder="Category">
+                                <option>Vegan</option>
+                                <option>Vegetarian</option>
+                                <option>Low Carb</option>
+                                <option>Pasta</option>
+                                <option>Baked Goods</option>
+                                <option>Keto</option>
+                                <option>Meat</option>
+                                <option>Salad</option>
+                            </select>
+                            <div class="validate"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <input type="text" name="img-url" class="form-control" id="img-url" placeholder="Image URL" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                            <div class="validate"></div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3 mb-3">
+                        <textarea class="form-control" name="ingredients" rows="5" placeholder="Products"></textarea>
+                        <div class="validate"></div>
+                    </div>
+                    <div class="form-group mt-3 mb-3">
+                        <textarea class="form-control" name="instructions" rows="5" placeholder="Instructions"></textarea>
+                        <div class="validate"></div>
+                    </div>
+                    <div class="form-group mt-3 mb-3">
+                        <textarea class="form-control" name="description" rows="5" placeholder="Descriptioon"></textarea>
+                        <div class="validate"></div>
+                    </div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+                </form>
+            </div><!-- End New Recipe Form -->
+
+        </div>
+
+    </div>
+</section><!-- End Create a Recipe Section -->

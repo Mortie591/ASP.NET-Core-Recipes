@@ -24,20 +24,8 @@ namespace OurRecipes.Controllers
         public IActionResult Index()
         {
             var recipes  = recipeService.GetRandomRecipes();
-            var recipeCards  = new List<RecipeCardViewModel>();
-            foreach (var recipe in recipes)
-            {
-                RecipeCardViewModel viewModel = new RecipeCardViewModel
-                {
-
-                    Title = HttpUtility.HtmlDecode(recipe.Title),
-                    Rating = recipe.Likes,
-                    imageUrl = recipe.ImageUrl
-                };
-                recipeCards.Add(viewModel);
-
-            }
-            return View(recipeCards);
+            
+            return View(recipes);
         }
 
         public IActionResult Privacy()
