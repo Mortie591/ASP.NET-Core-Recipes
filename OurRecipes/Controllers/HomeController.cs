@@ -23,20 +23,21 @@ namespace OurRecipes.Controllers
 
         public IActionResult Index()
         {
-            var recipes = new List<RecipeCardViewModel>();
-            for (int i = 0; i < 6; i++)
+            var recipes  = recipeService.GetRandomRecipes();
+            var recipeCards  = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
             {
-                var recipe = recipeService.GetRandomRecipe();
                 RecipeCardViewModel viewModel = new RecipeCardViewModel
                 {
+
                     Title = HttpUtility.HtmlDecode(recipe.Title),
                     Rating = recipe.Likes,
                     imageUrl = recipe.ImageUrl
                 };
-                recipes.Add(viewModel);
+                recipeCards.Add(viewModel);
 
             }
-            return View(recipes);
+            return View(recipeCards);
         }
 
         public IActionResult Privacy()

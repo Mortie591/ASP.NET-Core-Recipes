@@ -15,15 +15,15 @@ namespace OurRecipes.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<Recipe> GetLatest(string categoryName)
+        public ICollection<Recipe> GetLatest()
         {
             throw new NotImplementedException();
         }
 
-        public Recipe GetRandomRecipe()
+        public ICollection<Recipe> GetRandomRecipes()
         {
-            var recipe = this.context.Recipes.OrderBy(x => Guid.NewGuid()).First();
-            return recipe;
+            var recipes = this.context.Recipes.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+            return recipes;
         }
 
         public Recipe GetRecipeById(string id)

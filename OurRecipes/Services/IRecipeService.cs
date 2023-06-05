@@ -6,11 +6,11 @@ namespace OurRecipes.Services
     {
         public Recipe GetRecipeById(string id);
         public Recipe GetRecipeByName(string name);
-        public Recipe GetRandomRecipe();
+        public ICollection<Recipe> GetRandomRecipes();
         public ICollection<Recipe> GetRecipesByIngredient(string ingredientName);
         public ICollection<Recipe> GetRecipesByTag(string tagType);
         public ICollection<Recipe> GetRecipesByCategory(string categoryName);
-        public ICollection<Recipe> GetLatest(string categoryName);
+        public ICollection<Recipe> GetLatest();
         public ICollection<Recipe> GetTrending(string categoryName);
         public void Add();
         public void Remove();
