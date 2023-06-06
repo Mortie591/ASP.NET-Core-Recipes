@@ -27,8 +27,129 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollY > 100 ? selectHeader.classList.add('sticked') : selectHeader.classList.remove('sticked');
     });
   }
+    /**
+   * Custom
+   */
+  //Add Ingredients row
+    let ingredientsParentElement = document.querySelector("ul[name='ingredients']");
+    let sectionParentElement = document.querySelector("ul[name='section-ul']");
 
-  /**
+    let ingredientsFieldset = document.querySelector('#ingredients-fieldset');
+    let ingredientRow = document.querySelector('#ingredients-row');
+    let addButtonElement = document.querySelector('#add-ingredient'); 
+    let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 
+    
+
+    const AddIngredientRow = function (parentNode) {
+        
+        let childNode = ingredientRow.cloneNode(true);
+        parentNode.insertBefore(childNode, event.target);
+        console.log("Added new ingredient line")
+    };
+
+    addButtonElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        AddIngredientRow(parent);
+    });
+
+
+    //Remove Ingredients row
+    const RemoveIngredientRow = function (parentNode) {
+        let liElements = parentNode.querySelectorAll('li');
+        if (liElements.length > 0) {
+            let lastListElement = liElements[liElements.length - 1];
+            parentNode.removeChild(lastListElement);
+            console.log('Removed last ingredient row ${lastListElement}');
+        } else {
+            console.log('No elements to remove')
+        }
+        
+    };
+    removeIngredientButtonElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        RemoveIngredientRow(parent);
+    });
+
+
+    //Add section
+    /**
+         * <div class="col-lg-4 col-md-6">
+               <label for="section-name"><strong>Section Name</strong></label>
+               <input type="text" name="section-name" class="form-control" id="section-name" placeholder="Section Name">
+           </div>
+         */
+    document.querySelector('#add-section').addEventListener('click', function (event) {
+        event.preventDefault();
+
+        let sectionElement = document.createElement('ul');
+        sectionElement.setAttribute('class', 'form-group mt-3 mb-3');
+        sectionElement.setAttribute('id', 'section-ul');
+
+        let labelElement = document.createElement('label');
+        labelElement.setAttribute('for', 'section-name');
+
+        let strongElement = document.createElement('strong');
+        strongElement.innerText = 'Section Name';
+
+        labelElement.appendChild(strongElement);
+
+        let inputElement = document.createElement('input');
+        inputElement.setAttribute('type', 'text');
+        inputElement.setAttribute('name', 'section-name');
+        inputElement.setAttribute('class', 'form-control col-lg-4 col-md-6');
+        inputElement.setAttribute('id', 'section-name');
+        inputElement.setAttribute('placeholder', 'Section Name');
+
+        let ingredientRow = ingredientsParentElement.querySelector('#ingredients-row').cloneNode(true);
+
+        var addButtonElementSection = document.querySelector('#add-ingredient').cloneNode(true);
+        var removeButtonElementSection = document.querySelector('#remove-ingredient').cloneNode(true);
+
+        addButtonElementSection.addEventListener('click', (event) => {
+            event.preventDefault();
+            let parent = event.target.parentNode;
+            AddIngredientRow(parent);
+        });
+
+        removeButtonElementSection.addEventListener('click', (event) => {
+            event.preventDefault();
+            let parent = event.target.parentNode;
+            RemoveIngredientRow(parent);
+        });
+
+        sectionElement.appendChild(labelElement);
+        sectionElement.appendChild(inputElement);
+        sectionElement.appendChild(ingredientRow);
+        sectionElement.appendChild(addButtonElementSection);
+        sectionElement.appendChild(removeButtonElementSection);
+
+        ingredientsFieldset.appendChild(sectionElement);
+        console.log("Added new section")
+    });
+
+    //Remove Section
+    const RemoveSection = function (parentNode) {
+        let sectionElements = parentNode.querySelectorAll("ul[id='section-ul']");
+        if (sectionElements.length > 0) {
+            let lastSectionElement = sectionElements[sectionElements.length - 1];
+            parentNode.removeChild(lastSectionElement);
+            console.log('Removed last ingredient row ${lastSectionElement}');
+        } else {
+            console.log('No elements to remove')
+        }
+
+    };
+    document.querySelector('#remove-section').addEventListener('click', (event) =>
+    {
+        event.preventDefault();
+            let parent = event.target.parentNode.parentNode;
+            RemoveSection(parent);
+        });
+
+
+    /**
    * Navbar links active state on scroll
    */
   let navbarlinks = document.querySelectorAll('#navbar a');

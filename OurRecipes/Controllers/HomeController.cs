@@ -26,7 +26,7 @@ namespace OurRecipes.Controllers
         public IActionResult Index()
         {
             //this.dataImportService.ImportRecipes();
-            this.scraperService.PopulateData();
+            //this.scraperService.PopulateData();
            
             var recipes  = recipeService.GetRandomRecipes();
             return View(recipes);

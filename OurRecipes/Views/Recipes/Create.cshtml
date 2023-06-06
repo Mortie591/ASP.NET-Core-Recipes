@@ -12,7 +12,7 @@
             </div>
 
             <div class="row-lg-8 d-flex justify-content-center">
-                <form action="forms/book-a-table.php" method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
+                <form method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
                     <div class="row gy-4">
                         <div class="col-lg-4 col-md-6">
                             <label for="title"><strong>Title</strong></label>
@@ -31,7 +31,7 @@
                                 <option>6</option>
                                 <option>7</option>
                                 <option>8</option>
-                                </select>
+                            </select>
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
@@ -48,6 +48,7 @@
                             <!--TODO: Get Categories-->
                             <label for="category"><strong>Category</strong></label>
                             <select type="text" name="category" class="form-control" id="categories" placeholder="Category">
+                                <option>Healthy</option>
                                 <optgroup label="Meal Course">
                                     <option>Breakfast</option>
                                     <option>Brunch</option>
@@ -56,30 +57,37 @@
                                     <option>Dinner</option>
                                 </optgroup>
                                 <optgroup label="Dish Type">
-                                    <option name="meat">Poultry</option>
-                                    <option name="meat">Turkey</option>
-                                    <option name="meat">Duck</option>
-                                    <option name="meat">Beef</option>
-                                    <option name="meat">Pork</option>
-                                    <option name="meat">Lamb</option>
-                                    <option name="fish">Fish</option>
-                                    <option name="sea-food">Sea Food</option>
                                     <option>Baked Goods</option>
-                                    <option>Pizza</option>
-                                    <option>Sandwitches&Wraps</option>
+                                    <option>Beverages</option>
                                     <option>Burgers</option>
+                                    <option>Desserts</option>
+                                    <option>Casserole</option>
+                                    <option>Fish</option>
+                                    <option>Meat: Beef</option>
+                                    <option>Meat: Duck</option>
+                                    <option>Meat: Lamb</option>
+                                    <option>Meat: Pork</option>
+                                    <option>Meat: Poultry</option>
+                                    <option>Meat: Turkey</option>
                                     <option>Pasta</option>
-                                    <option>Sides</option>
+                                    <option>Pizza</option>
                                     <option>Salad</option>
+                                    <option>Sandwitches&Wraps</option>
+                                    <option>Sea Food</option>
+                                    <option>Sides</option>
                                     <option>Soup</option>
-                                    <option>Dessert</option>
-                                    <option>Beverage</option>
                                 </optgroup>
                                 <optgroup label="Dietary">
+                                    <option>Keto</option>
+                                    <option>Low Carb</option>
                                     <option>Vegan</option>
                                     <option>Vegetarian</option>
-                                    <option>Low Carb</option>
-                                    <option>Keto</option>
+                                </optgroup>
+                                <optgroup label="Holiday">
+                                    <option>Christmas</option>
+                                    <option>Halloween</option>
+                                    <option>Thanksgiving</option>
+                                    <option>Valentine's Day</option>
                                 </optgroup>
                             </select>
                             <div class="validate"></div>
@@ -113,14 +121,13 @@
                             <label for="difficulty"><strong>Difficulty</strong></label>
                             <select type="text" name="difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
                                 <option>Easy</option>
-                                <option>Midium</option>
+                                <option>Medium</option>
                                 <option>Hard</option>
                                 <option>Expert</option>
                             </select>
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <!--TODO: Get Types of cuisine-->
                             <label for="cooking-style"><strong>Cooking Technique</strong></label>
                             <select type="text" name="cooking-style" class="form-control" id="cooking-style" placeholder="Cooking Style">
                                 <option>Roasing</option>
@@ -140,15 +147,51 @@
                             <input type="text" name="img-url" class="form-control" id="img-url" placeholder="Image URL" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
                             <div class="validate"></div>
                         </div>
+                        <div name="ingredients" class="form-group mt-3 mb-3">
+                            <fieldset class="form-group mt-3 mb-3" id="ingredients-fieldset">
+                                <legend for="ingredients"><strong>Ingredients</strong></legend>
+                                    
+                                <ul name="ingredients" class="form-group mt-3 mb-3">
+                                    <li name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
+                                        <div class="col-lg-4 col-md-6">
+                                            <label for="ingredient-name"><strong>Ingredient Name</strong></label>
+                                            <input type="text" name="ingredient-name" class="form-control" id="ingredient-name" placeholder="Ingredient Name">
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <label for="ingredient-quantity"><strong>Ingredient Quantity</strong></label>
+                                            <input type="text" name="ingredient-quantity" class="form-control" id="ingredient-quantity" placeholder="Ingredient Quantity">
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <label for="ingredient-unit"><strong>Units</strong></label>
+                                            <select type="text" name="ingredient-unit" class="form-control" id="ingredient-unit">
+                                                <option>---</option>
+                                                <option>gr</option>
+                                                <option>kg</option>
+                                                <option>ml</option>
+                                                <option>l</option>
+                                                <option>tbsp</option>
+                                                <option>tsp</option>
+                                                <option>cup</option>
+                                                <option>oz</option>
+                                            </select>
+                                        </div>
+                                    </li>
+                                    <button class="btn btn-md btn-primary" id="add-ingredient">Add more</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
+                                </ul>
+                                <div class="form-group mt-3 mb-3">
+                                    <button class="btn btn-md btn-primary" id="add-section">Add Section</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
+                                </div>
+                            </fieldset>
+                            <div class="validate"></div>
+                        </div>
+
                     </div>
-                    <div class="form-group mt-3 mb-3">
-                        <label for="ingredients"><strong>Ingredients</strong></label>
-                        <textarea class="form-control" name="ingredients" rows="5" placeholder="Products"></textarea>
-                        <div class="validate"></div>
-                    </div>
+
                     <div class="form-group mt-3 mb-3">
                         <label for="instructions"><strong>Instructions</strong></label>
-                        <textarea class="form-control" name="instructions" rows="5" placeholder="Instructions"></textarea>
+                        <textarea class="form-control" name="instructions" rows="5" placeholder="Preheat oven to 325F (160C)."></textarea>
                         <div class="validate"></div>
                     </div>
                     <div class="form-group mt-3 mb-3">
