@@ -1,4 +1,6 @@
-﻿using OurRecipes.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Services.Models.ImportDtos;
 using System.Text;
@@ -16,10 +18,6 @@ namespace OurRecipes.Services
 
         public void ImportRecipes()
         {
-            //this.context.Database.EnsureDeleted();
-            //this.context.Database.EnsureCreated();
-            //this.context.SaveChanges();
-
             string path = "Services/SourceData";
             ICollection<RecipeDto> recipesDto = DeserializeDataFromJSON(path);
 
@@ -55,7 +53,10 @@ namespace OurRecipes.Services
                 {
                     if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
                     {
-                        this.recipes.Add(recipe);
+                        if(!this.recipes.Select(x => x.Title).Contains(recipe.Title))
+                        {
+                            this.recipes.Add(recipe);
+                        }
                     }
                 }
             }
@@ -67,6 +68,23 @@ namespace OurRecipes.Services
             this.context.Categories.AddRangeAsync(this.categories);
             this.context.Recipes.AddRangeAsync(this.recipes);
 
+            this.context.SaveChanges();
+        }
+
+        public void CleanDatabase()
+        {
+
+            //this.context.Database.EnsureDeleted();
+            //this.context.Database.EnsureCreated();
+            //this.context.SaveChanges();
+
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Tags', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Units', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Nutrients', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Ingredients', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Components', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Sections', RESEED, 0)");
+            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Categories', RESEED, 0)");
             this.context.SaveChanges();
         }
         private ICollection<Section> CreateSections(RecipeDto recipe)

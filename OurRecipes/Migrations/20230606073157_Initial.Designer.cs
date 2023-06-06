@@ -9,11 +9,11 @@ using OurRecipes.Data;
 
 #nullable disable
 
-namespace OurRecipes.Data.Migrations
+namespace OurRecipes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230530100834_MinorChanges1")]
-    partial class MinorChanges1
+    [Migration("20230606073157_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,6 +267,10 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -281,7 +285,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("RecipeId")
                         .IsRequired()
@@ -319,7 +324,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("UnitId")
                         .HasColumnType("int");
@@ -345,7 +351,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NamePlural")
                         .HasColumnType("nvarchar(max)");
@@ -368,7 +375,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
@@ -397,8 +405,9 @@ namespace OurRecipes.Data.Migrations
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CookTime")
-                        .HasColumnType("int");
+                    b.Property<string>("CookTime")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("CreatedOnDate")
                         .HasColumnType("datetime2");
@@ -419,15 +428,22 @@ namespace OurRecipes.Data.Migrations
                     b.Property<int>("Likes")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PrepTime")
-                        .HasColumnType("int");
+                    b.Property<string>("OriginalUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("Servings")
-                        .HasColumnType("tinyint");
+                    b.Property<string>("PrepTime")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Servings")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -447,7 +463,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -471,7 +488,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -488,11 +506,13 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -509,7 +529,8 @@ namespace OurRecipes.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 

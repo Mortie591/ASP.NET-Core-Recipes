@@ -52,7 +52,10 @@ namespace OurRecipes.Services
                     {
                         if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
                         {
-                            this.recipes.Add(recipe);
+                            if (!this.recipes.Select(x => x.Title).Contains(recipe.Title))
+                            {
+                                this.recipes.Add(recipe);
+                            }
                         }
                     }
                 }
@@ -70,7 +73,6 @@ namespace OurRecipes.Services
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine(ex.Message);
             }
             
