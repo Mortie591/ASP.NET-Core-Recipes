@@ -11,6 +11,7 @@ namespace OurRecipes.Data.Models
         public int Id { get; set; }
         [Required, MaxLength(100)]
         public string Name { get; set; }
+        public string? Type { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
     }
 }

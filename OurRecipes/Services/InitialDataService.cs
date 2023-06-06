@@ -176,6 +176,21 @@ namespace OurRecipes.Services
             }
             return category;
         }
+        protected virtual Category GetOrCreateCategory(string categoryName, string categoryType)
+        {
+            Category category = this.context.Categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
+            if (category != null)
+            {
+                return category;
+            }
+            category = this.categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
+            if (category == null)
+            {
+                category = new Category { Name = categoryName,Type = categoryType };
+                this.categories.Add(category);
+            }
+            return category;
+        }
     }
 }
  
