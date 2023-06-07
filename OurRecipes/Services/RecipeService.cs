@@ -1,6 +1,6 @@
 ﻿using OurRecipes.Data;
 using OurRecipes.Data.Models;
-using OurRecipes.Models;
+using OurRecipes.Models.Recipes;
 using System.Web;
 
 namespace OurRecipes.Services

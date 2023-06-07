@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let ingredientsFieldset = document.querySelector('#ingredients-fieldset');
     let ingredientRow = document.querySelector('#ingredients-row');
-    let addButtonElement = document.querySelector('#add-ingredient'); 
+    let addIngredientButtonElement = document.querySelector('#add-ingredient'); 
     let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 
     
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Added new ingredient line")
     };
 
-    addButtonElement.addEventListener('click', (event) => {
+    addIngredientButtonElement.addEventListener('click', (event) => {
         event.preventDefault();
         let parent = event.target.parentNode;
         AddIngredientRow(parent);
@@ -146,7 +146,47 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
             let parent = event.target.parentNode.parentNode;
             RemoveSection(parent);
-        });
+    });
+
+
+    //Add Nutrient row
+    let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
+
+    let nutrientRow = document.querySelector('#nutrients-row');
+    let addNutrientButtonElement = document.querySelector('#add-nutrient');
+    let removeNutrientButtonElement = document.querySelector('#remove-nutrient');
+
+
+    const AddNutrientRow = function (parentNode) {
+        let childNode = nutrientRow.cloneNode(true);
+        parentNode.insertBefore(childNode, event.target);
+        console.log("Added new nutrient row")
+    };
+
+    addNutrientButtonElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        AddNutrientRow(parent);
+    });
+
+
+    //Remove Nutrients row
+    const RemoveNutrientRow = function (parentNode) {
+        let liElements = parentNode.querySelectorAll('li');
+        if (liElements.length > 0) {
+            let lastListElement = liElements[liElements.length - 1];
+            parentNode.removeChild(lastListElement);
+            console.log('Removed last nutrient row');
+        } else {
+            console.log('No elements to remove')
+        }
+
+    };
+    removeNutrientButtonElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        RemoveNutrientRow(parent);
+    });
 
 
     /**

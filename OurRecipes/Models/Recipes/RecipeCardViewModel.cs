@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Models
+﻿namespace OurRecipes.Models.Recipes
 {
     public class RecipeCardViewModel
     {

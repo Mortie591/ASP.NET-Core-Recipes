@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OurRecipes.Models;
+using OurRecipes.Models.Recipes;
 
 namespace OurRecipes.Controllers
 {

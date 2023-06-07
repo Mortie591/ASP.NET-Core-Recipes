@@ -1,4 +1,6 @@
-﻿<section id="create-recipe" class="section-bg">
+﻿@using OurRecipes.Models.Recipes;
+@model CreateRecipeInputModel
+<section id="create-recipe" class="section-bg">
     <div class="container" data-aos="fade-up">
 
         <div class="section-header">
@@ -15,34 +17,24 @@
                 <form method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
                     <div class="row gy-4">
                         <div class="col-lg-4 col-md-6">
-                            <label for="title"><strong>Title</strong></label>
-                            <input type="text" name="title" class="form-control" id="title" placeholder="Recipe Title" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-                            <div class="validate"></div>
+                            <label asp-for="Title"><strong>Title</strong></label>
+                            <input asp-for="Title" class="form-control" id="title" placeholder="Recipe Title">
+                            <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="servings"><strong>Servings</strong></label>
-                            <select type="text" name="servings" class="form-control" id="servings" placeholder="Number of servings">
-                                <option>---</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                            </select>
-                            <div class="validate"></div>
+                            <label asp-for="Servings"><strong>Servings</strong></label>
+                            <input asp-for="Servings" class="form-control" id="servings" placeholder="Servings">
+                            <span asp-validation-for="Servings" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="prep-time"><strong>Preparation Time</strong></label>
-                            <input type="text" name="prep-time" class="form-control" id="prep-time" placeholder="Preparation time (in minutes)" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-                            <div class="validate"></div>
+                            <<label asp-for="PrepTime"><strong> Preparation Time (in minutes)</strong></label>
+                            <input asp-for="PrepTime" class="form-control" id="prepTime" placeholder="25">
+                            <span asp-validation-for="PrepTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="cook-time"><strong>Cooking Time</strong></label>
-                            <input type="text" name="cook-time" class="form-control" id="cook-time" placeholder="Cook time (in minutes)" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-                            <div class="validate"></div>
+                            <<label asp-for="CookTime"><strong> Cooking Time (in minutes)</strong></label>
+                            <input asp-for="CookTime" class="form-control" id="prepTime" placeholder="25">
+                            <span asp-validation-for="CookTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <!--TODO: Get Categories-->
@@ -143,9 +135,9 @@
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="img-url"><strong>Image URL</strong></label>
-                            <input type="text" name="img-url" class="form-control" id="img-url" placeholder="Image URL" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-                            <div class="validate"></div>
+                            <label asp-for="ImageUrl"><strong>Image Url</strong></label>
+                            <input asp-for="ImageUrl" class="form-control" id="img-url" placeholder="Recipe Title">
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
                         </div>
                         <div name="ingredients" class="form-group mt-3 mb-3">
                             <fieldset class="form-group mt-3 mb-3" id="ingredients-fieldset">
@@ -155,11 +147,11 @@
                                     <li name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                         <div class="col-lg-4 col-md-6">
                                             <label for="ingredient-name"><strong>Ingredient Name</strong></label>
-                                            <input type="text" name="ingredient-name" class="form-control" id="ingredient-name" placeholder="Ingredient Name">
+                                            <input type="text" name="ingredient-name" class="form-control" id="ingredient-name" placeholder="White flour">
                                         </div>
                                         <div class="col-lg-4 col-md-6">
                                             <label for="ingredient-quantity"><strong>Ingredient Quantity</strong></label>
-                                            <input type="text" name="ingredient-quantity" class="form-control" id="ingredient-quantity" placeholder="Ingredient Quantity">
+                                            <input type="text" name="ingredient-quantity" class="form-control" id="ingredient-quantity" placeholder="500">
                                         </div>
                                         <div class="col-lg-4 col-md-6">
                                             <label for="ingredient-unit"><strong>Units</strong></label>
@@ -186,18 +178,36 @@
                             </fieldset>
                             <div class="validate"></div>
                         </div>
+                            <fieldset class="form-group mt-3 mb-3" id="nutrients-fieldset">
+                            <legend for="nutrients"><strong>Nutrients Per Serving</strong></legend>
 
+                            <ul name="nutrients" class="form-group mt-3 mb-3">
+                                <li name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
+                                        <div class="col-lg-4 col-md-6">
+                                        <label for="nutrient-quantity"><strong>Nutrient Quantity</strong></label>
+                                        <input type="text" name="nutrient-quantity" class="form-control" id="nutrient-quantity" placeholder="25g">
+                                        </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label for="nutrient-name"><strong>Nutrient Name</strong></label>
+                                        <input type="text" name="nutrient-name" class="form-control" id="nutrient-name" placeholder="Carbs">
+                                        <div class="validate"></div>
+                                    </div>
+                                    </li>
+                                <button class="btn btn-md btn-primary" id="add-nutrient">Add more</button>
+                                <button class="btn btn-md btn-secondary" id="remove-nutrient">Remove</button>
+                                </ul>
+                            </fieldset>
                     </div>
 
                     <div class="form-group mt-3 mb-3">
-                        <label for="instructions"><strong>Instructions</strong></label>
-                        <textarea class="form-control" name="instructions" rows="5" placeholder="Preheat oven to 325F (160C)."></textarea>
-                        <div class="validate"></div>
+                        <label asp-for="Instructions"><strong>Instructions</strong></label>
+                        <textarea asp-for="Instructions" class="form-control" id="instructions" placeholder="1. Heat the oil in a medium pan over a medium heat."></textarea>
+                        <span asp-validation-for="Instructions" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-3 mb-3">
-                        <label for="description"><strong>Descriptioon</strong></label>
-                        <textarea class="form-control" name="description" rows="5" placeholder="Descriptioon"></textarea>
-                        <div class="validate"></div>
+                        <label asp-for="Description"><strong>Descriptioon</strong></label>
+                        <textarea asp-for="Description" class="form-control" id="description" rows="5" placeholder="Descriptioon"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
                 </form>

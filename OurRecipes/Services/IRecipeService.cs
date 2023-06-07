@@ -1,5 +1,5 @@
 ﻿using OurRecipes.Data.Models;
-using OurRecipes.Models;
+using OurRecipes.Models.Recipes;
 
 namespace OurRecipes.Services
 {
