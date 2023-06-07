@@ -7,7 +7,8 @@ namespace OurRecipes.Controllers
     {
         public IActionResult Create()
         {
-            return this.View();
+            var viewModel = new CreateRecipeInputModel();
+            return this.View(viewModel);
         }
 
         [HttpPost]
@@ -15,7 +16,7 @@ namespace OurRecipes.Controllers
         {
             if(!this.ModelState.IsValid)
             {
-                return this.View();
+                return this.View(input);
             }
             //TODO: Redirect to Recipe info page
             return this.Redirect("/");

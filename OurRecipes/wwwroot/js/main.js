@@ -5,6 +5,38 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
+
+function AddNutrient() {
+    let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
+    let parent = event.target.parentNode;
+    let liElements = parent.querySelectorAll('li');
+    let nutrientsIndex = liElements.length;
+
+    let nutrientRow = document.createElement('li');
+    nutrientRow.setAttribute('name', 'nutrients-row');
+    nutrientRow.setAttribute('class', 'row mt-3 mb-3');
+    nutrientRow.setAttribute('id', 'nutrients-row');
+    nutrientRow.innerHTML = `<div class="col-lg-4 col-md-6">
+                                            <label><strong>Nutrient Quantity</strong></label>
+                                            <input name="Nutrients[${nutrientsIndex}].Quantity" class="form-control" id="nutrient-quantity" placeholder="25g">
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <label><strong>Nutrient Name</strong></label>
+                                        <input name="Nutrients[${nutrientsIndex}].Name" class="form-control" id="nutrient-name" placeholder="Carbs">
+                                        </div>`;
+    var validationMessage = document.createElement('span');
+    validationMessage.classList.add('text-danger');
+    validationMessage.setAttribute('data-valmsg-for', `Nutrients[${nutrientsIndex}].Name`);
+
+    const AddNutrientRow = function (parentNode) {
+        let childNode = nutrientRow.cloneNode(true);
+        childNode.appendChild(validationMessage);
+        parentNode.insertBefore(childNode, event.target);
+        console.log("Added new nutrient row");
+    };
+    AddNutrientRow(parent);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
 
@@ -150,24 +182,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     //Add Nutrient row
-    let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
+    
+    
+    
+    //let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
 
-    let nutrientRow = document.querySelector('#nutrients-row');
-    let addNutrientButtonElement = document.querySelector('#add-nutrient');
-    let removeNutrientButtonElement = document.querySelector('#remove-nutrient');
+    //let nutrientRow = document.querySelector('#nutrients-row');
+    //let addNutrientButtonElement = document.querySelector('#add-nutrient');
+    //let removeNutrientButtonElement = document.querySelector('#remove-nutrient');
 
 
-    const AddNutrientRow = function (parentNode) {
-        let childNode = nutrientRow.cloneNode(true);
-        parentNode.insertBefore(childNode, event.target);
-        console.log("Added new nutrient row")
-    };
+    //const AddNutrientRow = function (parentNode) {
+    //    let childNode = nutrientRow.cloneNode(true);
+    //    parentNode.insertBefore(childNode, event.target);
+    //    console.log("Added new nutrient row")
+    //};
 
-    addNutrientButtonElement.addEventListener('click', (event) => {
-        event.preventDefault();
-        let parent = event.target.parentNode;
-        AddNutrientRow(parent);
-    });
+    //addNutrientButtonElement.addEventListener('click', (event) => {
+    //    event.preventDefault();
+    //    let parent = event.target.parentNode;
+    //    AddNutrientRow(parent);
+    //});
 
 
     //Remove Nutrients row

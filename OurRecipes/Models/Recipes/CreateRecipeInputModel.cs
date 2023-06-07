@@ -28,7 +28,7 @@ namespace OurRecipes.Models.Recipes
         public IDictionary<string, string> Categories { get; set; } //Type <-> Name
         public ICollection<SectionInputModel>? Sections { get; set; }
         public ICollection<ComponentInputModel> Components { get; set; }
-        [Required,MinLength(50),MaxLength(1000)]
+        [Required,MinLength(10),MaxLength(1000)]
         public string Instructions { get; set; }
         public ICollection<NutrientInputModel> Nutrients { get; set; }
     }
