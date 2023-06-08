@@ -17,21 +17,26 @@ function AddNutrient() {
     nutrientRow.setAttribute('class', 'row mt-3 mb-3');
     nutrientRow.setAttribute('id', 'nutrients-row');
     nutrientRow.innerHTML = `<div class="col-lg-4 col-md-6">
-                                            <label><strong>Nutrient Quantity</strong></label>
-                                            <input name="Nutrients[${nutrientsIndex}].Quantity" class="form-control" id="nutrient-quantity" placeholder="25g">
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <label><strong>Nutrient Name</strong></label>
-                                        <input name="Nutrients[${nutrientsIndex}].Name" class="form-control" id="nutrient-name" placeholder="Carbs">
-                                        </div>`;
-    var validationMessage = document.createElement('span');
-    validationMessage.classList.add('text-danger');
-    validationMessage.setAttribute('data-valmsg-for', `Nutrients[${nutrientsIndex}].Name`);
-
+                                      <label><strong>Nutrient Quantity</strong></label>
+                                      <input name="Nutrients[${nutrientsIndex}].Quantity" class="form-control" placeholder="25g">
+                                      <span asp-validation-for="Nutrients[${nutrientsIndex}].Quantity" class="text-danger"></span>
+                                  </div>
+                                  <div class="col-lg-4 col-md-6">
+                                      <label><strong>Nutrient Name</strong></label>
+                                  <input name="Nutrients[${nutrientsIndex}].Name" class="form-control" placeholder="Carbs">
+                                  <span asp-validation-for="Nutrients[${nutrientsIndex}].Name" class="text-danger"></span>
+                                  </div>`;
+    //var validationMessage = document.createElement('span');
+    //validationMessage.classList.add('text-danger');
+    //validationMessage.setAttribute('data-valmsg-for', `Nutrients[${nutrientsIndex}].Name`);
+    //var form = document.querySelector('form');
+    //if (form) {
+    //    form.dispatchEvent(new Event('reset'));
+    //    form.dispatchEvent(new Event('validationadded'));
+    //}
     const AddNutrientRow = function (parentNode) {
-        let childNode = nutrientRow.cloneNode(true);
-        childNode.appendChild(validationMessage);
-        parentNode.insertBefore(childNode, event.target);
+        //let childNode = nutrientRow.cloneNode(true);
+        parentNode.insertBefore(nutrientRow, event.target);
         console.log("Added new nutrient row");
     };
     AddNutrientRow(parent);

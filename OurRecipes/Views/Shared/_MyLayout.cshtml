@@ -80,11 +80,12 @@
                             <li><a href="#">Drinks</a></li>
                         </ul>
                     </li>
+                    <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li><a asp-area="" asp-controller="Recipes" asp-action="MyRecipes">My Recipes</a></li>
                         <li><a asp-area="" asp-controller="Recipes" asp-action="Favourites">My Favourites</a></li>
-                        <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
+                        
                     }
                     else
                     {

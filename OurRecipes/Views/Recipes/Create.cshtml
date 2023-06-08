@@ -185,39 +185,25 @@
                             <legend for="nutrients"><strong>Nutrients Per Serving</strong></legend>
 
                             <ul asp-for="Nutrients" name="nutrients" class="form-group mt-3 mb-3">
-                               @foreach (var nutrient in @Model.Nutrients)
+                                @for (int i = 0; i < Model.Nutrients.Count; i++)
                                 {
                                     <li asp-for="NutrientInputModel" name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Quantity</strong></label>
-                                            <input name="@nutrient.Quantity" class="form-control" id="nutrient-quantity" placeholder="25g">
-                                            <span asp-validation-for="@nutrient.Quantity" class="text-danger"></span>
+                                            <input asp-for="Nutrients[i].Quantity" class="form-control" placeholder="25g">
+                                            <span asp-validation-for="Nutrients[i].Quantity" class="text-danger"></span>
                                         </div>
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Name</strong></label>
-                                            <input name="@nutrient.Name" class="form-control" id="nutrient-name" placeholder="Carbs">
-                                            <span asp-validation-for="@nutrient.Name" class="text-danger"></span>
+                                            <input asp-for="Nutrients[i].Name" class="form-control" placeholder="Carbs">
+                                            <span asp-validation-for="Nutrients[i].Name" class="text-danger"></span>
                                         </div>
                                     </li>
                                 }
-                                
-                                <!--
-                                    <li name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
-                                        <div class="col-lg-4 col-md-6">
-                                            <label><strong>Nutrient Quantity</strong></label>
-                                            <input name="nutrient-quantity" class="form-control" id="nutrient-quantity" placeholder="25g">
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <label><strong>Nutrient Name</strong></label>
-                                        <input name="nutrient-name" class="form-control" id="nutrient-name" placeholder="Carbs">
-                                        </div>
-                                    </li>
-                                -->
-                                
+                               
                                 <button class="btn btn-md btn-primary" type="button" id="add-nutrient" onclick="AddNutrient()">Add more</button>
                                 <button class="btn btn-md btn-secondary" id="remove-nutrient">Remove</button>
                                 </ul>
-                            <span asp-validation-for="Nutrients" class="text-danger"></span>
                             </fieldset>
                     </div>
 

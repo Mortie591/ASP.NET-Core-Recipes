@@ -10,7 +10,7 @@ namespace OurRecipes.Models.Recipes
             Categories = new Dictionary<string, string>();
             Sections = new HashSet<SectionInputModel>();
             Components = new HashSet<ComponentInputModel>();
-            Nutrients = new HashSet<NutrientInputModel>();
+            Nutrients = new List<NutrientInputModel>();
         }
         [Required, MinLength(4),MaxLength(50)]
         public string Title { get; set; }
@@ -28,8 +28,9 @@ namespace OurRecipes.Models.Recipes
         public IDictionary<string, string> Categories { get; set; } //Type <-> Name
         public ICollection<SectionInputModel>? Sections { get; set; }
         public ICollection<ComponentInputModel> Components { get; set; }
+
         [Required,MinLength(10),MaxLength(1000)]
         public string Instructions { get; set; }
-        public ICollection<NutrientInputModel> Nutrients { get; set; }
+        public List<NutrientInputModel> Nutrients { get; set; }
     }
 }
