@@ -43,15 +43,14 @@
                             <!--TODO: Get Categories-->
                             <label for="category"><strong>Category</strong></label>
                             <select type="text" name="category" class="form-control" id="categories" placeholder="Category" multiple>
-                                <option>Healthy</option>
-                                <optgroup name="Meal Course">
+                                <optgroup for="category-type" class="form-control" name="category-type" label="Meal Course">
                                     <option>Breakfast</option>
                                     <option>Brunch</option>
                                     <option>Lunch</option>
                                     <option>Snacks</option>
                                     <option>Dinner</option>
                                 </optgroup>
-                                <optgroup name="Dish Type">
+                                <optgroup label="Dish Type">
                                     <option>Baked Goods</option>
                                     <option>Beverages</option>
                                     <option>Burgers</option>
@@ -72,18 +71,19 @@
                                     <option>Sides</option>
                                     <option>Soup</option>
                                 </optgroup>
-                                <optgroup name="Dietary">
+                                <optgroup label="Dietary">
                                     <option>Keto</option>
                                     <option>Low Carb</option>
                                     <option>Vegan</option>
                                     <option>Vegetarian</option>
                                 </optgroup>
-                                <optgroup name="Holiday">
+                                <optgroup label="Holiday">
                                     <option>Christmas</option>
                                     <option>Halloween</option>
                                     <option>Thanksgiving</option>
                                     <option>Valentine's Day</option>
                                 </optgroup>
+                                <option>Healthy</option>
                             </select>
                             <div class="validate"></div>
                         </div>

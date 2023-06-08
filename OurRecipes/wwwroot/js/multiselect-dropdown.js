@@ -157,9 +157,12 @@ function MultiselectDropdown(options) {
             }
 
             Array.from(el.options).map(o => {
-                var op = newEl('div', { class: o.selected ? 'checked' : '', optEl: o })
+                
+
                 var ic = newEl('input', { type: 'checkbox', checked: o.selected });
+                var op = newEl('div', { class: o.selected ? 'checked' : '', optEl: o })
                 op.appendChild(ic);
+                //op.appendChild(newEl('div', { text: parent, style: { display: 'none' } }));
                 op.appendChild(newEl('label', { text: o.text }));
 
                 op.addEventListener('click', () => {
@@ -187,7 +190,8 @@ function MultiselectDropdown(options) {
                         var c = newEl('span', { class: 'optext', text: x.text, srcOption: x });
                         if ((el.attributes['multiselect-hide-x']?.value !== 'true'))
                             c.appendChild(newEl('span', { class: 'optdel', text: '🗙', title: config.txtRemove, onclick: (ev) => { c.srcOption.listitemEl.dispatchEvent(new Event('click')); div.refresh(); ev.stopPropagation(); } }));
-
+                        let parent = x.parentNode.getAttribute('label');
+                        c.appendChild(newEl('span', { text: parent, style: { display: 'none' } }))
                         div.appendChild(c);
                     });
                 }
