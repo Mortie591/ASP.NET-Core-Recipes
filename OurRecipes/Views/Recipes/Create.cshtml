@@ -147,35 +147,78 @@
                                 <legend for="ingredients"><strong>Ingredients</strong></legend>
                                     
                                 <ul name="ingredients" class="form-group mt-3 mb-3">
-                                    <li name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
-                                        <div class="col-lg-4 col-md-6">
-                                            <label for="ingredient-name"><strong>Ingredient Name</strong></label>
-                                            <input type="text" name="ingredient-name" class="form-control" id="ingredient-name" placeholder="White flour">
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <label for="ingredient-quantity"><strong>Ingredient Quantity</strong></label>
-                                            <input type="text" name="ingredient-quantity" class="form-control" id="ingredient-quantity" placeholder="500">
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <label for="ingredient-unit"><strong>Units</strong></label>
-                                            <select type="text" name="ingredient-unit" class="form-control" id="ingredient-unit">
-                                                <option>---</option>
-                                                <option>gr</option>
-                                                <option>kg</option>
-                                                <option>ml</option>
-                                                <option>l</option>
-                                                <option>tbsp</option>
-                                                <option>tsp</option>
-                                                <option>cup</option>
-                                                <option>oz</option>
-                                            </select>
-                                        </div>
-                                    </li>
-                                    <button class="btn btn-md btn-primary" id="add-ingredient">Add more</button>
+                                    @for (int i = 0; i < Model.Components.Count; i++)
+                                    {
+                                        <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Name</strong></label>
+                                                <input asp-for="Components[i].IngredientName" class="form-control" placeholder="25g">
+                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Quantity</strong></label>
+                                                <input asp-for="Components[i].Quantity" class="form-control" placeholder="Carbs">
+                                                <span asp-validation-for="Components[i].Quantity" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Units</strong></label>
+                                                <select asp-for="Components[i].Unit" class="form-control">
+                                                    <option>---</option>
+                                                    <option>gr</option>
+                                                    <option>kg</option>
+                                                    <option>ml</option>
+                                                    <option>l</option>
+                                                    <option>tbsp</option>
+                                                    <option>tsp</option>
+                                                    <option>cup</option>
+                                                    <option>oz</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                    }
+                                    @for (int i = 0; i < Model.Sections.Count; i++)
+                                    {
+                                        <ul name="sections" class="form-group mt-3 mb-3">
+                                            <label asp-for="Sections[i].SectionName"><strong>Section Name</strong></label>
+                                            <input asp-for="Sections[i].SectionName" class="form-control" placeholder="Section Name">
+                                            @for (int j = 0; j < Model.Sections[i].Components.Count; j++)
+                                            {
+                                                <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Name</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" placeholder="25g">
+                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Quantity</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].Quantity" class="form-control" placeholder="Carbs">
+                                                        <span asp-validation-for="Sections[i].Components[j].Quantity" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Units</strong></label>
+                                                        <select asp-for="Sections[i].Components[j].Unit" class="form-control">
+                                                            <option>---</option>
+                                                            <option>gr</option>
+                                                            <option>kg</option>
+                                                            <option>ml</option>
+                                                            <option>l</option>
+                                                            <option>tbsp</option>
+                                                            <option>tsp</option>
+                                                            <option>cup</option>
+                                                            <option>oz</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                   
+                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add more</button>
                                     <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
                                 </ul>
+
                                 <div class="form-group mt-3 mb-3">
-                                    <button class="btn btn-md btn-primary" id="add-section">Add Section</button>
+                                    <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
                                     <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
                                 </div>
                             </fieldset>

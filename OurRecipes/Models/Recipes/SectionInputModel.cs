@@ -2,8 +2,8 @@
 {
     public SectionInputModel()
     {
-        this.Components = new HashSet<ComponentInputModel>();
+        this.Components = new List<ComponentInputModel>();
     }
     public string SectionName { get; set; }
-    public ICollection<ComponentInputModel> Components { get; set; }
+    public List<ComponentInputModel> Components { get; set; }
 }

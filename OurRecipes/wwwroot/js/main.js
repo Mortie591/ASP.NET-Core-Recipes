@@ -5,9 +5,8 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
-//Test
+
 function AddNutrient() {
-    let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
     let parent = event.target.parentNode;
     let liElements = parent.querySelectorAll('li');
     let nutrientsIndex = liElements.length;
@@ -26,21 +25,138 @@ function AddNutrient() {
                                   <input name="Nutrients[${nutrientsIndex}].Name" class="form-control" placeholder="Carbs">
                                   <span asp-validation-for="Nutrients[${nutrientsIndex}].Name" class="text-danger"></span>
                                   </div>`;
-    //var validationMessage = document.createElement('span');
-    //validationMessage.classList.add('text-danger');
-    //validationMessage.setAttribute('data-valmsg-for', `Nutrients[${nutrientsIndex}].Name`);
-    //var form = document.querySelector('form');
-    //if (form) {
-    //    form.dispatchEvent(new Event('reset'));
-    //    form.dispatchEvent(new Event('validationadded'));
-    //}
+    
     const AddNutrientRow = function (parentNode) {
-        //let childNode = nutrientRow.cloneNode(true);
         parentNode.insertBefore(nutrientRow, event.target);
         console.log("Added new nutrient row");
     };
     AddNutrientRow(parent);
 }
+
+
+//Add ingredients
+function AddIngredient() {
+    let parent = event.target.parentNode;
+    let liElements = parent.querySelectorAll('li');
+    let ingredientsIndex = liElements.length;
+
+    let ingreedientRow = document.createElement('li');
+    ingreedientRow.setAttribute('name', 'ingredients-row');
+    ingreedientRow.setAttribute('class', 'row mt-3 mb-3');
+    ingreedientRow.setAttribute('id', 'ingredients-row');
+    ingreedientRow.innerHTML = `<div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Name</strong></label>
+                                        <input name="Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="25g">
+                                        <span asp-validation-for="Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Quantity</strong></label>
+                                        <input name="Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="Carbs">
+                                        <span asp-validation-for="Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Units</strong></label>
+                                        <select name="Components[${ingredientsIndex}].Unit" class="form-control">
+                                            <option>---</option>
+                                            <option>gr</option>
+                                            <option>kg</option>
+                                            <option>ml</option>
+                                            <option>l</option>
+                                            <option>tbsp</option>
+                                            <option>tsp</option>
+                                            <option>cup</option>
+                                            <option>oz</option>
+                                        </select>
+                                    </div>`;
+
+    const AddIngredientRow = function (parentNode) {
+        parentNode.insertBefore(ingreedientRow, event.target);
+        console.log("Added new ingredient row");
+    };
+    AddIngredientRow(parent);
+}
+
+function AddSection() {
+    let parent = event.target.parentNode.parentNode;
+    let ulElements = parent.querySelectorAll("ul[name='sections']");
+    
+    let sectionsIndex = ulElements.length;
+    let sectionElement = document.createElement('ul');
+    sectionElement.setAttribute('class', 'form-group mt-3 mb-3');
+    sectionElement.setAttribute('name', `sections`);
+    sectionElement.innerHTML = `<label name="Sections[${sectionsIndex}].SectionName"><strong>Section Name</strong></label>
+                                    <input name="Sections[${sectionsIndex}].SectionName" class="form-control" placeholder="Section Name">`;
+
+    var addButtonElementSection = document.querySelector('#add-ingredient').cloneNode(true);
+    addButtonElementSection.removeAttribute('onclick');
+    var removeButtonElementSection = document.querySelector('#remove-ingredient').cloneNode(true);
+
+    const AddIngredientRow = function (parentNode, ingredientsIndex) {
+
+        let ingredientRow = document.createElement('li');
+        ingredientRow.setAttribute('name', 'ingredients-row');
+        ingredientRow.setAttribute('class', 'row mt-3 mb-3');
+        ingredientRow.setAttribute('id', 'ingredients-row');
+        ingredientRow.innerHTML = `<div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Name</strong></label>
+                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="25g">
+                                        <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Quantity</strong></label>
+                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="Carbs">
+                                        <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Units</strong></label>
+                                        <select name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Unit" class="form-control">
+                                            <option>---</option>
+                                            <option>gr</option>
+                                            <option>kg</option>
+                                            <option>ml</option>
+                                            <option>l</option>
+                                            <option>tbsp</option>
+                                            <option>tsp</option>
+                                            <option>cup</option>
+                                            <option>oz</option>
+                                        </select>
+                                    </div>`;
+        parentNode.insertBefore(ingredientRow, event.target);
+        console.log("Added new ingredient line")
+    };
+
+    addButtonElementSection.addEventListener('click', (event) => {
+
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        let liElements = parent.querySelectorAll('li');
+        let ingredientsIndex = liElements.length;
+        AddIngredientRow(parent, ingredientsIndex);
+    });
+
+    sectionElement.appendChild(addButtonElementSection);
+    sectionElement.appendChild(removeButtonElementSection);
+
+    const RemoveIngredientRow = function (parentNode) {
+        let liElements = parentNode.querySelectorAll('li');
+        if (liElements.length > 0) {
+            let lastListElement = liElements[liElements.length - 1];
+            parentNode.removeChild(lastListElement);
+            console.log('Removed last ingredient row');
+        } else {
+            console.log('No elements to remove')
+        }
+
+    };
+    removeButtonElementSection.addEventListener('click', (event) => {
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        RemoveIngredientRow(parent);
+    });
+
+    parent.appendChild(sectionElement);
+    console.log("Added new section")
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
@@ -67,37 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
    * Custom
    */
-  //Add Ingredients row
-    let ingredientsParentElement = document.querySelector("ul[name='ingredients']");
-    let sectionParentElement = document.querySelector("ul[name='section-ul']");
-
-    let ingredientsFieldset = document.querySelector('#ingredients-fieldset');
-    let ingredientRow = document.querySelector('#ingredients-row');
-    let addIngredientButtonElement = document.querySelector('#add-ingredient'); 
-    let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 
-    
-
-    const AddIngredientRow = function (parentNode) {
-        
-        let childNode = ingredientRow.cloneNode(true);
-        parentNode.insertBefore(childNode, event.target);
-        console.log("Added new ingredient line")
-    };
-
-    addIngredientButtonElement.addEventListener('click', (event) => {
-        event.preventDefault();
-        let parent = event.target.parentNode;
-        AddIngredientRow(parent);
-    });
-
 
     //Remove Ingredients row
+    let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 
     const RemoveIngredientRow = function (parentNode) {
         let liElements = parentNode.querySelectorAll('li');
         if (liElements.length > 0) {
             let lastListElement = liElements[liElements.length - 1];
             parentNode.removeChild(lastListElement);
-            console.log('Removed last ingredient row ${lastListElement}');
+            console.log('Removed last ingredient row');
         } else {
             console.log('No elements to remove')
         }
@@ -108,64 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let parent = event.target.parentNode;
         RemoveIngredientRow(parent);
     });
-
-
-    //Add section
-    /**
-         * <div class="col-lg-4 col-md-6">
-               <label for="section-name"><strong>Section Name</strong></label>
-               <input type="text" name="section-name" class="form-control" id="section-name" placeholder="Section Name">
-           </div>
-         */
-    document.querySelector('#add-section').addEventListener('click', function (event) {
-        event.preventDefault();
-
-        let sectionElement = document.createElement('ul');
-        sectionElement.setAttribute('class', 'form-group mt-3 mb-3');
-        sectionElement.setAttribute('id', 'section-ul');
-
-        let labelElement = document.createElement('label');
-        labelElement.setAttribute('for', 'section-name');
-
-        let strongElement = document.createElement('strong');
-        strongElement.innerText = 'Section Name';
-
-        labelElement.appendChild(strongElement);
-
-        let inputElement = document.createElement('input');
-        inputElement.setAttribute('type', 'text');
-        inputElement.setAttribute('name', 'section-name');
-        inputElement.setAttribute('class', 'form-control col-lg-4 col-md-6');
-        inputElement.setAttribute('id', 'section-name');
-        inputElement.setAttribute('placeholder', 'Section Name');
-
-        let ingredientRow = ingredientsParentElement.querySelector('#ingredients-row').cloneNode(true);
-
-        var addButtonElementSection = document.querySelector('#add-ingredient').cloneNode(true);
-        var removeButtonElementSection = document.querySelector('#remove-ingredient').cloneNode(true);
-
-        addButtonElementSection.addEventListener('click', (event) => {
-            event.preventDefault();
-            let parent = event.target.parentNode;
-            AddIngredientRow(parent);
-        });
-
-        removeButtonElementSection.addEventListener('click', (event) => {
-            event.preventDefault();
-            let parent = event.target.parentNode;
-            RemoveIngredientRow(parent);
-        });
-
-        sectionElement.appendChild(labelElement);
-        sectionElement.appendChild(inputElement);
-        sectionElement.appendChild(ingredientRow);
-        sectionElement.appendChild(addButtonElementSection);
-        sectionElement.appendChild(removeButtonElementSection);
-
-        ingredientsFieldset.appendChild(sectionElement);
-        console.log("Added new section")
-    });
-
+ 
     //Remove Section
     const RemoveSection = function (parentNode) {
         let sectionElements = parentNode.querySelectorAll("ul[id='section-ul']");
@@ -185,32 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
             RemoveSection(parent);
     });
 
-
-    //Add Nutrient row
-    
-    
-    
-    //let nutrientsParentElement = document.querySelector("ul[name='nutrients']");
-
-    //let nutrientRow = document.querySelector('#nutrients-row');
-    //let addNutrientButtonElement = document.querySelector('#add-nutrient');
-    //let removeNutrientButtonElement = document.querySelector('#remove-nutrient');
-
-
-    //const AddNutrientRow = function (parentNode) {
-    //    let childNode = nutrientRow.cloneNode(true);
-    //    parentNode.insertBefore(childNode, event.target);
-    //    console.log("Added new nutrient row")
-    //};
-
-    //addNutrientButtonElement.addEventListener('click', (event) => {
-    //    event.preventDefault();
-    //    let parent = event.target.parentNode;
-    //    AddNutrientRow(parent);
-    //});
-
-
     //Remove Nutrients row
+    let removeNutrientButtonElement = document.querySelector('#remove-nutrient');
     const RemoveNutrientRow = function (parentNode) {
         let liElements = parentNode.querySelectorAll('li');
         if (liElements.length > 0) {

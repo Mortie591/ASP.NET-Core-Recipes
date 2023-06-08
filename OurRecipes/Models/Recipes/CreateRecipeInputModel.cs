@@ -8,8 +8,8 @@ namespace OurRecipes.Models.Recipes
         public CreateRecipeInputModel()
         {
             Categories = new Dictionary<string, string>();
-            Sections = new HashSet<SectionInputModel>();
-            Components = new HashSet<ComponentInputModel>();
+            Sections = new List<SectionInputModel>();
+            Components = new List<ComponentInputModel>();
             Nutrients = new List<NutrientInputModel>();
         }
         [Required, MinLength(4),MaxLength(50)]
@@ -26,8 +26,8 @@ namespace OurRecipes.Models.Recipes
         [RegularExpression(@"/^(?:(?<scheme>[^:\\/?#]+):)?(?:\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*\\/)?(?<file>[^?#]*\\.(?<extension>[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]))(?:\\?(?<query>[^#]*))?(?:#(?<fragment>.*))?$/gm")]
         public string ImageUrl { get; set; }
         public IDictionary<string, string> Categories { get; set; } //Type <-> Name
-        public ICollection<SectionInputModel>? Sections { get; set; }
-        public ICollection<ComponentInputModel> Components { get; set; }
+        public List<SectionInputModel>? Sections { get; set; }
+        public List<ComponentInputModel> Components { get; set; }
 
         [Required,MinLength(10),MaxLength(1000)]
         public string Instructions { get; set; }
