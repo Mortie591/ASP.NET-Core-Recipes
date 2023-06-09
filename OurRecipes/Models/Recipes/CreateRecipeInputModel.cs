@@ -23,7 +23,7 @@ namespace OurRecipes.Models.Recipes
         [Range(0, 24 * 60)]
         public int? CookTime { get; set; }
         [Required]
-        [RegularExpression(@"/^(?:(?<scheme>[^:\\/?#]+):)?(?:\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*\\/)?(?<file>[^?#]*\\.(?<extension>[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]))(?:\\?(?<query>[^#]*))?(?:#(?<fragment>.*))?$/gm")]
+        //[RegularExpression(@"/^(?:(?<scheme>[^:\\/?#]+):)?(?:\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*\\/)?(?<file>[^?#]*\\.(?<extension>[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]))(?:\\?(?<query>[^#]*))?(?:#(?<fragment>.*))?$/gm")]
         public string ImageUrl { get; set; }
         public List<string> Categories { get; set; } //Type <-> Name
         public string Cuisine { get; set; } 

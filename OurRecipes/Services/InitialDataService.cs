@@ -20,6 +20,7 @@ namespace OurRecipes.Services
             this.context = db; 
         }
 
+        //Check for existing records before adding them to DB
         protected virtual ICollection<Component> GetOrCreateComponents(ICollection<Section> sections)
         {
             var recipeComponents = new HashSet<Component>();
@@ -52,7 +53,6 @@ namespace OurRecipes.Services
             }
             return recipeComponents;
         }
-        //Check for existing records before adding them to DB
         protected virtual Unit GetOrCreateUnit(string unitName)
         {
             Unit unit = this.context.Units.FirstOrDefault(x => string.Equals(x.Name, unitName));
@@ -190,6 +190,7 @@ namespace OurRecipes.Services
             }
             return category;
         }
+
     }
 }
  

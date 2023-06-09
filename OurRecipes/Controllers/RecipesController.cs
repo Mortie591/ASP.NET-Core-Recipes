@@ -26,8 +26,8 @@ namespace OurRecipes.Controllers
             {
                 return this.View(input);
             }
+            this.recipeService.Add(input);
             //TODO: Redirect to Recipe info page
-            //this.recipeService.Add(input);
             return this.Redirect("/");
         }
     }

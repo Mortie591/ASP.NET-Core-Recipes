@@ -43,6 +43,7 @@
                             <!--TODO: Get Categories-->
                             <label asp-for="Categories"><strong>Category</strong></label>
                             <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
+                                <option>---</option>
                                 <optgroup label="Meal Course">
                                     <option value="Meal Course-Breakfast">Breakfast</option>
                                     <option value="Meal Course-Brunch">Brunch</option>
@@ -85,61 +86,63 @@
                                     <option value="Holiday-Valentine's Day">Valentine's Day</option>
                                 </optgroup>
                             </select>
-                            <div class="validate"></div>
+                            <span asp-validation-for="Categories" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <!--TODO: add remaining countries-->
                             <label asp-for="Cuisine"><strong>Cuisine</strong></label>
                             <select asp-for="Cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
                                 <option>---</option>
-                                <option>American</option>
-                                <option>British</option>
-                                <option>Bulgarian</option>
-                                <option>Chinese</option>
-                                <option>Greek</option>
-                                <option>Italian</option>
-                                <option>French</option>
-                                <option>Mexican</option>
+                                <option value="Cuisine-American">American</option>
+                                <option value="Cuisine-British">British</option>
+                                <option value="Cuisine-Bulgarian">Bulgarian</option>
+                                <option value="Cuisine-Chinese">Chinese</option>
+                                <option value="Cuisine-French">French</option>
+                                <option value="Cuisine-Greek">Greek</option>
+                                <option value="Cuisine-Italian">Italian</option>
+                                <option value="Cuisine-Japanse">Japanese</option>
+                                <option value="Cuisine-Mexican">Mexican</option>
+                                <option value="Cuisine-Spanish">Spanish</option>
                             </select>
-                            <div class="validate"></div>
+                            <span asp-validation-for="Cuisine" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Season"><strong>Season</strong></label>
                             <select asp-for="Season" class="form-control" id="season" placeholder="Season">
                                 <option>---</option>
-                                <option>Winter</option>
-                                <option>Spring</option>
-                                <option>Summer</option>
-                                <option>Autumn</option>
+                                <option value="Season-Winter">Winter</option>
+                                <option value="Season-Spring">Spring</option>
+                                <option value="Season-Summer">Summer</option>
+                                <option value="Season-Autumn">Autumn</option>
                             </select>
-                            <div class="validate"></div>
+                            <span asp-validation-for="Season" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Difficulty"><strong>Difficulty</strong></label>
                             <select asp-for="Difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
                                 <option>---</option>
-                                <option>Easy</option>
-                                <option>Medium</option>
-                                <option>Hard</option>
-                                <option>Expert</option>
+                                <option value="Difficulty-Easy">Easy</option>
+                                <option value="Difficulty-Medium">Medium</option>
+                                <option value="Difficulty-Challenge">Challenge</option>
+                                <option value="Difficulty-Expert">Expert</option>
                             </select>
-                            <div class="validate"></div>
+                            <span asp-validation-for="Difficulty" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
                             <select asp-for="CookingTechnique" class="form-control" id="cooking-style" placeholder="Cooking Style">
                                 <option>---</option>
-                                <option>Roasing</option>
-                                <option>Stewing</option>
-                                <option>Grilling</option>
-                                <option>Baking</option>
-                                <option>Braising</option>
-                                <option>Steaming</option>
-                                <option>Frying</option>
-                                <option>Deep Frying</option>
-                                <option>Smoking</option>
+                                <option value="CookingTechnique-Roasing">Roasing</option>
+                                <option value="CookingTechnique-Stewing">Stewing</option>
+                                <option value="CookingTechnique-Grilling">Grilling</option>
+                                <option value="CookingTechnique-Baking">Baking</option>
+                                <option value="CookingTechnique-Braising">Braising</option>
+                                <option value="CookingTechnique-Steaming">Steaming</option>
+                                <option value="CookingTechnique-Frying">Frying</option>
+                                <option value="CookingTechnique-Deep Frying">Deep Frying</option>
+                                <option value="CookingTechnique-Smoking">Smoking</option>
                             </select>
-                            <div class="validate"></div>
+                            <span asp-validation-for="CookingTechnique" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="ImageUrl"><strong>Image Url</strong></label>
@@ -260,7 +263,7 @@
                         <span asp-validation-for="Instructions" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-3 mb-3">
-                        <label asp-for="Description"><strong>Descriptioon</strong></label>
+                        <label asp-for="Description"><strong>Description</strong></label>
                         <textarea asp-for="Description" class="form-control" id="description" rows="5" placeholder="Descriptioon"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>

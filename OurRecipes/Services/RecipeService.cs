@@ -1,7 +1,9 @@
-﻿using OurRecipes.Data;
+﻿using NuGet.Packaging;
+using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
 using System.Web;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OurRecipes.Services
 {
@@ -17,9 +19,8 @@ namespace OurRecipes.Services
 
         public void Add(CreateRecipeInputModel recipeDto)
         {
-            var sections = recipeDto.Sections;
-            var componens = recipeDto.Components;
-            var categories = recipeDto.Categories;
+            //var sections = recipeDto.Sections;
+            //var componens = recipeDto.Components;
 
             var Recipe = new Recipe()
             {
@@ -29,10 +30,45 @@ namespace OurRecipes.Services
                 CookTime = recipeDto.CookTime.ToString(),
                 Servings = recipeDto.CookTime.ToString(),
                 CreatedOnDate = DateTime.Now,
-                //Author
+                Categories = AddCategories(recipeDto),
+                Sections = recipeDto.Sections.Select(x=>new Section
+                {
+                    Name = x.SectionName,
+                    Components = x.Components.Select(c=>new Component
+                    {
+                        Ingredient = GetOrCreateIngredient(c.IngredientName),
+                        Quantity = c.Quantity,
+                        Unit = GetOrCreateUnit(c.Unit),
+                        Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
+                    }).ToList()
+                }).ToList(),
+                Instructions = recipeDto.Instructions,
+                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity)).ToList(),
+                //Author
             };
-            throw new NotImplementedException();
+            if(Recipe.Sections.Any())
+            {
+                Recipe.Components = GetOrCreateComponents(Recipe.Sections);
+            }
+            if(recipeDto.Components.Any())
+            {
+                foreach(var c in recipeDto.Components)
+                {
+                    Component recipeComponent = new Component
+                    {
+                        Ingredient = GetOrCreateIngredient(c.IngredientName),
+                        Quantity = c.Quantity,
+                        Unit = GetOrCreateUnit(c.Unit),
+                        Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+                    };
+                    Recipe.Components.Add(recipeComponent);
+                }
+                
+            }
+            
+            this.context.Recipes.Add(Recipe);
+            this.context.SaveChanges();
         }
 
         public void Add()
@@ -44,7 +80,7 @@ namespace OurRecipes.Services
         {
             throw new NotImplementedException();
         }
-
+        
         public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
             var recipes = this.context.Recipes.Select(x=>new
@@ -104,6 +140,43 @@ namespace OurRecipes.Services
         public void Remove()
         {
             throw new NotImplementedException();
+        }
+
+        private List<Category> AddCategories(CreateRecipeInputModel recipeDto)
+        {
+            var initalCategoryList = recipeDto.Categories;
+            initalCategoryList.Add(recipeDto.Cuisine);
+            initalCategoryList.Add(recipeDto.Difficulty);
+            initalCategoryList.Add(recipeDto.CookingTechnique);
+            initalCategoryList.Add(recipeDto.Season);
+           
+            var categories = new List<Category>();
+            
+            foreach(var category in initalCategoryList)
+            {
+                if (category == "---") continue;
+                string[] categoryLine = category.Split('-',2,StringSplitOptions.RemoveEmptyEntries);
+                var key = categoryLine[0];
+                var value = categoryLine[1];
+                
+                var dbCategory=this.context.Categories.FirstOrDefault(x => x.Type == key && x.Name == value);
+
+                if (dbCategory==null)
+                {
+                    categories.Add(new Category
+                    {
+                        Type = key,
+                        Name = value,
+                    });
+                }
+                else
+                {
+                    categories.Add(dbCategory);
+                }
+                
+            }
+
+            return categories;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace OurRecipes.Services
         public ICollection<Recipe> GetRecipesByCategory(string categoryName);
         public ICollection<Recipe> GetLatest();
         public ICollection<Recipe> GetTrending(string categoryName);
-        public void Add();
+        public void Add(CreateRecipeInputModel recipeDto);
         public void Remove();
        
     }
