@@ -7,7 +7,7 @@ namespace OurRecipes.Models.Recipes
     {
         public CreateRecipeInputModel()
         {
-            Categories = new Dictionary<string, string>();
+            Categories = new List<string>();
             Sections = new List<SectionInputModel>();
             Components = new List<ComponentInputModel>();
             Nutrients = new List<NutrientInputModel>();
@@ -25,7 +25,11 @@ namespace OurRecipes.Models.Recipes
         [Required]
         [RegularExpression(@"/^(?:(?<scheme>[^:\\/?#]+):)?(?:\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*\\/)?(?<file>[^?#]*\\.(?<extension>[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]))(?:\\?(?<query>[^#]*))?(?:#(?<fragment>.*))?$/gm")]
         public string ImageUrl { get; set; }
-        public IDictionary<string, string> Categories { get; set; } //Type <-> Name
+        public List<string> Categories { get; set; } //Type <-> Name
+        public string Cuisine { get; set; } 
+        public string Season { get; set; }
+        public string Difficulty { get; set; }
+        public string CookingTechnique { get; set; }
         public List<SectionInputModel>? Sections { get; set; }
         public List<ComponentInputModel> Components { get; set; }
 

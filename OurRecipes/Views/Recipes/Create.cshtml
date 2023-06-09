@@ -41,8 +41,8 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <!--TODO: Get Categories-->
-                            <label for="category"><strong>Category</strong></label>
-                            <select type="text" name="category" class="form-control" id="categories" placeholder="Category" multiple>
+                            <label asp-for="Categories"><strong>Category</strong></label>
+                            <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
                                 <optgroup label="Meal Course">
                                     <option value="Meal Course-Breakfast">Breakfast</option>
                                     <option value="Meal Course-Brunch">Brunch</option>
@@ -89,8 +89,8 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <!--TODO: add remaining countries-->
-                            <label for="cuisine"><strong>Cuisine</strong></label>
-                            <select type="text" name="cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
+                            <label asp-for="Cuisine"><strong>Cuisine</strong></label>
+                            <select asp-for="Cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
                                 <option>---</option>
                                 <option>American</option>
                                 <option>British</option>
@@ -104,8 +104,8 @@
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="season"><strong>Season</strong></label>
-                            <select type="text" name="season" class="form-control" id="season" placeholder="Season">
+                            <label asp-for="Season"><strong>Season</strong></label>
+                            <select asp-for="Season" class="form-control" id="season" placeholder="Season">
                                 <option>---</option>
                                 <option>Winter</option>
                                 <option>Spring</option>
@@ -115,8 +115,8 @@
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="difficulty"><strong>Difficulty</strong></label>
-                            <select type="text" name="difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
+                            <label asp-for="Difficulty"><strong>Difficulty</strong></label>
+                            <select asp-for="Difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
                                 <option>---</option>
                                 <option>Easy</option>
                                 <option>Medium</option>
@@ -126,8 +126,8 @@
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label for="cooking-style"><strong>Cooking Technique</strong></label>
-                            <select type="text" name="cooking-style" class="form-control" id="cooking-style" placeholder="Cooking Style">
+                            <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
+                            <select asp-for="CookingTechnique" class="form-control" id="cooking-style" placeholder="Cooking Style">
                                 <option>---</option>
                                 <option>Roasing</option>
                                 <option>Stewing</option>

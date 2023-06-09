@@ -2,7 +2,6 @@
 style.setAttribute("id", "multiselect_dropdown_styles");
 style.innerHTML = `
 .multiselect-dropdown{
-  display: inline-block;
   padding: 2px 5px 0px 5px;
   border-radius: 4px;
   border: solid 1px #ced4da;
@@ -114,7 +113,7 @@ function MultiselectDropdown(options) {
 
     document.querySelectorAll("select[multiple]").forEach((el, k) => {
 
-        var div = newEl('div', { class: 'form-control'});
+        var div = newEl('div', { class: 'multiselect-dropdown'});
         el.style.display = 'none';
         el.parentNode.insertBefore(div, el.nextSibling);
         var listWrap = newEl('div', { class: 'multiselect-dropdown-list-wrapper' });

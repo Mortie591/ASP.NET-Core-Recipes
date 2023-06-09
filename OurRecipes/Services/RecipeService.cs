@@ -5,13 +5,36 @@ using System.Web;
 
 namespace OurRecipes.Services
 {
-    public class RecipeService : IRecipeService
+    public class RecipeService : InitialDataService,IRecipeService
     {
         private readonly ApplicationDbContext context;
-        public RecipeService(ApplicationDbContext db)
+
+        public RecipeService(ApplicationDbContext db) 
+            : base(db)
         {
             this.context = db;
         }
+
+        public void Add(CreateRecipeInputModel recipeDto)
+        {
+            var sections = recipeDto.Sections;
+            var componens = recipeDto.Components;
+            var categories = recipeDto.Categories;
+
+            var Recipe = new Recipe()
+            {
+                Title = recipeDto.Title,
+                Description = recipeDto.Description,
+                PrepTime = recipeDto.PrepTime.ToString(),
+                CookTime = recipeDto.CookTime.ToString(),
+                Servings = recipeDto.CookTime.ToString(),
+                CreatedOnDate = DateTime.Now,
+                //Author
+
+            };
+            throw new NotImplementedException();
+        }
+
         public void Add()
         {
             throw new NotImplementedException();
