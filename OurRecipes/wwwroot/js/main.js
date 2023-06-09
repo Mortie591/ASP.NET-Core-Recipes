@@ -29,6 +29,7 @@ function AddNutrient() {
     const AddNutrientRow = function (parentNode) {
         parentNode.insertBefore(nutrientRow, event.target);
         console.log("Added new nutrient row");
+        document.querySelector('#remove-nutrient').classList.remove('disabled');
     };
     AddNutrientRow(parent);
 }
@@ -72,6 +73,7 @@ function AddIngredient() {
     const AddIngredientRow = function (parentNode) {
         parentNode.insertBefore(ingreedientRow, event.target);
         console.log("Added new ingredient row");
+        document.querySelector('#remove-ingredient').classList.remove('disabled');
     };
     AddIngredientRow(parent);
 }
@@ -87,9 +89,10 @@ function AddSection() {
     sectionElement.innerHTML = `<label name="Sections[${sectionsIndex}].SectionName"><strong>Section Name</strong></label>
                                     <input name="Sections[${sectionsIndex}].SectionName" class="form-control" placeholder="Section Name">`;
 
-    var addButtonElementSection = document.querySelector('#add-ingredient').cloneNode(true);
-    addButtonElementSection.removeAttribute('onclick');
-    var removeButtonElementSection = document.querySelector('#remove-ingredient').cloneNode(true);
+    var addIngredientToSection = document.querySelector('#add-ingredient').cloneNode(true);
+    addIngredientToSection.removeAttribute('onclick');
+    addIngredientToSection.innerText = 'Add Ingredient'
+    var removeIngredientFromSection = document.querySelector('#remove-ingredient').cloneNode(true);
 
     const AddIngredientRow = function (parentNode, ingredientsIndex) {
 
@@ -123,9 +126,10 @@ function AddSection() {
                                     </div>`;
         parentNode.insertBefore(ingredientRow, event.target);
         console.log("Added new ingredient line")
+        removeIngredientFromSection.classList.remove('disabled');
     };
 
-    addButtonElementSection.addEventListener('click', (event) => {
+    addIngredientToSection.addEventListener('click', (event) => {
 
         event.preventDefault();
         let parent = event.target.parentNode;
@@ -134,8 +138,8 @@ function AddSection() {
         AddIngredientRow(parent, ingredientsIndex);
     });
 
-    sectionElement.appendChild(addButtonElementSection);
-    sectionElement.appendChild(removeButtonElementSection);
+    sectionElement.appendChild(addIngredientToSection);
+    sectionElement.appendChild(removeIngredientFromSection);
 
     const RemoveIngredientRow = function (parentNode) {
         let liElements = parentNode.querySelectorAll('li');
@@ -143,12 +147,16 @@ function AddSection() {
             let lastListElement = liElements[liElements.length - 1];
             parentNode.removeChild(lastListElement);
             console.log('Removed last ingredient row');
+
+            if (parentNode.querySelectorAll('li').length == 0) {
+                removeIngredientFromSection.classList.add('disabled');
+            }
         } else {
             console.log('No elements to remove')
         }
 
     };
-    removeButtonElementSection.addEventListener('click', (event) => {
+    removeIngredientFromSection.addEventListener('click', (event) => {
         event.preventDefault();
         let parent = event.target.parentNode;
         RemoveIngredientRow(parent);
@@ -156,6 +164,7 @@ function AddSection() {
 
     parent.appendChild(sectionElement);
     console.log("Added new section")
+    document.querySelector('#remove-section').classList.remove('disabled');
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -192,6 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let lastListElement = liElements[liElements.length - 1];
             parentNode.removeChild(lastListElement);
             console.log('Removed last ingredient row');
+            if (parentNode.querySelectorAll('li').length == 0) {
+                removeIngredientButtonElement.classList.add('disabled');
+            }
         } else {
             console.log('No elements to remove')
         }
@@ -205,11 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
  
     //Remove Section
     const RemoveSection = function (parentNode) {
-        let sectionElements = parentNode.querySelectorAll("ul[id='section-ul']");
+        let sectionElements = parentNode.querySelectorAll("ul[name='sections']");
         if (sectionElements.length > 0) {
             let lastSectionElement = sectionElements[sectionElements.length - 1];
             parentNode.removeChild(lastSectionElement);
-            console.log('Removed last ingredient row ${lastSectionElement}');
+            console.log('Removed last section');
+            if (parentNode.querySelectorAll("ul[name='sections']").length == 0) {
+                document.querySelector('#remove-section').classList.add('disabled');
+            }
         } else {
             console.log('No elements to remove')
         }
@@ -230,6 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let lastListElement = liElements[liElements.length - 1];
             parentNode.removeChild(lastListElement);
             console.log('Removed last nutrient row');
+            if (parentNode.querySelectorAll('li').length == 0) {
+                removeNutrientButtonElement.classList.add('disabled');
+            }
         } else {
             console.log('No elements to remove')
         }

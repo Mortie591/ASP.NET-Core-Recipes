@@ -43,47 +43,47 @@
                             <!--TODO: Get Categories-->
                             <label for="category"><strong>Category</strong></label>
                             <select type="text" name="category" class="form-control" id="categories" placeholder="Category" multiple>
-                                <optgroup for="category-type" class="form-control" name="category-type" label="Meal Course">
-                                    <option>Breakfast</option>
-                                    <option>Brunch</option>
-                                    <option>Lunch</option>
-                                    <option>Snacks</option>
-                                    <option>Dinner</option>
+                                <optgroup label="Meal Course">
+                                    <option value="Meal Course-Breakfast">Breakfast</option>
+                                    <option value="Meal Course-Brunch">Brunch</option>
+                                    <option value="Meal Course-Lunch">Lunch</option>
+                                    <option value="Meal Course-Snacks">Snacks</option>
+                                    <option value="Meal Course-Dinner">Dinner</option>
                                 </optgroup>
                                 <optgroup label="Dish Type">
-                                    <option>Baked Goods</option>
-                                    <option>Beverages</option>
-                                    <option>Burgers</option>
-                                    <option>Desserts</option>
-                                    <option>Casserole</option>
-                                    <option>Fish</option>
-                                    <option>Meat: Beef</option>
-                                    <option>Meat: Duck</option>
-                                    <option>Meat: Lamb</option>
-                                    <option>Meat: Pork</option>
-                                    <option>Meat: Poultry</option>
-                                    <option>Meat: Turkey</option>
-                                    <option>Pasta</option>
-                                    <option>Pizza</option>
-                                    <option>Salad</option>
-                                    <option>Sandwitches&Wraps</option>
-                                    <option>Sea Food</option>
-                                    <option>Sides</option>
-                                    <option>Soup</option>
+                                    <option value="Dish Type-Baked Goods">Baked Goods</option>
+                                    <option value="Dish Type-Beverages">Beverages</option>
+                                    <option value="Dish Type-Burgers">Burgers</option>
+                                    <option value="Dish Type-Desserts">Desserts</option>
+                                    <option value="Dish Type-Casserole">Casserole</option>
+                                    <option value="Dish Type-Fish">Fish</option>
+                                    <option value="Dish Type-Meat: Beef">Meat: Beef</option>
+                                    <option value="Dish Type-Meat: Duck">Meat: Duck</option>
+                                    <option value="Dish Type-Meat: Lamb">Meat: Lamb</option>
+                                    <option value="Dish Type-Meat: Pork">Meat: Pork</option>
+                                    <option value="Dish Type-Meat: Poultry">Meat: Poultry</option>
+                                    <option value="Dish Type-Meat: Turkey">Meat: Turkey</option>
+                                    <option value="Dish Type-Pasta">Pasta</option>
+                                    <option value="Dish Type-Pizza">Pizza</option>
+                                    <option value="Dish Type-Salad">Salad</option>
+                                    <option value="Dish Type-Sandwitches&Wraps">Sandwitches&Wraps</option>
+                                    <option value="Dish Type-Sea Food">Sea Food</option>
+                                    <option value="Dish Type-Sides">Sides</option>
+                                    <option value="Dish Type-Soup">Soup</option>
                                 </optgroup>
                                 <optgroup label="Dietary">
-                                    <option>Keto</option>
-                                    <option>Low Carb</option>
-                                    <option>Vegan</option>
-                                    <option>Vegetarian</option>
+                                    <option value="Dietary-Healthy">Healthy</option>
+                                    <option value="Dietary-Keto">Keto</option>
+                                    <option value="Dietary-Low Carb">Low Carb</option>
+                                    <option value="Dietary-Vegan">Vegan</option>
+                                    <option value="Dietary-Vegetarian">Vegetarian</option>
                                 </optgroup>
                                 <optgroup label="Holiday">
-                                    <option>Christmas</option>
-                                    <option>Halloween</option>
-                                    <option>Thanksgiving</option>
-                                    <option>Valentine's Day</option>
+                                    <option value="Holiday-Christmas">Christmas</option>
+                                    <option value="Holiday-Halloween">Halloween</option>
+                                    <option value="Holiday-Thanksgiving">Thanksgiving</option>
+                                    <option value="Holiday-Valentine's Day">Valentine's Day</option>
                                 </optgroup>
-                                <option>Healthy</option>
                             </select>
                             <div class="validate"></div>
                         </div>
@@ -91,9 +91,12 @@
                             <!--TODO: add remaining countries-->
                             <label for="cuisine"><strong>Cuisine</strong></label>
                             <select type="text" name="cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
+                                <option>---</option>
                                 <option>American</option>
                                 <option>British</option>
                                 <option>Bulgarian</option>
+                                <option>Chinese</option>
+                                <option>Greek</option>
                                 <option>Italian</option>
                                 <option>French</option>
                                 <option>Mexican</option>
@@ -103,18 +106,18 @@
                         <div class="col-lg-4 col-md-6">
                             <label for="season"><strong>Season</strong></label>
                             <select type="text" name="season" class="form-control" id="season" placeholder="Season">
+                                <option>---</option>
                                 <option>Winter</option>
                                 <option>Spring</option>
                                 <option>Summer</option>
                                 <option>Autumn</option>
-                                <option>Christmas</option>
-                                <option>Halloween</option>
                             </select>
                             <div class="validate"></div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label for="difficulty"><strong>Difficulty</strong></label>
                             <select type="text" name="difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
+                                <option>---</option>
                                 <option>Easy</option>
                                 <option>Medium</option>
                                 <option>Hard</option>
@@ -125,6 +128,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label for="cooking-style"><strong>Cooking Technique</strong></label>
                             <select type="text" name="cooking-style" class="form-control" id="cooking-style" placeholder="Cooking Style">
+                                <option>---</option>
                                 <option>Roasing</option>
                                 <option>Stewing</option>
                                 <option>Grilling</option>
@@ -213,13 +217,13 @@
                                         </ul>
                                     }
                                    
-                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add more</button>
-                                    <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
+                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
+                                    <button class="btn btn-md btn-secondary disabled" id="remove-ingredient">Remove</button>
                                 </ul>
 
                                 <div class="form-group mt-3 mb-3">
                                     <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
-                                    <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
+                                    <button class="btn btn-md btn-secondary disabled" id="remove-section">Remove Section</button>
                                 </div>
                             </fieldset>
                             <div class="validate"></div>
@@ -245,7 +249,7 @@
                                 }
                                
                                 <button class="btn btn-md btn-primary" type="button" id="add-nutrient" onclick="AddNutrient()">Add more</button>
-                                <button class="btn btn-md btn-secondary" id="remove-nutrient">Remove</button>
+                                <button class="btn btn-md btn-secondary disabled" id="remove-nutrient">Remove</button>
                                 </ul>
                             </fieldset>
                     </div>
