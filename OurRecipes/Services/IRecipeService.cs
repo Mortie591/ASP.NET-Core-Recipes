@@ -5,16 +5,15 @@ namespace OurRecipes.Services
 {
     public interface IRecipeService
     {
-        public Recipe GetRecipeById(string id);
-        public Recipe GetRecipeByName(string name);
+        public RecipeViewModel GetRecipeById(string id);
+        public RecipeViewModel GetRecipeByName(string name);
         public ICollection<RecipeCardViewModel> GetRandomRecipes();
-        public ICollection<Recipe> GetRecipesByIngredient(string ingredientName);
-        public ICollection<Recipe> GetRecipesByTag(string tagType);
-        public ICollection<Recipe> GetRecipesByCategory(string categoryName);
-        public ICollection<Recipe> GetLatest();
-        public ICollection<Recipe> GetTrending(string categoryName);
+        public ICollection<RecipeCardViewModel> GetRecipesByIngredient(string ingredientName);
+        public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName);
+        public ICollection<RecipeCardViewModel> GetLatest();
+        public ICollection<RecipeCardViewModel> GetTrending();
         public void Add(CreateRecipeInputModel recipeDto);
-        public void Remove();
+        public void Remove(string id);
        
     }
 }

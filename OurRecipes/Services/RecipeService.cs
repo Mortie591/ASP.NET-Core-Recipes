@@ -1,4 +1,5 @@
-﻿using NuGet.Packaging;
+﻿using AutoMapper;
+using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
@@ -10,11 +11,13 @@ namespace OurRecipes.Services
     public class RecipeService : InitialDataService,IRecipeService
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public RecipeService(ApplicationDbContext db) 
+        public RecipeService(ApplicationDbContext db, IMapper mapper) 
             : base(db)
         {
             this.context = db;
+            this.mapper = mapper;
         }
 
         public void Add(CreateRecipeInputModel recipeDto)
@@ -71,22 +74,13 @@ namespace OurRecipes.Services
             this.context.SaveChanges();
         }
 
-        public void Add()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Recipe> GetLatest()
-        {
-            throw new NotImplementedException();
-        }
-        
         public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
             var recipes = this.context.Recipes.Select(x=>new
             {
                 x.Id,
                 x.Title,
+                x.Categories,
                 x.Likes,
                 x.ImageUrl
             }).OrderBy(x => Guid.NewGuid()).Take(6).ToList();
@@ -106,40 +100,146 @@ namespace OurRecipes.Services
             }
             return recipeCards;
         }
-
-        public Recipe GetRecipeById(string id)
+        public ICollection<RecipeCardViewModel> GetLatest()
         {
-            throw new NotImplementedException();
+            var recipes = this.context.Recipes.Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Categories,
+                x.Likes,
+                x.ImageUrl,
+                x.CreatedOnDate
+            }).OrderByDescending(x => x.CreatedOnDate).Take(10).ToList();
+
+            var recipeCards = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl,
+                    dateCreated = recipe.CreatedOnDate
+                };
+                recipeCards.Add(viewModel);
+            }
+            return recipeCards;
+        }
+        
+
+        public RecipeViewModel GetRecipeById(string id)
+        {
+            Recipe recipe = context.Recipes.FirstOrDefault(x=>x.Id.Equals(id));
+            if (recipe != null)
+            {
+                RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
+                return recipeViewModel;
+            }
+            return null;
         }
 
-        public Recipe GetRecipeByName(string name)
+        public RecipeViewModel GetRecipeByName(string name)
         {
-            throw new NotImplementedException();
+            Recipe recipe = context.Recipes.FirstOrDefault(x => x.Title.Equals(name));
+            if (recipe != null)
+            {
+                RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
+                return recipeViewModel;
+            }
+            return null;
         }
 
-        public ICollection<Recipe> GetRecipesByCategory(string categoryName)
+        public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName)
         {
-            throw new NotImplementedException();
+            var recipes = this.context.Recipes.Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Categories,
+                x.Likes,
+                x.ImageUrl
+            }).Where(x => x.Categories.Any(c => c.Name.ToLower().Equals(categoryName.ToLower())));
+
+            var recipeCards = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl,
+                };
+                recipeCards.Add(viewModel);
+            }
+            return recipeCards;
         }
 
-        public ICollection<Recipe> GetRecipesByIngredient(string ingredientName)
+        public ICollection<RecipeCardViewModel> GetRecipesByIngredient(string ingredientName)
         {
-            throw new NotImplementedException();
+            var recipes = this.context.Recipes.Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Components,
+                x.Likes,
+                x.ImageUrl
+            }).Where(x => x.Components.Any(c => c.Ingredient.Name.ToLower().Equals(ingredientName.ToLower())));
+
+            var recipeCards = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl,
+                };
+                recipeCards.Add(viewModel);
+            }
+            return recipeCards;
         }
 
-        public ICollection<Recipe> GetRecipesByTag(string tagType)
+        public ICollection<RecipeCardViewModel> GetTrending()
         {
-            throw new NotImplementedException();
+            var recipes = this.context.Recipes.Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Likes,
+                x.ImageUrl,
+                x.CreatedOnDate
+            }).OrderByDescending(x=>x.Likes).ThenByDescending(x=>x.CreatedOnDate).ToList();
+
+            var recipeCards = new List<RecipeCardViewModel>();
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl,
+                    dateCreated = recipe.CreatedOnDate
+                };
+                recipeCards.Add(viewModel);
+            }
+            return recipeCards;
         }
 
-        public ICollection<Recipe> GetTrending(string categoryName)
+        public void Remove(string id)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Remove()
-        {
-            throw new NotImplementedException();
+            Recipe recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
+            if (recipe != null)
+            {
+                this.context.Recipes.Remove(recipe);
+                this.context.SaveChanges();
+                Console.WriteLine($"Successfully deleted recipe with id: {id}");
+            }
+            else
+            {
+                Console.WriteLine($"No recipe with id: {id} found");
+            }
         }
 
         private List<Category> AddCategories(CreateRecipeInputModel recipeDto)
