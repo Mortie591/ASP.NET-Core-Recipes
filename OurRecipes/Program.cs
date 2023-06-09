@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Services;
+using AutoMapper;
 
 namespace OurRecipes
 {
@@ -27,6 +28,7 @@ namespace OurRecipes
             builder.Services.AddTransient<IDataImportService, DataImportService>();
             builder.Services.AddTransient<IScraperService, ScraperService>();
             builder.Services.AddTransient<IRecipeService, RecipeService>();
+            builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
 

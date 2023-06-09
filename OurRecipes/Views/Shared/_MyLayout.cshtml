@@ -50,47 +50,49 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-                    
+
                     <!-- TODO: Update dropdown menu
                     To be added under discover and recipes
                     -->
                     <li class="dropdown">
-                        <a asp-area="" asp-controller="Recipes" asp-action="Discover"><span>Discover</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                        <a asp-area="" asp-controller="Collections" asp-action="Discover"><span>Discover</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
-                            <li><a href="#">Healthy</a></li>
+                            <li><a asp-controller="Collections" asp-action="Healthy">Healthy</a></li>
                             <li class="dropdown">
                                 <a href="#"><span>Meal Course</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                                 <ul>
-                                    <li><a href="#">Breakfast</a></li>
-                                    <li><a href="#">Lunch</a></li>
-                                    <li><a href="#">Dinner</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Breakfast">Breakfast</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Lunch">Lunch</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Dinner">Dinner</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a asp-area="" asp-controller="Recipes" asp-action="Cuisine"><span>Cuisine</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                <a asp-area="" asp-controller="Collections" asp-action="Cuisine"><span>Cuisine</span> 
+                                    <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                                 <ul>
-                                    <li><a href="#">American</a></li>
-                                    <li><a href="#">Italian</a></li>
-                                    <li><a href="#">Mexican</a></li>
-                                    <li><a href="#">Chinese</a></li>
+                                    <li><a asp-controller="Collections" asp-action="American">American</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Bulgarian">Bulgarian</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Chinese">Chinese</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Italian">Italian</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Mexican">Mexican</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">Desserts</a></li>
-                            <li><a href="#">Chicken Recipes</a></li>
-                            <li><a href="#">Drinks</a></li>
+                            <li><a asp-controller="Collections" asp-action="Desserts">Desserts</a></li>
+                            <li><a asp-controller="Collections" asp-action="Chicken">Chicken Recipes</a></li>
+                            <li><a asp-controller="Collections" asp-action="Drinks">Drinks</a></li>
                         </ul>
                     </li>
-                    <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <li><a asp-area="" asp-controller="Recipes" asp-action="MyRecipes">My Recipes</a></li>
-                        <li><a asp-area="" asp-controller="Recipes" asp-action="Favourites">My Favourites</a></li>
-                        
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
+                        <li><a asp-area="" asp-controller="Collections" asp-action="MyRecipes">My Recipes</a></li>
+                        <li><a asp-area="" asp-controller="Collections" asp-action="FavouriteRecipes">My Favourites</a></li>
+
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Recipes" asp-action="Easy">Easy</a></li>
-                        <li><a asp-area="" asp-controller="Recipes" asp-action="Snacks">Snacks</a></li>
+                        <li><a asp-area="" asp-controller="Collections" asp-action="Easy">Easy</a></li>
+                        <li><a asp-area="" asp-controller="Collections" asp-action="Snacks">Snacks</a></li>
                     }
                     <li>
                         <div class="input-group ps-5">
@@ -129,47 +131,11 @@
 
         <div class="container">
             <div class="row gy-3">
-                <div class="col-lg-3 col-md-6 d-flex">
-                    <i class="bi bi-geo-alt icon"></i>
-                    <div>
-                        <h4>Address</h4>
-                        <p>
-                            A108 Adam Street <br>
-                            New York, NY 535022 - US<br>
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links d-flex">
-                    <i class="bi bi-telephone icon"></i>
-                    <div>
-                        <h4>Reservations</h4>
-                        <p>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com<br>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links d-flex">
-                    <i class="bi bi-clock icon"></i>
-                    <div>
-                        <h4>Opening Hours</h4>
-                        <p>
-                            <strong>Mon-Sat: 11AM</strong> - 23PM<br>
-                            Sunday: Closed
-                        </p>
-                    </div>
-                </div>
-
                 <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Follow Us</h4>
+                    <h4>About us</h4>
                     <div class="social-links d-flex">
-                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://github.com/Mortie591" class="github"><i class="bi bi-github"></i></a>
+                        <a href="/About" class="info"><i class="bi bi-info-circle-fill"></i></a>
                     </div>
                 </div>
 
@@ -192,7 +158,7 @@
 
     <div id="preloader"></div>
 
-    
+
     <!-- Template Main JS File -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
