@@ -19,6 +19,21 @@ namespace OurRecipes.Controllers
             var recipes = this.recipeService.GetRecipesByCategory(categoryName);
             return this.View(recipes);
         }
+        
+        public IActionResult ByIngredients(string ingredientsInput)
+        {
+            string[] ingredients = ingredientsInput.Split(',',StringSplitOptions.RemoveEmptyEntries);
+            if(ingredients.Length != 0)
+            {
+                var recipes = this.recipeService.GetRecipesByIngredients(ingredients);
+                return this.View(recipes);
+            }
+            else
+            {
+                return this.View(null);
+            }
+
+        }
 
         public IActionResult Create()
         {

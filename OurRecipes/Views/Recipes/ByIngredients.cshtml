@@ -1,14 +1,15 @@
 ﻿@using OurRecipes.Models.Recipes;
 @model List<RecipeCardViewModel>;
 @{
-    ViewData["Title"] = "All recipes by category";
+    ViewData["Title"] = "All recipes by ingredients";
 }
 
 <section id="recipe-cards" class="cards section-bg">
     <div class="container" data-aos="fade-up">
         <div class="section-header">
-            <p>Our <span>Daily</span> Suggestions</p>
-            <h2>Daily recipes</h2>
+            <p>Recipes by <span>Ingredients</span></p>
+            <h2>Recipes by ingredients</h2>
+            <h2>@Model.Count</h2>
         </div>
         <div class="row gy-4">
             @foreach (var element in Model)

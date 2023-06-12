@@ -177,7 +177,7 @@ namespace OurRecipes.Services
             return recipeCards;
         }
 
-        public ICollection<RecipeCardViewModel> GetRecipesByIngredient(string ingredientName)
+        public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients)
         {
             var recipes = this.context.Recipes.Select(x => new
             {
@@ -186,7 +186,14 @@ namespace OurRecipes.Services
                 x.Components,
                 x.Likes,
                 x.ImageUrl
-            }).Where(x => x.Components.Any(c => c.Ingredient.Name.ToLower().Equals(ingredientName.ToLower())));
+            });
+            foreach (string ingredient in ingredients)
+            {
+                recipes.Where(x=>x.Components
+                    .Any(c => c.Ingredient.Name.ToLower() == ingredient.ToLower()))
+                    .ToList();
+            }
+           
 
             var recipeCards = new List<RecipeCardViewModel>();
             foreach (var recipe in recipes)
