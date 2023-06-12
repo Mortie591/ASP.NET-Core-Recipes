@@ -2,12 +2,14 @@
 
 namespace OurRecipes.Services
 {
-    public interface ICollectionsService
+    public interface ICategoryService
     {
         public void GetMyRecipes();
         public void GetFavouriteRecipes();
-        public void GetMealCourses();
+        
         public ICollection<CollectionCardViewModel> DiscoverRecipes();
+        public ICollection<CollectionCardViewModel> GetCategoriesByType(string typeName);
+        
         
     }
 }

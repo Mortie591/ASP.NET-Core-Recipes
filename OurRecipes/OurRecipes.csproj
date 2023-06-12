@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Collections\MyRecipes.cshtml" />
+    <Content Remove="Views\Categories\MyRecipes.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Views\Collections\MyRecipes.cshtml" />
+    <Compile Include="Views\Categories\MyRecipes.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

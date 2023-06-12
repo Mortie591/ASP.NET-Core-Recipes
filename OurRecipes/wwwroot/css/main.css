@@ -1143,8 +1143,8 @@ section {
 
     .events .swiper-pagination .swiper-pagination-bullet-active {
         background-color: var(--color-primary);
-    }member-
-
+    }
+member-
 /*--------------------------------------------------------------
 # Recipe cards
 --------------------------------------------------------------*/
@@ -1152,7 +1152,7 @@ section {
     overflow: hidden;
     text-align: center;
     border-radius: 5px;
-    background: #fff;
+    background-color: floralwhite;
     box-shadow: 0px 0 30px rgba(55, 55, 63, 0.08);
     transition: 0.3s;
 }
@@ -1162,17 +1162,17 @@ section {
         overflow: hidden;
     }
 
-        .cards .card-member .member-img:after {
-            position: absolute;
-            content: "";
-            left: 0;
-            bottom: 0;
-            height: 100%;
-            width: 100%;
-            background: url(../img/team-shape.svg) no-repeat center bottom;
-            background-size: contain;
-            z-index: 1;
-        }
+   .cards .card-member .member-img:after {
+       position: absolute;
+       content: "";
+       left: 0;
+       bottom: 0;
+       height: 100%;
+       width: 100%;
+       background: url(../img/team-shape.svg) no-repeat center bottom;
+       background-size: contain;
+       z-index: 1;
+   }
 
     .cards .card-member .social {
         position: absolute;

@@ -44,57 +44,54 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <a class="logo d-flex align-items-center me-auto me-lg-0" asp-area="" asp-controller="Home" asp-action="Index">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="assets/img/logo.png" alt=""> -->
                 <h1>Mucho&Better<span>'</span>s</h1>
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
                     <li class="dropdown">
-                        <a asp-area="" asp-controller="Collections" asp-action="Discover"><span>Discover</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                        <a asp-area="" asp-controller="Categories" asp-action="Discover"><span>Discover</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
-                            <li><a asp-controller="Collections" asp-action="Healthy">Healthy</a></li>
+                            <li><a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Dietary">Healthy</a></li>
                             <li class="dropdown">
-                                <a asp-controller="Collections" asp-action="MealCourse"><span>Meal Course</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                <a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Meal Course"><span>Meal Course</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                                 <ul>
-                                    <li><a asp-controller="Collections" asp-action="Breakfast">Breakfast</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Lunch">Lunch</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Dinner">Dinner</a></li>
+                                    <li><a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Breakfast">Breakfast</a></li>
+                                    <li><a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Lunch">Lunch</a></li>
+                                    <li><a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Dinner"> Dinner</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a asp-area="" asp-controller="Collections" asp-action="Cuisine"><span>Cuisine</span> 
-                                    <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                <a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Cuisine"><span>Cuisine</span><i class="bi bi-chevron-down dropdown-indicator"></i></a>
                                 <ul>
-                                    <li><a asp-controller="Collections" asp-action="American">American</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Bulgarian">Bulgarian</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Chinese">Chinese</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Italian">Italian</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Mexican">Mexican</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="American">American</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Bulgarian">Bulgarian</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Chinese">Chinese</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Italian">Italian</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Mexican">Mexican</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a asp-area="" asp-controller="Collections" asp-action="Seasonal">
+                                <a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Seasonal">
                                     <span>Seasonal</span>
                                     <i class="bi bi-chevron-down dropdown-indicator"></i>
                                 </a>
                                 <ul>
-                                    <li><a asp-controller="Collections" asp-action="Winter">Winter</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Spring">Spring</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Summer">Summer</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Autumn">Autumn</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Winter">Winter</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Spring">Spring</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Summer">Summer</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Autumn">Autumn</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a asp-area="" asp-controller="Collections" asp-action="Holiday">
+                                <a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Holiday">
                                     <span>Holiday Specials</span>
                                     <i class="bi bi-chevron-down dropdown-indicator"></i>
                                 </a>
                                 <ul>
-                                    <li><a asp-controller="Collections" asp-action="Christmas">Christmas</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Halloween">Halloween</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Easter">Easter</a></li>
-                                    <li><a asp-controller="Collections" asp-action="Thanksgiving">Thanksgiving</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Christmas">Christmas</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Halloween">Halloween</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Easter">Easter</a></li>
+                                    <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Thanksgiving">Thanksgiving</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -102,14 +99,24 @@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
-                        <li><a asp-area="" asp-controller="Collections" asp-action="MyRecipes">My Recipes</a></li>
-                        <li><a asp-area="" asp-controller="Collections" asp-action="FavouriteRecipes">My Favourites</a></li>
+                        <li><a asp-area="" asp-controller="Categories" asp-action="MyRecipes">My Recipes</a></li>
+                        <li><a asp-area="" asp-controller="Categories" asp-action="FavouriteRecipes">My Favourites</a></li>
 
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Collections" asp-action="Easy">Easy</a></li>
-                        <li><a asp-area="" asp-controller="Collections" asp-action="Snacks">Snacks</a></li>
+                        <li class="dropdown">
+                            <a asp-area="" asp-controller="Categories" asp-action="ByType" asp-route-categoryType="Difficulty">
+                                <span>By Difficulty</span>
+                                <i class="bi bi-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul>
+                                <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Easy">Easy</a></li>
+                                <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="MoreEffort">More Effort</a></li>
+                                <li><a asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Chanllenge">Chanllenge</a></li>
+                            </ul>
+                        </li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Snacks">Snacks</a></li>
                     }
                     <li>
                         <div class="input-group ps-5">

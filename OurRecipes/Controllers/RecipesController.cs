@@ -13,6 +13,13 @@ namespace OurRecipes.Controllers
         {
             this.recipeService = recipeService;
         }
+
+        public IActionResult ByCategory(string categoryName)
+        {
+            var recipes = this.recipeService.GetRecipesByCategory(categoryName);
+            return this.View(recipes);
+        }
+
         public IActionResult Create()
         {
             var viewModel = new CreateRecipeInputModel();
