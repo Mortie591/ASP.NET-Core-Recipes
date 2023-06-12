@@ -6,10 +6,12 @@ namespace OurRecipes.Controllers
     public class CollectionsController:Controller
     {
         private readonly IRecipeService recipeService;
+        private readonly ICollectionsService collectionsService;
 
-        public CollectionsController(IRecipeService recipeService)
+        public CollectionsController(IRecipeService recipeService, ICollectionsService collectionsService)
         {
             this.recipeService = recipeService;
+            this.collectionsService = collectionsService;
         }
 
         public IActionResult MyRecipes()
@@ -24,7 +26,8 @@ namespace OurRecipes.Controllers
 
         public IActionResult Discover()
         {
-            return this.View();
+            var categories = this.collectionsService.DiscoverRecipes();
+            return this.View(categories);
         }
 
         public IActionResult Healthy()

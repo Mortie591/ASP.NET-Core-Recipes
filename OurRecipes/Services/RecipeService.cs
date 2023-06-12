@@ -121,7 +121,7 @@ namespace OurRecipes.Services
                     Title = HttpUtility.HtmlDecode(recipe.Title),
                     Rating = recipe.Likes,
                     imageUrl = recipe.ImageUrl,
-                    dateCreated = recipe.CreatedOnDate
+                    Categories = recipe.Categories,
                 };
                 recipeCards.Add(viewModel);
             }
@@ -165,6 +165,7 @@ namespace OurRecipes.Services
             var recipeCards = new List<RecipeCardViewModel>();
             foreach (var recipe in recipes)
             {
+                //RecipeCardViewModel recipeViewModel = mapper.Map<Recipe, RecipeCardViewModel>(recipe);
                 RecipeCardViewModel viewModel = new RecipeCardViewModel
                 {
                     Title = HttpUtility.HtmlDecode(recipe.Title),
@@ -208,6 +209,7 @@ namespace OurRecipes.Services
                 x.Id,
                 x.Title,
                 x.Likes,
+                x.Categories,
                 x.ImageUrl,
                 x.CreatedOnDate
             }).OrderByDescending(x=>x.Likes).ThenByDescending(x=>x.CreatedOnDate).ToList();
@@ -220,7 +222,7 @@ namespace OurRecipes.Services
                     Title = HttpUtility.HtmlDecode(recipe.Title),
                     Rating = recipe.Likes,
                     imageUrl = recipe.ImageUrl,
-                    dateCreated = recipe.CreatedOnDate
+                    Categories = recipe.Categories
                 };
                 recipeCards.Add(viewModel);
             }

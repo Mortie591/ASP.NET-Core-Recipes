@@ -1,4 +1,6 @@
-﻿namespace OurRecipes.Models.Recipes
+﻿using OurRecipes.Data.Models;
+
+namespace OurRecipes.Models.Recipes
 {
     public class RecipeCardViewModel
     {
@@ -6,6 +8,6 @@
         public string Title { get; set; }
         public string imageUrl { get; set; }
         public ushort Rating { get; set; }
-        public DateTime dateCreated { get; set; }
+        public ICollection<Category> Categories { get; set; }
     }
 }

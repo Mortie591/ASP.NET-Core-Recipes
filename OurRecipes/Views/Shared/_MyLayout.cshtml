@@ -50,16 +50,12 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-
-                    <!-- TODO: Update dropdown menu
-                    To be added under discover and recipes
-                    -->
                     <li class="dropdown">
                         <a asp-area="" asp-controller="Collections" asp-action="Discover"><span>Discover</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
                             <li><a asp-controller="Collections" asp-action="Healthy">Healthy</a></li>
                             <li class="dropdown">
-                                <a href="#"><span>Meal Course</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                <a asp-controller="Collections" asp-action="MealCourse"><span>Meal Course</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                                 <ul>
                                     <li><a asp-controller="Collections" asp-action="Breakfast">Breakfast</a></li>
                                     <li><a asp-controller="Collections" asp-action="Lunch">Lunch</a></li>
@@ -77,9 +73,30 @@
                                     <li><a asp-controller="Collections" asp-action="Mexican">Mexican</a></li>
                                 </ul>
                             </li>
-                            <li><a asp-controller="Collections" asp-action="Desserts">Desserts</a></li>
-                            <li><a asp-controller="Collections" asp-action="Chicken">Chicken Recipes</a></li>
-                            <li><a asp-controller="Collections" asp-action="Drinks">Drinks</a></li>
+                            <li class="dropdown">
+                                <a asp-area="" asp-controller="Collections" asp-action="Seasonal">
+                                    <span>Seasonal</span>
+                                    <i class="bi bi-chevron-down dropdown-indicator"></i>
+                                </a>
+                                <ul>
+                                    <li><a asp-controller="Collections" asp-action="Winter">Winter</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Spring">Spring</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Summer">Summer</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Autumn">Autumn</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a asp-area="" asp-controller="Collections" asp-action="Holiday">
+                                    <span>Holiday Specials</span>
+                                    <i class="bi bi-chevron-down dropdown-indicator"></i>
+                                </a>
+                                <ul>
+                                    <li><a asp-controller="Collections" asp-action="Christmas">Christmas</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Halloween">Halloween</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Easter">Easter</a></li>
+                                    <li><a asp-controller="Collections" asp-action="Thanksgiving">Thanksgiving</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     @if (SignInManager.IsSignedIn(User))

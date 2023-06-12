@@ -1,1 +1,30 @@
-﻿
+﻿@using OurRecipes.Models.Recipes;
+@model List<CollectionCardViewModel>;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section id="recipe-cards" class="cards section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <p>Discover</p>
+            <h2>Discover recipes</h2>
+        </div>
+        <div class="row gy-4">
+            @foreach (var element in Model)
+            {
+                <a href="/Collections/@element.Name" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-member">
+                        <div class="member-img">
+                            <img src="~/img/collections-cover.jpg" class="img-fluid" alt="@element.Name-img">
+                        </div>
+                        <div class="member-info">
+                            <h4>@element.Name</h4>
+                            <p>@element.RecipeCount recipes</p>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</section>

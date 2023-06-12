@@ -28,6 +28,7 @@ namespace OurRecipes
             builder.Services.AddTransient<IDataImportService, DataImportService>();
             builder.Services.AddTransient<IScraperService, ScraperService>();
             builder.Services.AddTransient<IRecipeService, RecipeService>();
+            builder.Services.AddTransient<ICollectionsService, CollectionsService>();
             builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
