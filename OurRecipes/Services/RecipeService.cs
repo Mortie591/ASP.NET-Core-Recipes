@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
@@ -179,7 +180,10 @@ namespace OurRecipes.Services
 
         public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients)
         {
-            var recipes = this.context.Recipes.Select(x => new
+            var recipeCards = new List<RecipeCardViewModel>();
+            var recipes = this.context.Recipes
+                .Include(x=>x.Components).ThenInclude(x=>x.Ingredient)
+                .Select(x => new 
             {
                 x.Id,
                 x.Title,
@@ -187,28 +191,48 @@ namespace OurRecipes.Services
                 x.Likes,
                 x.ImageUrl
             });
-            foreach (string ingredient in ingredients)
-            {
-                recipes.Where(x=>x.Components
-                    .Any(c => c.Ingredient.Name.ToLower() == ingredient.ToLower()))
-                    .ToList();
-            }
-           
-
-            var recipeCards = new List<RecipeCardViewModel>();
+            
             foreach (var recipe in recipes)
             {
-                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                var components = recipe.Components.Where(c=>c.Ingredient!=null).Select(c => c.Ingredient.Name).ToList();
+                //var result = ingredients.Intersect(components);
+                var result = CompareIngredients(ingredients, components);
+                if (result.Count() == ingredients.Length)
                 {
-                    Title = HttpUtility.HtmlDecode(recipe.Title),
-                    Rating = recipe.Likes,
-                    imageUrl = recipe.ImageUrl,
-                };
-                recipeCards.Add(viewModel);
+                    RecipeCardViewModel viewModel = new RecipeCardViewModel
+                    {
+                        Title = HttpUtility.HtmlDecode(recipe.Title),
+                        Rating = recipe.Likes,
+                        imageUrl = recipe.ImageUrl,
+                    };
+                    recipeCards.Add(viewModel);
+                }
             }
+            
             return recipeCards;
         }
 
+        private List<string> CompareIngredients(ICollection<string> source, ICollection<string> destination)
+        {
+            var result = new List<string>();
+            var isMatch = true;
+            foreach (var sourceItem in source)
+            {
+                foreach (var destinationItem in destination)
+                {
+                    if(destinationItem.Contains(sourceItem) || sourceItem.Contains(destinationItem)) 
+                    {
+                        result.Add(sourceItem);
+                    }
+                    else
+                    {
+                        isMatch = false;
+                        continue;
+                    }
+                }
+            }
+            return result;
+        }
         public ICollection<RecipeCardViewModel> GetTrending()
         {
             var recipes = this.context.Recipes.Select(x => new

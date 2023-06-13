@@ -30,8 +30,8 @@ namespace OurRecipes.Controllers
             }
             else
             {
-                return this.View(null);
-            }
+                return RedirectToAction("/");
+            } 
 
         }
 
