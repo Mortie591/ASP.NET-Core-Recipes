@@ -7,7 +7,7 @@ namespace OurRecipes.Models.Recipes
     {
         public RecipeViewModel()
         {
-            Categories = new List<Category>();
+            Categories = new List<string>();
             Sections = new List<Section>();
             Components = new List<Component>();
             Nutrients = new List<Nutrient>();
@@ -15,13 +15,16 @@ namespace OurRecipes.Models.Recipes
         public string Title { get; set; }
         public string Description { get; set; }
         public int Servings { get; set; }
-        public int? PrepTime { get; set; }
-        public int? CookTime { get; set; }
+        public string PrepTime { get; set; }
+        public string CookTime { get; set; }
+        public string Difficulty { get; set; }
         public string ImageUrl { get; set; }
-        public List<Category> Categories { get; set; } 
+        public int Rating { get; set; }
+        public List<string> Categories { get; set; } 
         public List<Section>? Sections { get; set; }
         public List<Component> Components { get; set; }
-        public string Instructions { get; set; }
+        public List<string> Instructions { get; set; }
         public List<Nutrient> Nutrients { get; set; }
+        public string Author { get; set; }
     }
 }

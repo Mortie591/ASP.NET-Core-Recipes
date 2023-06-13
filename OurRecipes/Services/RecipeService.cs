@@ -4,6 +4,7 @@ using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
+using System.Text.RegularExpressions;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -143,10 +144,29 @@ namespace OurRecipes.Services
 
         public RecipeViewModel GetRecipeByName(string name)
         {
-            Recipe recipe = context.Recipes.FirstOrDefault(x => x.Title.Equals(name));
+            name = HttpUtility.HtmlEncode(name);
+            Recipe recipe = context.Recipes
+                .Include(x=>x.Nutrients)
+                .Include(x=>x.Components) 
+                .Include(x=>x.Categories)
+                .FirstOrDefault(x => x.Title.Equals(name));
             if (recipe != null)
             {
-                RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
+                //Regex regex = new Regex(@"[\\d]+[\\.]");
+                RecipeViewModel recipeViewModel = new RecipeViewModel
+                {
+                    Title = recipe.Title,
+                    Description = recipe.Description,
+                    PrepTime = recipe.PrepTime,
+                    CookTime = recipe.CookTime,
+                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty").Name,
+                    Servings = int.TryParse(recipe.Servings, out int servings) is true ? servings : 0,
+                    Nutrients = recipe.Nutrients.ToList(),
+                    ImageUrl = recipe.ImageUrl,
+                    Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty").Select(x => x.Name).ToList(),
+                    Instructions = recipe.Instructions.Split(".",StringSplitOptions.RemoveEmptyEntries).ToList(),
+                };
+                //RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
                 return recipeViewModel;
             }
             return null;

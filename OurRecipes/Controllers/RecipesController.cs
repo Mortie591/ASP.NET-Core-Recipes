@@ -13,10 +13,11 @@ namespace OurRecipes.Controllers
         {
             this.recipeService = recipeService;
         }
-        public IActionResult Details()
+        [Route("/Recipes/{name}")]
+        public IActionResult Details(string name)
         {
-            //var recipe = recipeService.GetRecipeById(id);
-            return this.View();
+            var recipe = recipeService.GetRecipeByName(name);
+            return this.View(recipe);
         }
         public IActionResult ByCategory(string categoryName)
         {

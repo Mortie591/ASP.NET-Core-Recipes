@@ -1,12 +1,12 @@
-﻿@*@using OurRecipes.Models.Recipes;
+﻿@using OurRecipes.Models.Recipes;
 @model RecipeViewModel;
 @{
     ViewData["Title"] = "Recipe details";
-}*@
+}
 
 <section class="cards section-bg">
     <div class="section-header">
-        <p>Model.Title</p>
+        <p>@Model.Title</p>
         <h2>Recipe details</h2>
     </div>
     
@@ -16,11 +16,11 @@
             <div class="col-lg-6 col-md-12">
                 <div>
                     <span>Author </span>
-                    <a href="#">Model.Author</a>
+                    <a href="#">@Model.Author</a>
                 </div>
                 <div class="d-flex flex-row">
                     <i class="p-2 bi bi-heart"></i>
-                    <div class="p-2"> 25 likes</div>
+                    <div class="p-2">@Model.Rating likes</div>
                     <div class="p-2">
                         <a href="#">Comments</a>
                     </div>
@@ -29,43 +29,39 @@
                     <div class="d-flex justify-content-start">
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            <div class="p-2 cook-prep-time">Prep: 45 min</div>
+                            <div class="p-2 cook-prep-time">Prep: @Model.PrepTime min</div>
                         </div>
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            <div class="p-2 cook-prep-time">Cook: 35 min</div>
+                            <div class="p-2 cook-prep-time">Cook: @Model.CookTime min</div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start">
                         <div class="d-flex">
                             <img class="p-2" style="width:32px;height:32px;" src="~/img/servings.svg" />
-                            <div class="p-2 servings">Servings: 4</div>
+                            <div class="p-2 servings">Servings:  @Model.Servings</div>
                         </div>
                         <div class="d-flex">
                             <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
-                            <div class="p-2 difficulty">Difficulty: Easy</div>
+                            <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Difficulty">@Model.Difficulty</a>
                         </div>
                         </div>
                 </div>
                 <div class="categories p-2">
                     <h5>Categories: </h5>
                     <ul class="d-flex flex-row custom-list">
-                        <li class="px-2 link">
-                            <a href="/ByCategory">Category</a>
-                        </li>
-                        <li class="px-2 link">
-                            <a href="/ByCategory">Category</a>
-                        </li>
-                        <li class="px-2 link">
-                            <a href="/ByCategory">Category</a>
-                        </li>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li class="px-2 link">
+                                <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@category">@category</a>
+                            </li>
+                        }
                     </ul>
                     
                 </div>
                 <div class="description">
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        @Model.Description
                     </p>
                 </div>
                 
@@ -77,60 +73,59 @@
             <div class="ingredients col-lg-6 col-md-12">
                 <h4>Ingredients</h4>
                 <ul class="list-group-flush custom-list">
-                    <li class="list-group-item list-group-item-action">
-                        <p>Model.Component.Text</p>
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                        <p>Model.Component.Text</p>
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                        <p>Model.Component.Text</p>
-                    </li>
+                    @foreach (var component in Model.Components)
+                    {
+                        <li class="list-group-item list-group-item-action">
+                            <p>@component.Text</p>
+                        </li>
+                    }
+                    @if (Model.Sections!=null && Model.Sections.Count > 0)
+                    {
+                        @foreach (var item in Model.Sections)
+                        {
+                            <li>
+                                <span>@item.Name</span>
+                            </li>
+                            @foreach (var component in item.Components)
+                            {
+                                <li class="list-group-item list-group-item-action">
+                                    <p>@component.Text</p>
+                                </li>
+                            }
+                        }
+                    }
                 </ul>
             </div>
             <div class="instructions col-lg-6 col-md-12">
                 <h4>Instructions</h4>
                 <ul class="custom-list">
-                    <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
-                    <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
-                    <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
-                     <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
-                     <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
-                    <li class="d-flex">
-                        <span class="p-2">1.</span>
-                        <p class="p-2">Instruction</p>
-                    </li>
+                    @foreach (var instruction in Model.Instructions)
+                    {
+                        <li class="d-flex">
+                            <p class="p-2">@instruction</p>
+                        </li>
+                    }
                 </ul>
             </div>
-           
         </div>
     </div>
     <div class="container">
         <h5>Nutrition per serving:</h5>
         <ul class="custom-list">
-            <li class="nutrition-block">
-                <div class="nutrition name">kCal</div>
-                <div class="nutrient quantity">200</div>
-            </li>
-            <li class="nutrition-block">
-                <div class="nutrition name">Fat</div>
-                <div class="nutrient quantity">30g</div>
-            </li>
+            @foreach (var nutrient in Model.Nutrients)
+            {
+                <li class="nutrition-block">
+                    <div name="nutrition name">@nutrient.Name</div>
+                    @if (nutrient.Name.ToLower() == "kcal")
+                    {
+                        <div name="nutrient quantity">@nutrient.Quantity</div>
+                    }
+                    else
+                    {
+                        <div name="nutrient quantity">@nutrient.Quantity g</div>
+                    }
+                </li>
+            }
         </ul>
     </div>
 </section>
