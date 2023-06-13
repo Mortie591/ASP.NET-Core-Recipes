@@ -13,7 +13,11 @@ namespace OurRecipes.Controllers
         {
             this.recipeService = recipeService;
         }
-
+        public IActionResult Details()
+        {
+            //var recipe = recipeService.GetRecipeById(id);
+            return this.View();
+        }
         public IActionResult ByCategory(string categoryName)
         {
             var recipes = this.recipeService.GetRecipesByCategory(categoryName);
@@ -30,7 +34,7 @@ namespace OurRecipes.Controllers
             }
             else
             {
-                return RedirectToAction("/");
+                return Redirect("/");
             } 
 
         }

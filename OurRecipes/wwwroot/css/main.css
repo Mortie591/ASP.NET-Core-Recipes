@@ -155,6 +155,37 @@ section {
 }
 
 /*--------------------------------------------------------------
+# Custom 
+--------------------------------------------------------------*/
+.custom-list {
+    list-style: none;
+    padding-left:0px;
+}
+
+.link {
+    text-decoration-line: underline;
+    color: red;
+}
+
+.recipe-container{
+    background-color:floralwhite;
+    padding:24px;
+    justify-content:center
+}
+.nutrition-block {
+    display: inline-block;
+    padding: 4px;
+    margin: 4px;
+    justify-content: center;
+    border-style: solid;
+    background-color: lightgrey;
+    border-color: #ccc3c3;
+}
+.list-group-item {
+    background-color: inherit;
+    padding: 0px;
+}
+/*--------------------------------------------------------------
 # Buttons
 --------------------------------------------------------------*/
 .btn-primary {
@@ -198,7 +229,10 @@ input[type=checkbox] {
 --------------------------------------------------------------*/
 .cover-img {
     max-height: 500px;
-    min-width:100%;
+    max-width: 600px;
+    min-width:400px;
+    
+    position:relative
 }
 
 /*--------------------------------------------------------------
@@ -1144,7 +1178,7 @@ section {
     .events .swiper-pagination .swiper-pagination-bullet-active {
         background-color: var(--color-primary);
     }
-member-
+
 /*--------------------------------------------------------------
 # Recipe cards
 --------------------------------------------------------------*/
