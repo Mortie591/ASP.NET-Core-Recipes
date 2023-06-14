@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OurRecipes.Data;
+using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
 using OurRecipes.Services;
 
@@ -8,10 +12,12 @@ namespace OurRecipes.Controllers
     public class RecipesController:Controller
     {
         private readonly IRecipeService recipeService;
+        private readonly UserManager<AppIdentityUser> userManager;
 
-        public RecipesController(IRecipeService recipeService )
+        public RecipesController(IRecipeService recipeService, UserManager<AppIdentityUser> userManager)
         {
             this.recipeService = recipeService;
+            this.userManager = userManager;
         }
         public IActionResult Details(string name)
         {
@@ -38,23 +44,48 @@ namespace OurRecipes.Controllers
             } 
 
         }
-
+        public IActionResult ByUser(string userName)
+        {
+            return this.View(userName);
+        }
+        public IActionResult MyRecipes()
+        {
+            string userId = userManager.GetUserId(User);
+            var recipes = recipeService.GetMyRecipes(userId);
+            return this.View(recipes);
+        }
+        [Authorize]
         public IActionResult Create()
         {
-            var viewModel = new CreateRecipeInputModel();
-            return this.View(viewModel);
+            var inputModel = new CreateRecipeInputModel();
+            
+            return this.View(inputModel);
         }
 
         [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreateRecipeInputModel input)
         {
-            if(!this.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return this.View(input);
             }
+            input.Author = userManager.GetUserId(User);
             this.recipeService.Add(input);
-            //TODO: Redirect to Recipe info page
-            return this.Redirect("/");
+            return RedirectToAction("Details","Recipes",new {input.Title});
         }
+
+        public async Task<IActionResult> Like() //Add to favourites
+        {
+            return this.View();
+        }
+
+        public IActionResult Unlike() //remove from favourites
+        {
+            return View();
+        }
+
+
     }
 }

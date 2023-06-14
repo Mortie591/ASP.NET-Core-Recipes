@@ -36,5 +36,6 @@ namespace OurRecipes.Models.Recipes
         [Required,MinLength(10),MaxLength(1000)]
         public string Instructions { get; set; }
         public List<NutrientInputModel> Nutrients { get; set; }
+        public string Author { get; set; }
     }
 }

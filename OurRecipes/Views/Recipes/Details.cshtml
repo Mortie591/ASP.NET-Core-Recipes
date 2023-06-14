@@ -17,7 +17,7 @@
             <div class="col-lg-6 col-md-12">
                 <div>
                     <span>Author </span>
-                    <a href="#">@Model.Author</a>
+                    <a asp-area="" asp-controller="Recipes" asp-action="ByUser" asp-route-userName=@Model.Author >@Model.Author</a>
                 </div>
                 <div class="d-flex flex-row">
                     <i class="p-2 bi bi-heart"></i>
@@ -30,7 +30,7 @@
                     <div class="d-flex justify-content-start">
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            @if (Model.PrepTime.Contains("mins"))
+                            @if (Model.PrepTime != null && Model.PrepTime.Contains("mins"))
                             {
                                 <div class="p-2 cook-prep-time">Prep: @Model.PrepTime</div>
                             }
@@ -41,7 +41,7 @@
                         </div>
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            @if (Model.CookTime.Contains("mins"))
+                            @if (Model.CookTime!=null && Model.CookTime.Contains("mins"))
                             {
                                 <div class="p-2 cook-prep-time">Cook: @Model.CookTime</div>
                             }
@@ -141,3 +141,4 @@
         </ul>
     </div>
 </section>
+<partial name="_Comment"/>

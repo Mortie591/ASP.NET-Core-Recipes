@@ -30,7 +30,7 @@ namespace OurRecipes.Services
         public ICollection<CollectionCardViewModel> GetCategoriesByType(string typeName)
         {
             var categories = this.context.Categories
-                .Where(x => x.Type.ToLower() == typeName)
+                .Where(x => x.Type == typeName)
                 .Select(x => new CollectionCardViewModel
                 {
                     Name = x.Name,
@@ -40,13 +40,6 @@ namespace OurRecipes.Services
             return categories;
         }
 
-        public void GetMyRecipes()
-        {
-            throw new NotImplementedException();
-        }
-        public void GetFavouriteRecipes()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

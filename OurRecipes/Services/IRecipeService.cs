@@ -13,7 +13,11 @@ namespace OurRecipes.Services
         public ICollection<RecipeCardViewModel> GetLatest();
         public ICollection<RecipeCardViewModel> GetTrending();
         public void Add(CreateRecipeInputModel recipeDto);
+        public ICollection<RecipeCardViewModel> GetMyRecipes(string userId);
+        public void GetFavouriteRecipes();
         public void Remove(string id);
-       
+        public Task LikeRecipe(string id, string userId);
+        public Task UnlikeRecipe(string id, string userId);
+
     }
 }

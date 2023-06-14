@@ -99,8 +99,8 @@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li><a asp-area="" asp-controller="Recipes" asp-action="Create">Create Recipe!</a></li>
-                        <li><a asp-area="" asp-controller="Categories" asp-action="MyRecipes">My Recipes</a></li>
-                        <li><a asp-area="" asp-controller="Categories" asp-action="FavouriteRecipes">My Favourites</a></li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="MyRecipes">My Recipes</a></li>
+                        <li><a asp-area="" asp-controller="Recipes" asp-action="MyFavouriteRecipes">My Favourites</a></li>
 
                     }
                     else

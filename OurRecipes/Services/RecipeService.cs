@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using OurRecipes.Data;
@@ -14,12 +15,14 @@ namespace OurRecipes.Services
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly UserManager<AppIdentityUser> userManager;
 
-        public RecipeService(ApplicationDbContext db, IMapper mapper) 
+        public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager) 
             : base(db)
         {
             this.context = db;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
         public void Add(CreateRecipeInputModel recipeDto)
@@ -50,7 +53,7 @@ namespace OurRecipes.Services
                 }).ToList(),
                 Instructions = recipeDto.Instructions,
                 Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity)).ToList(),
-                //Author
+                AuthorId = recipeDto.Author
             };
             if(Recipe.Sections.Any())
             {
@@ -143,9 +146,9 @@ namespace OurRecipes.Services
 
         public RecipeViewModel GetRecipeByName(string name)
         {
-            //name = HttpUtility.HtmlEncode(name);
+            name = HttpUtility.HtmlEncode(name);
             //TODO: split query
-            Recipe recipe = context.Recipes
+            Recipe recipe = context.Recipes 
                 .Include(x=>x.Nutrients)
                 .Include(x=>x.Components)
                 .Include(x=>x.Categories)
@@ -153,20 +156,22 @@ namespace OurRecipes.Services
             if (recipe != null)
             {
                 Regex regex = new Regex(@"([/\d]+[.])|([/\d]+[/\s]+[-])/gm");
+                var author = userManager.FindByIdAsync(recipe.AuthorId).Result;
                 RecipeViewModel recipeViewModel = new RecipeViewModel
                 {
                     Name = HttpUtility.HtmlDecode(recipe.Title),
                     Description = HttpUtility.HtmlDecode(recipe.Description),
                     PrepTime = recipe.PrepTime,
                     CookTime = recipe.CookTime,
-                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty")!=null? recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty").Name : null,
+                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type == "difficulty")!=null? recipe.Categories.FirstOrDefault(x => x.Type == "difficulty").Name : null,
                     Servings = int.TryParse(recipe.Servings, out int servings) is true ? servings : 0,
                     Nutrients = recipe.Nutrients.Where(x=>x.Name!="updated_at").ToList(),
                     ImageUrl = recipe.ImageUrl,
-                    Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty").Select(x => x.Name).ToList(),
+                    Categories = recipe.Categories.Where(x => x.Type != "difficulty").Select(x => x.Name).ToList(),
                     Instructions = String.Join('\n', regex.Split(recipe.Instructions)),
                     Sections = recipe.Sections.ToList(),
-                    Components = recipe.Components.ToList()
+                    Components = recipe.Components.ToList(),
+                    Author = author!=null?author.UserName:null
             };
                 //RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
                 return recipeViewModel;
@@ -183,7 +188,7 @@ namespace OurRecipes.Services
                 x.Categories,
                 x.Likes,
                 x.ImageUrl
-            }).Where(x => x.Categories.Any(c => c.Name.ToLower().Equals(categoryName.ToLower())));
+            }).Where(x => x.Categories.Any(c => c.Name.Equals(categoryName)));
 
             var recipeCards = new List<RecipeCardViewModel>();
             foreach (var recipe in recipes)
@@ -233,28 +238,7 @@ namespace OurRecipes.Services
             
             return recipeCards;
         }
-
-        private List<string> CompareIngredients(ICollection<string> source, ICollection<string> destination)
-        {
-            var result = new List<string>();
-            var isMatch = true;
-            foreach (var sourceItem in source)
-            {
-                foreach (var destinationItem in destination)
-                {
-                    if(destinationItem.Contains(sourceItem) || sourceItem.Contains(destinationItem)) 
-                    {
-                        result.Add(sourceItem);
-                    }
-                    else
-                    {
-                        isMatch = false;
-                        continue;
-                    }
-                }
-            }
-            return result;
-        }
+        
         public ICollection<RecipeCardViewModel> GetTrending()
         {
             var recipes = this.context.Recipes.Select(x => new
@@ -297,6 +281,48 @@ namespace OurRecipes.Services
             }
         }
 
+        public ICollection<RecipeCardViewModel> GetMyRecipes(string userId)
+        {
+            var recipes = this.context.Recipes.Where(x=>x.AuthorId == userId).Select(x=> new
+            {
+                x.Id,
+                x.Title,
+                x.Likes,
+                x.Categories,
+                x.ImageUrl
+            }).ToList();
+
+            var recipeCards = new List<RecipeCardViewModel>();
+
+            foreach (var recipe in recipes)
+            {
+                RecipeCardViewModel viewModel = new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(recipe.Title),
+                    Rating = recipe.Likes,
+                    imageUrl = recipe.ImageUrl,
+                    Categories = recipe.Categories
+                };
+                recipeCards.Add(viewModel);
+            }
+            return recipeCards;
+        }
+        public void GetFavouriteRecipes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task LikeRecipe(string id, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UnlikeRecipe(string id, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        //Private methods
         private List<Category> AddCategories(CreateRecipeInputModel recipeDto)
         {
             var initalCategoryList = recipeDto.Categories;
@@ -304,19 +330,19 @@ namespace OurRecipes.Services
             initalCategoryList.Add(recipeDto.Difficulty);
             initalCategoryList.Add(recipeDto.CookingTechnique);
             initalCategoryList.Add(recipeDto.Season);
-           
+
             var categories = new List<Category>();
-            
-            foreach(var category in initalCategoryList)
+
+            foreach (var category in initalCategoryList)
             {
                 if (category == "---") continue;
-                string[] categoryLine = category.Split('-',2,StringSplitOptions.RemoveEmptyEntries);
+                string[] categoryLine = category.Split('-', 2, StringSplitOptions.RemoveEmptyEntries);
                 var key = categoryLine[0];
                 var value = categoryLine[1];
-                
-                var dbCategory=this.context.Categories.FirstOrDefault(x => x.Type == key && x.Name == value);
 
-                if (dbCategory==null)
+                var dbCategory = this.context.Categories.FirstOrDefault(x => x.Type == key && x.Name == value);
+
+                if (dbCategory == null)
                 {
                     categories.Add(new Category
                     {
@@ -328,10 +354,32 @@ namespace OurRecipes.Services
                 {
                     categories.Add(dbCategory);
                 }
-                
+
             }
 
             return categories;
         }
+        private List<string> CompareIngredients(ICollection<string> source, ICollection<string> destination)
+        {
+            var result = new List<string>();
+            var isMatch = true;
+            foreach (var sourceItem in source)
+            {
+                foreach (var destinationItem in destination)
+                {
+                    if (destinationItem.Contains(sourceItem) || sourceItem.Contains(destinationItem))
+                    {
+                        result.Add(sourceItem);
+                    }
+                    else
+                    {
+                        isMatch = false;
+                        continue;
+                    }
+                }
+            }
+            return result;
+        }
+
     }
 }
