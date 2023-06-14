@@ -14,7 +14,7 @@
         <div class="row gy-4">
             @foreach (var element in Model)
             {
-                <a href="/Recipes/@element.Title" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                <a asp-controller="Recipes" asp-action="Details" asp-route-name="@element.Title" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
                     <div class="card-member">
                         <div class="member-img">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" class="img-fluid" alt="@element.Title-img">

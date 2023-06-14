@@ -143,7 +143,7 @@ namespace OurRecipes.Services
 
         public RecipeViewModel GetRecipeByName(string name)
         {
-            name = HttpUtility.HtmlEncode(name);
+            //name = HttpUtility.HtmlEncode(name);
             //TODO: split query
             Recipe recipe = context.Recipes
                 .Include(x=>x.Nutrients)
@@ -159,7 +159,7 @@ namespace OurRecipes.Services
                     Description = HttpUtility.HtmlDecode(recipe.Description),
                     PrepTime = recipe.PrepTime,
                     CookTime = recipe.CookTime,
-                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty").Name,
+                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty")!=null? recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty").Name : null,
                     Servings = int.TryParse(recipe.Servings, out int servings) is true ? servings : 0,
                     Nutrients = recipe.Nutrients.Where(x=>x.Name!="updated_at").ToList(),
                     ImageUrl = recipe.ImageUrl,
