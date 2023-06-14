@@ -2,11 +2,12 @@
 @model RecipeViewModel;
 @{
     ViewData["Title"] = "Recipe details";
+    int count = 1;
 }
 
 <section class="cards section-bg">
     <div class="section-header">
-        <p>@Model.Title</p>
+        <p>@Model.Name</p>
         <h2>Recipe details</h2>
     </div>
     
@@ -29,11 +30,25 @@
                     <div class="d-flex justify-content-start">
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            <div class="p-2 cook-prep-time">Prep: @Model.PrepTime min</div>
+                            @if (Model.PrepTime.Contains("mins"))
+                            {
+                                <div class="p-2 cook-prep-time">Prep: @Model.PrepTime</div>
+                            }
+                            else
+                            {
+                                <div class="p-2 cook-prep-time">Prep: @Model.PrepTime mins</div>
+                            }
                         </div>
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                            <div class="p-2 cook-prep-time">Cook: @Model.CookTime min</div>
+                            @if (Model.CookTime.Contains("mins"))
+                            {
+                                <div class="p-2 cook-prep-time">Cook: @Model.CookTime</div>
+                            }
+                            else
+                            {
+                                <div class="p-2 cook-prep-time">Cook: @Model.CookTime mins</div>
+                            }
                         </div>
                     </div>
                     <div class="d-flex justify-content-start">
@@ -76,8 +91,9 @@
                     @foreach (var component in Model.Components)
                     {
                         <li class="list-group-item list-group-item-action">
-                            <p>@component.Text</p>
+                            <p>@count. @component.Text</p>
                         </li>
+                            count++;
                     }
                     @if (Model.Sections!=null && Model.Sections.Count > 0)
                     {
@@ -89,8 +105,9 @@
                             @foreach (var component in item.Components)
                             {
                                 <li class="list-group-item list-group-item-action">
-                                    <p>@component.Text</p>
+                                    <p>@count. @component.Text</p>
                                 </li>
+                                count++;
                             }
                         }
                     }
@@ -98,14 +115,9 @@
             </div>
             <div class="instructions col-lg-6 col-md-12">
                 <h4>Instructions</h4>
-                <ul class="custom-list">
-                    @foreach (var instruction in Model.Instructions)
-                    {
-                        <li class="d-flex">
-                            <p class="p-2">@instruction</p>
-                        </li>
-                    }
-                </ul>
+                <div>
+                    <p class="p-2">@Model.Instructions</p>
+                </div>
             </div>
         </div>
     </div>

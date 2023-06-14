@@ -13,7 +13,6 @@ namespace OurRecipes.Controllers
         {
             this.recipeService = recipeService;
         }
-        [Route("/Recipes/{name}")]
         public IActionResult Details(string name)
         {
             var recipe = recipeService.GetRecipeByName(name);

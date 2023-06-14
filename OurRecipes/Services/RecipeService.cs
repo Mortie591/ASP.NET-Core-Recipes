@@ -130,7 +130,6 @@ namespace OurRecipes.Services
             return recipeCards;
         }
         
-
         public RecipeViewModel GetRecipeById(string id)
         {
             Recipe recipe = context.Recipes.FirstOrDefault(x=>x.Id.Equals(id));
@@ -145,27 +144,30 @@ namespace OurRecipes.Services
         public RecipeViewModel GetRecipeByName(string name)
         {
             name = HttpUtility.HtmlEncode(name);
+            //TODO: split query
             Recipe recipe = context.Recipes
                 .Include(x=>x.Nutrients)
-                .Include(x=>x.Components) 
+                .Include(x=>x.Components)
                 .Include(x=>x.Categories)
                 .FirstOrDefault(x => x.Title.Equals(name));
             if (recipe != null)
             {
-                //Regex regex = new Regex(@"[\\d]+[\\.]");
+                Regex regex = new Regex(@"([/\d]+[.])|([/\d]+[/\s]+[-])/gm");
                 RecipeViewModel recipeViewModel = new RecipeViewModel
                 {
-                    Title = recipe.Title,
-                    Description = recipe.Description,
+                    Name = HttpUtility.HtmlDecode(recipe.Title),
+                    Description = HttpUtility.HtmlDecode(recipe.Description),
                     PrepTime = recipe.PrepTime,
                     CookTime = recipe.CookTime,
                     Difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty").Name,
                     Servings = int.TryParse(recipe.Servings, out int servings) is true ? servings : 0,
-                    Nutrients = recipe.Nutrients.ToList(),
+                    Nutrients = recipe.Nutrients.Where(x=>x.Name!="updated_at").ToList(),
                     ImageUrl = recipe.ImageUrl,
                     Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty").Select(x => x.Name).ToList(),
-                    Instructions = recipe.Instructions.Split(".",StringSplitOptions.RemoveEmptyEntries).ToList(),
-                };
+                    Instructions = String.Join('\n', regex.Split(recipe.Instructions)),
+                    Sections = recipe.Sections.ToList(),
+                    Components = recipe.Components.ToList()
+            };
                 //RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
                 return recipeViewModel;
             }
