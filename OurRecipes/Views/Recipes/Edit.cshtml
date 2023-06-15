@@ -1,1 +1,277 @@
-﻿
+﻿@using OurRecipes.Models.Recipes;
+@model CreateRecipeInputModel;
+@{
+    int nutrientsIndex = 0;
+}
+<section id="create-recipe" class="section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-header">
+            <p>Edit <span>Recipe</span> </p>
+            <h2>New Recipe</h2>
+        </div>
+
+        <div class="row gy-4">
+            <div>
+                <img class="img-fluid cover-img" src="/img/new-recipe-cover.jpg" data-aos-delay="200" />
+            </div>
+
+            <div class="row-lg-8 d-flex justify-content-center">
+                <form method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4">
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="Title"><strong>Title</strong></label>
+                            <input asp-for="Title" class="form-control" id="title" value="@Model.Title">
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="Servings"><strong>Servings</strong></label>
+                            <input asp-for="Servings" class="form-control" id="servings" placeholder="Servings">
+                            <span asp-validation-for="Servings" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <<label asp-for="PrepTime"><strong> Preparation Time (in minutes)</strong></label>
+                            <input asp-for="PrepTime" class="form-control" id="prepTime" placeholder="25">
+                            <span asp-validation-for="PrepTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <<label asp-for="CookTime"><strong>Cooking Time (in minutes)</strong></label>
+                            <input asp-for="CookTime" class="form-control" id="prepTime" placeholder="25">
+                            <span asp-validation-for="CookTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <!--TODO: Get Categories-->
+                            <label asp-for="Categories"><strong>Category</strong></label>
+                            <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
+                                <option>---</option>
+                                <optgroup label="Meal Course">
+                                    <option value="Meal Course-Breakfast">Breakfast</option>
+                                    <option value="Meal Course-Brunch">Brunch</option>
+                                    <option value="Meal Course-Lunch">Lunch</option>
+                                    <option value="Meal Course-Snacks">Snacks</option>
+                                    <option value="Meal Course-Dinner">Dinner</option>
+                                </optgroup>
+                                <optgroup label="Dish Type">
+                                    <option value="Dish Type-Baked Goods">Baked Goods</option>
+                                    <option value="Dish Type-Beverages">Beverages</option>
+                                    <option value="Dish Type-Burgers">Burgers</option>
+                                    <option value="Dish Type-Desserts">Desserts</option>
+                                    <option value="Dish Type-Casserole">Casserole</option>
+                                    <option value="Dish Type-Fish">Fish</option>
+                                    <option value="Dish Type-Meat: Beef">Meat: Beef</option>
+                                    <option value="Dish Type-Meat: Duck">Meat: Duck</option>
+                                    <option value="Dish Type-Meat: Lamb">Meat: Lamb</option>
+                                    <option value="Dish Type-Meat: Pork">Meat: Pork</option>
+                                    <option value="Dish Type-Meat: Poultry">Meat: Poultry</option>
+                                    <option value="Dish Type-Meat: Turkey">Meat: Turkey</option>
+                                    <option value="Dish Type-Pasta">Pasta</option>
+                                    <option value="Dish Type-Pizza">Pizza</option>
+                                    <option value="Dish Type-Salad">Salad</option>
+                                    <option value="Dish Type-Sandwitches&Wraps">Sandwitches&Wraps</option>
+                                    <option value="Dish Type-Sea Food">Sea Food</option>
+                                    <option value="Dish Type-Sides">Sides</option>
+                                    <option value="Dish Type-Soup">Soup</option>
+                                </optgroup>
+                                <optgroup label="Dietary">
+                                    <option value="Dietary-Healthy">Healthy</option>
+                                    <option value="Dietary-Keto">Keto</option>
+                                    <option value="Dietary-Low Carb">Low Carb</option>
+                                    <option value="Dietary-Vegan">Vegan</option>
+                                    <option value="Dietary-Vegetarian">Vegetarian</option>
+                                </optgroup>
+                                <optgroup label="Holiday">
+                                    <option value="Holiday-Christmas">Christmas</option>
+                                    <option value="Holiday-Halloween">Halloween</option>
+                                    <option value="Holiday-Thanksgiving">Thanksgiving</option>
+                                    <option value="Holiday-Valentine's Day">Valentine's Day</option>
+                                </optgroup>
+                            </select>
+                            <span asp-validation-for="Categories" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <!--TODO: add remaining countries-->
+                            <label asp-for="Cuisine"><strong>Cuisine</strong></label>
+                            <select asp-for="Cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
+                                <option>---</option>
+                                <option value="Cuisine-American">American</option>
+                                <option value="Cuisine-British">British</option>
+                                <option value="Cuisine-Bulgarian">Bulgarian</option>
+                                <option value="Cuisine-Chinese">Chinese</option>
+                                <option value="Cuisine-French">French</option>
+                                <option value="Cuisine-Greek">Greek</option>
+                                <option value="Cuisine-Italian">Italian</option>
+                                <option value="Cuisine-Japanse">Japanese</option>
+                                <option value="Cuisine-Mexican">Mexican</option>
+                                <option value="Cuisine-Spanish">Spanish</option>
+                            </select>
+                            <span asp-validation-for="Cuisine" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="Season"><strong>Season</strong></label>
+                            <select asp-for="Season" class="form-control" id="season" placeholder="Season">
+                                <option>---</option>
+                                <option value="Season-Winter">Winter</option>
+                                <option value="Season-Spring">Spring</option>
+                                <option value="Season-Summer">Summer</option>
+                                <option value="Season-Autumn">Autumn</option>
+                            </select>
+                            <span asp-validation-for="Season" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="Difficulty"><strong>Difficulty</strong></label>
+                            <select asp-for="Difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
+                                <option>---</option>
+                                <option value="Difficulty-Easy">Easy</option>
+                                <option value="Difficulty-Medium">Medium</option>
+                                <option value="Difficulty-Challenge">Challenge</option>
+                                <option value="Difficulty-Expert">Expert</option>
+                            </select>
+                            <span asp-validation-for="Difficulty" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
+                            <select asp-for="CookingTechnique" class="form-control" id="cooking-style" placeholder="Cooking Style">
+                                <option>---</option>
+                                <option value="CookingTechnique-Roasing">Roasing</option>
+                                <option value="CookingTechnique-Stewing">Stewing</option>
+                                <option value="CookingTechnique-Grilling">Grilling</option>
+                                <option value="CookingTechnique-Baking">Baking</option>
+                                <option value="CookingTechnique-Braising">Braising</option>
+                                <option value="CookingTechnique-Steaming">Steaming</option>
+                                <option value="CookingTechnique-Frying">Frying</option>
+                                <option value="CookingTechnique-Deep Frying">Deep Frying</option>
+                                <option value="CookingTechnique-Smoking">Smoking</option>
+                            </select>
+                            <span asp-validation-for="CookingTechnique" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label asp-for="ImageUrl"><strong>Image Url</strong></label>
+                            <input asp-for="ImageUrl" class="form-control" id="img-url" placeholder="Recipe Title">
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+                        <div name="ingredients" class="form-group mt-3 mb-3">
+                            <fieldset class="form-group mt-3 mb-3" id="ingredients-fieldset">
+                                <legend for="ingredients"><strong>Ingredients</strong></legend>
+
+                                <ul name="ingredients" class="form-group mt-3 mb-3">
+                                    @for (int i = 0; i < Model.Components.Count; i++)
+                                    {
+                                        <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Name</strong></label>
+                                                <input asp-for="Components[i].IngredientName" class="form-control" placeholder="25g">
+                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Quantity</strong></label>
+                                                <input asp-for="Components[i].Quantity" class="form-control" placeholder="Carbs">
+                                                <span asp-validation-for="Components[i].Quantity" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Units</strong></label>
+                                                <select asp-for="Components[i].Unit" class="form-control">
+                                                    <option>---</option>
+                                                    <option>gr</option>
+                                                    <option>kg</option>
+                                                    <option>ml</option>
+                                                    <option>l</option>
+                                                    <option>tbsp</option>
+                                                    <option>tsp</option>
+                                                    <option>cup</option>
+                                                    <option>oz</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                    }
+                                    @for (int i = 0; i < Model.Sections.Count; i++)
+                                    {
+                                        <ul name="sections" class="form-group mt-3 mb-3">
+                                            <label asp-for="Sections[i].SectionName"><strong>Section Name</strong></label>
+                                            <input asp-for="Sections[i].SectionName" class="form-control" placeholder="Section Name">
+                                            @for (int j = 0; j < Model.Sections[i].Components.Count; j++)
+                                            {
+                                                <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Name</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" placeholder="All purpose flour">
+                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Quantity</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].Quantity" class="form-control" placeholder="650">
+                                                        <span asp-validation-for="Sections[i].Components[j].Quantity" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Units</strong></label>
+                                                        <select asp-for="Sections[i].Components[j].Unit" class="form-control">
+                                                            <option>---</option>
+                                                            <option>gr</option>
+                                                            <option>kg</option>
+                                                            <option>ml</option>
+                                                            <option>l</option>
+                                                            <option>tbsp</option>
+                                                            <option>tsp</option>
+                                                            <option>cup</option>
+                                                            <option>oz</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+
+                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
+                                    <button class="btn btn-md btn-secondary disabled" id="remove-ingredient">Remove</button>
+                                </ul>
+
+                                <div class="form-group mt-3 mb-3">
+                                    <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
+                                    <button class="btn btn-md btn-secondary disabled" id="remove-section">Remove Section</button>
+                                </div>
+                            </fieldset>
+                            <div class="validate"></div>
+                        </div>
+                        <fieldset class="form-group mt-3 mb-3" id="nutrients-fieldset">
+                            <legend for="nutrients"><strong>Nutrients Per Serving</strong></legend>
+
+                            <ul asp-for="Nutrients" name="nutrients" class="form-group mt-3 mb-3">
+                                @for (int i = 0; i < Model.Nutrients.Count; i++)
+                                {
+                                    <li asp-for="NutrientInputModel" name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
+                                        <div class="col-lg-4 col-md-6">
+                                            <label><strong>Nutrient Quantity</strong></label>
+                                            <input asp-for="Nutrients[i].Quantity" class="form-control" placeholder="25g">
+                                            <span asp-validation-for="Nutrients[i].Quantity" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <label><strong>Nutrient Name</strong></label>
+                                            <input asp-for="Nutrients[i].Name" class="form-control" placeholder="Carbs">
+                                            <span asp-validation-for="Nutrients[i].Name" class="text-danger"></span>
+                                        </div>
+                                    </li>
+                                }
+
+                                <button class="btn btn-md btn-primary" type="button" id="add-nutrient" onclick="AddNutrient()">Add more</button>
+                                <button class="btn btn-md btn-secondary disabled" id="remove-nutrient">Remove</button>
+                            </ul>
+                        </fieldset>
+                    </div>
+
+                    <div class="form-group mt-3 mb-3">
+                        <label asp-for="Instructions"><strong>Instructions</strong></label>
+                        <textarea asp-for="Instructions" class="form-control" id="instructions" placeholder="1. Heat the oil in a medium pan over a medium heat."></textarea>
+                        <span asp-validation-for="Instructions" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-3 mb-3">
+                        <label asp-for="Description"><strong>Description</strong></label>
+                        <textarea asp-for="Description" class="form-control" id="description" rows="5" placeholder="Descriptioon"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+                </form>
+            </div><!-- End New Recipe Form -->
+
+        </div>
+
+    </div>
+</section><!-- End Create a Recipe Section -->

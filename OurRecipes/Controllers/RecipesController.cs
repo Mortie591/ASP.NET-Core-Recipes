@@ -44,15 +44,42 @@ namespace OurRecipes.Controllers
             } 
 
         }
-        public IActionResult ByUser(string userName)
+        [Authorize]
+        public async Task<IActionResult> ByUser(string userName)
         {
-            return this.View(userName);
+            var user = await userManager.FindByNameAsync(userName);
+            if (user != null)
+            {
+                var recipes = await recipeService.GetRecipesByUserAsync(user.Id);
+                return this.View(recipes);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
+        [Authorize]
         public IActionResult MyRecipes()
         {
             string userId = userManager.GetUserId(User);
             var recipes = recipeService.GetMyRecipes(userId);
             return this.View(recipes);
+        }
+        [Authorize]
+        public IActionResult MyFavouriteRecipes()
+        {
+            string userId = userManager.GetUserId(User);
+            if (userId != null)
+            {
+                var recipes = recipeService.GetFavouriteRecipes(userId);
+                return this.View(recipes);
+            }
+            else
+            {
+                return NotFound();
+            }
+           
         }
         [Authorize]
         public IActionResult Create()
@@ -75,17 +102,33 @@ namespace OurRecipes.Controllers
             this.recipeService.Add(input);
             return RedirectToAction("Details","Recipes",new {input.Title});
         }
+        [Authorize]
+        public IActionResult Edit(CreateRecipeInputModel input, string id)
+        {
+            return this.View(input);
+        }
 
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(CreateRecipeInputModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+            return RedirectToAction("Details", "Recipes", new { input.Title });
+        }
+        [Authorize]
         public async Task<IActionResult> Like() //Add to favourites
         {
             return this.View();
         }
-
+        [Authorize]
         public IActionResult Unlike() //remove from favourites
         {
             return View();
         }
-
 
     }
 }
