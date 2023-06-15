@@ -6,6 +6,27 @@
 * License: https://bootstrapmade.com/license/
 */
 
+
+//function AddInstruction() {
+//    let parent = event.target.parentNode;
+//    let liElements = parent.querySelectorAll('li');
+//    let instructionsIndex = liElements.length;
+
+//    let instructionRow = document.createElement('li');
+//    instructionRow.setAttribute('name', 'instructions-row');
+//    instructionRow.setAttribute('class', 'row mt-3 mb-3');
+//    instructionRow.setAttribute('id', 'instructions-row');
+//    instructionRow.innerHTML = `<textarea asp-for="Instructions[${instructionsIndex}]" class="form-control" id="instructions" placeholder="Heat the oil in a medium pan over a medium heat."></textarea>
+//                                    <span asp-validation-for="Instructions" class="text-danger"></span>`;
+
+//    const AddInstructionsRow = function (parentNode) {
+//        parentNode.insertBefore(instructionRow, event.target);
+//        console.log("Added new instruction row");
+//        document.querySelector('#remove-instruction').classList.remove('disabled');
+//    };
+//    AddInstructionsRow(parent);
+//}
+
 function AddNutrient() {
     let parent = event.target.parentNode;
     let liElements = parent.querySelectorAll('li');
@@ -47,12 +68,12 @@ function AddIngredient() {
     ingreedientRow.setAttribute('id', 'ingredients-row');
     ingreedientRow.innerHTML = `<div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Name</strong></label>
-                                        <input name="Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="25g">
+                                        <input name="Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="Pork chops">
                                         <span asp-validation-for="Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
                                     </div>
                                     <div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Quantity</strong></label>
-                                        <input name="Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="Carbs">
+                                        <input name="Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="200">
                                         <span asp-validation-for="Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
                                     </div>
                                     <div class="col-lg-4 col-md-6">
@@ -192,6 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
    * Custom
    */
+
+  //Remove instructionss row
+    //let removeInstructionsButtonElement = document.querySelector('#remove-instruction');
+    //const RemoveInstructionRow = function (parentNode) {
+    //    let liElements = parentNode.querySelectorAll('li');
+    //    if (liElements.length > 0) {
+    //        let lastListElement = liElements[liElements.length - 1];
+    //        parentNode.removeChild(lastListElement);
+    //        console.log('Removed last instruction row');
+    //        if (parentNode.querySelectorAll('li').length == 0) {
+    //            removeInstructionsButtonElement.classList.add('disabled');
+    //        }
+    //    } else {
+    //        console.log('No elements to remove')
+    //    }
 
     //Remove Ingredients row
     let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 

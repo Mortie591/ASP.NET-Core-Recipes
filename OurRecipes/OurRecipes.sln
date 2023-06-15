@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OurRecipes", "OurRecipes.csproj", "{6775F7D0-6616-4382-A656-FC5BFCC31AC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSeeder", "..\DataSeeder\DataSeeder.csproj", "{6178D591-D8F7-4A99-B270-0BE7FF973EA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6775F7D0-6616-4382-A656-FC5BFCC31AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6775F7D0-6616-4382-A656-FC5BFCC31AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6775F7D0-6616-4382-A656-FC5BFCC31AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6178D591-D8F7-4A99-B270-0BE7FF973EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6178D591-D8F7-4A99-B270-0BE7FF973EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6178D591-D8F7-4A99-B270-0BE7FF973EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6178D591-D8F7-4A99-B270-0BE7FF973EA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

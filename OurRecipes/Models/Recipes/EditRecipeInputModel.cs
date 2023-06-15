@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OurRecipes.Models.Recipes
 {
-    public class CreateRecipeInputModel
+    public class EditRecipeInputModel
     {
-        public CreateRecipeInputModel()
+        public EditRecipeInputModel()
         {
             Categories = new List<string>();
             Sections = new List<SectionInputModel>();
             Components = new List<ComponentInputModel>();
             Nutrients = new List<NutrientInputModel>();
         }
+        [Required]
+        public string Id { get; set; }
         [Required, MinLength(4),MaxLength(50)]
         public string Title { get; set; }
         [Required, MinLength(4), MaxLength(250)]
@@ -33,9 +35,8 @@ namespace OurRecipes.Models.Recipes
         public List<SectionInputModel>? Sections { get; set; }
         public List<ComponentInputModel> Components { get; set; }
 
-        [Required,MinLength(10)]
+        [Required,MinLength(10),MaxLength(1000)]
         public string Instructions { get; set; }
         public List<NutrientInputModel> Nutrients { get; set; }
-        public string Author { get; set; }
     }
 }

@@ -6,8 +6,9 @@ using OurRecipes.Services.Models.ImportDtos;
 using System.Text;
 using System.Text.Json;
 using Component = OurRecipes.Data.Models.Component;
+using OurRecipes.Services;
 
-namespace OurRecipes.Services
+namespace DataSeeder
 {
     public class DataImportService : InitialDataService, IDataImportService
     {
@@ -18,7 +19,7 @@ namespace OurRecipes.Services
 
         public void ImportRecipes()
         {
-            string path = "Services/SourceData";
+            string path = "SourceData";
             ICollection<RecipeDto> recipesDto = DeserializeDataFromJSON(path);
 
             foreach (RecipeDto recipeDto in recipesDto)
@@ -32,8 +33,8 @@ namespace OurRecipes.Services
                     Title = recipeDto.Title,
                     Description = recipeDto.Description,
                     Servings = recipeDto.Servings.ToString(),
-                    PrepTime = recipeDto.PrepTime==0?"": recipeDto.PrepTime+" "+"mins",
-                    CookTime = recipeDto.CookTime == 0 ? "" : recipeDto.PrepTime + " " + "mins",
+                    PrepTime = recipeDto.PrepTime==0?"": recipeDto.PrepTime.ToString(),
+                    CookTime = recipeDto.CookTime == 0 ? "" : recipeDto.CookTime.ToString(),
                     ImageUrl = recipeDto.ImageUrl,
                     CreatedOnDate = createdOn,
                     Categories = recipeDto.Categories.Select(x => GetOrCreateCategory(x.name)).ToList(),
@@ -53,30 +54,29 @@ namespace OurRecipes.Services
                 {
                     if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
                     {
-                        if(!this.recipes.Select(x => x.Title).Contains(recipe.Title))
+                        try
                         {
-                            this.recipes.Add(recipe);
+                            this.context.Recipes.Add(recipe);
+                            this.context.SaveChanges();
                         }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.InnerException);
+                        }
+                        
                     }
                 }
             }
 
-            this.context.Units.AddRangeAsync(this.units);
-            this.context.Tags.AddRangeAsync(this.tags);
-            this.context.Nutrients.AddRangeAsync(this.nutrients);
-            this.context.Ingredients.AddRangeAsync(this.ingredients);
-            this.context.Categories.AddRangeAsync(this.categories);
-            this.context.Recipes.AddRangeAsync(this.recipes);
-
-            this.context.SaveChanges();
+            
         }
 
         public void CleanDatabase()
         {
 
-            //this.context.Database.EnsureDeleted();
-            //this.context.Database.EnsureCreated();
-            //this.context.SaveChanges();
+            this.context.Database.EnsureDeleted();
+            this.context.Database.EnsureCreated();
+            this.context.SaveChanges();
 
             this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Tags', RESEED, 0)");
             this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Units', RESEED, 0)");
@@ -143,7 +143,7 @@ namespace OurRecipes.Services
             StringBuilder sb = new StringBuilder();
             foreach(var instruction in instructions)
             {
-                sb.AppendLine($"{instruction.position} - {instruction.display_text}");
+                sb.AppendLine($"{instruction.display_text}");
             }
             return sb.ToString().Trim();
         }

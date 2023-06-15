@@ -65,6 +65,7 @@ namespace OurRecipes.Services
             {
                 unit = new Unit { Name = unitName };
                 this.units.Add(unit);
+                this.context.Units.Add(unit);
             }
             return unit;
         }
@@ -81,6 +82,7 @@ namespace OurRecipes.Services
             {
                 tag = new Tag { Name = tagName, Type = type };
                 this.tags.Add(tag);
+                this.context.Tags.Add(tag);
             }
             return tag;
         }
@@ -97,6 +99,7 @@ namespace OurRecipes.Services
             {
                 tag = new Tag { Name = tagName, Type = tagName };
                 this.tags.Add(tag);
+                this.context.Tags.Add(tag);
             }
             return tag;
         }
@@ -112,6 +115,7 @@ namespace OurRecipes.Services
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity };
                 this.nutrients.Add(nutrient);
+                this.context.Nutrients.Add(nutrient);
             }
             return nutrient;
         }
@@ -127,6 +131,7 @@ namespace OurRecipes.Services
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity, Unit = GetOrCreateUnit(unitName) };
                 this.nutrients.Add(nutrient);
+                this.context.Nutrients.Add(nutrient);
             }
             return nutrient;
         }
@@ -142,6 +147,7 @@ namespace OurRecipes.Services
             {
                 ingredient = new Ingredient { Name = ingredientName, NamePlural = pluralName };
                 this.ingredients.Add(ingredient);
+                this.context.Ingredients.Add(ingredient);
             }
             return ingredient;
         }
@@ -157,6 +163,7 @@ namespace OurRecipes.Services
             {
                 ingredient = new Ingredient { Name = ingredientName, NamePlural = null };
                 this.ingredients.Add(ingredient);
+                this.context.Ingredients.Add(ingredient);
             }
             return ingredient;
         }
@@ -172,6 +179,8 @@ namespace OurRecipes.Services
             {
                 category = new Category { Name = categoryName };
                 this.categories.Add(category);
+                this.context.Categories.Add(category);
+
             }
             return category;
         }
@@ -187,6 +196,7 @@ namespace OurRecipes.Services
             {
                 category = new Category { Name = categoryName,Type = categoryType };
                 this.categories.Add(category);
+                this.context.Categories.Add(category);
             }
             return category;
         }

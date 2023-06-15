@@ -103,15 +103,16 @@ namespace OurRecipes.Controllers
             return RedirectToAction("Details","Recipes",new {input.Title});
         }
         [Authorize]
-        public IActionResult Edit(CreateRecipeInputModel input, string id)
+        public IActionResult Edit(string id)
         {
-            return this.View(input);
+            var recipe = this.recipeService.GetRecipeById(id);
+            return this.View(recipe);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(CreateRecipeInputModel input)
+        public IActionResult Edit(EditRecipeInputModel input)
         {
             if (ModelState.IsValid)
             {

@@ -10,17 +10,12 @@ namespace OurRecipes.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDataImportService dataImportService;
-        private readonly IScraperService scraperService;
         private readonly IRecipeService recipeService;
 
-        public HomeController(ILogger<HomeController> logger, IRecipeService recipeService, IDataImportService dataImportService, IScraperService scraperService)
+        public HomeController(ILogger<HomeController> logger, IRecipeService recipeService)
         {
             _logger = logger;
-            this.dataImportService = dataImportService;
-            this.scraperService = scraperService;
             this.recipeService = recipeService;
-            this.scraperService = scraperService;
         }
 
         public IActionResult Index()

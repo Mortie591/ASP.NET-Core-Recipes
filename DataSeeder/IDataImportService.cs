@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Services
+﻿namespace DataSeeder
 {
     public interface IDataImportService
     {

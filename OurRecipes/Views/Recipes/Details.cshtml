@@ -23,7 +23,7 @@
                     <i class="p-2 bi bi-heart"></i>
                     <div class="p-2">@Model.Rating likes</div>
                     <div class="p-2">
-                        <a href="#">Comments</a>
+                        <a href="#Comments">Comments</a>
                     </div>
                 </div>
                 <div class="plan">
@@ -115,9 +115,13 @@
             </div>
             <div class="instructions col-lg-6 col-md-12">
                 <h4>Instructions</h4>
-                <div>
-                    <p class="p-2">@Model.Instructions</p>
-                </div>
+                <ul class="list-group custom-list"></ul>
+                @for (int i = 1; i < Model.Instructions.ToArray().Length-1; i++)
+                {
+                    <li class="list-group-item list-group-item-action">
+                        <p class="p-2">@i. @Model.Instructions[i]</p>
+                    </li>
+                }
             </div>
         </div>
     </div>

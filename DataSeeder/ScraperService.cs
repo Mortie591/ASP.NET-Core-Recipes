@@ -1,10 +1,11 @@
 ﻿using HtmlAgilityPack;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
+using OurRecipes.Services;
 using OurRecipes.Services.Models.ScraperDtos;
 using System.Text;
 
-namespace OurRecipes.Services
+namespace DataSeeder
 {
     public class ScraperService:InitialDataService, IScraperService
     {
@@ -54,26 +55,14 @@ namespace OurRecipes.Services
                         {
                             if (!this.recipes.Select(x => x.Title).Contains(recipe.Title))
                             {
-                                this.recipes.Add(recipe);
+                                this.context.Recipes.Add(recipe);
+
+                                this.context.SaveChanges();
+
                             }
                         }
                     }
                 }
-            }
-            try
-            {
-                this.context.Units.AddRangeAsync(this.units);
-                this.context.Tags.AddRangeAsync(this.tags);
-                this.context.Nutrients.AddRangeAsync(this.nutrients);
-                this.context.Ingredients.AddRangeAsync(this.ingredients);
-                this.context.Categories.AddRangeAsync(this.categories);
-                this.context.Recipes.AddRangeAsync(this.recipes);
-
-                this.context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
             
         }
@@ -294,7 +283,7 @@ namespace OurRecipes.Services
             for (int i = 0; i < instructionsList.Count; i++)
             {
                 var paragraph = instructionsList[i].LastChild.InnerText;
-                instructions.AppendLine($"{i + 1}. {paragraph}");
+                instructions.AppendLine($"{paragraph}");
             }
             recipeDto.Instructions = instructions.ToString();
 

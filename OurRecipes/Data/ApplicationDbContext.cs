@@ -6,6 +6,10 @@ namespace OurRecipes.Data
 {
     public class ApplicationDbContext : IdentityDbContext <AppIdentityUser>
     {
+        public ApplicationDbContext()
+        {
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -31,7 +35,7 @@ namespace OurRecipes.Data
                 .WithOne(x => x.Author)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Ingredient>().HasIndex(x => new { x.Name }).IsUnique();
+            //builder.Entity<Ingredient>().HasIndex(x => new { x.Name }).IsUnique();
             builder.Entity<Recipe>().HasKey(x => x.Id);
             
             base.OnModelCreating(builder);

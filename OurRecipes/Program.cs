@@ -4,6 +4,7 @@ using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Services;
 using AutoMapper;
+using OurRecipes.Models.Profiles;
 
 namespace OurRecipes
 {
@@ -35,11 +36,10 @@ namespace OurRecipes
             builder.Services.AddControllersWithViews();
 
             //Custom services registration
-            builder.Services.AddTransient<IDataImportService, DataImportService>();
-            builder.Services.AddTransient<IScraperService, ScraperService>();
+            
             builder.Services.AddTransient<IRecipeService, RecipeService>();
             builder.Services.AddTransient<ICategoryService, CategoryService>();
-            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(c=>c.AddProfile<RecipeProfile>(),typeof(Program));
 
             var app = builder.Build();
 

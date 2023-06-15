@@ -67,7 +67,7 @@ namespace OurRecipes.Services
                     {
                         Ingredient = GetOrCreateIngredient(c.IngredientName),
                         Quantity = c.Quantity,
-                        Unit = GetOrCreateUnit(c.Unit),
+                        Unit = c.Unit!="---"?GetOrCreateUnit(c.Unit):null,
                         Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
                     };
                     Recipe.Components.Add(recipeComponent);
@@ -126,7 +126,7 @@ namespace OurRecipes.Services
                     Nutrients = recipe.Nutrients.Where(x => x.Name != "updated_at").ToList(),
                     ImageUrl = recipe.ImageUrl,
                     Categories = recipe.Categories.Where(x => x.Type != "difficulty").Select(x => x.Name).ToList(),
-                    Instructions = String.Join('\n', regex.Split(recipe.Instructions)),
+                    Instructions = recipe.Instructions.Split(Environment.NewLine,StringSplitOptions.RemoveEmptyEntries).ToList(),
                     Sections = recipe.Sections.ToList(),
                     Components = recipe.Components.ToList(),
                     Author = author != null ? author.UserName : null

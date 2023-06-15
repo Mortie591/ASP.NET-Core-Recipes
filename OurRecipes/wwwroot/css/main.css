@@ -157,6 +157,9 @@ section {
 /*--------------------------------------------------------------
 # Custom 
 --------------------------------------------------------------*/
+textarea{
+    white-space:pre-wrap;
+}
 .custom-list {
     list-style: none;
     padding-left:0px;

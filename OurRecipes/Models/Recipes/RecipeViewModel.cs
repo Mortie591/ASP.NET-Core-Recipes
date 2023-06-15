@@ -11,6 +11,7 @@ namespace OurRecipes.Models.Recipes
             Sections = new List<Section>();
             Components = new List<Component>();
             Nutrients = new List<Nutrient>();
+            Instructions = new List<string>();
         }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -23,7 +24,7 @@ namespace OurRecipes.Models.Recipes
         public List<string> Categories { get; set; } 
         public List<Section>? Sections { get; set; }
         public List<Component> Components { get; set; }
-        public string Instructions { get; set; }
+        public List<string> Instructions { get; set; }
         public List<Nutrient> Nutrients { get; set; }
         public string Author { get; set; }
     }
