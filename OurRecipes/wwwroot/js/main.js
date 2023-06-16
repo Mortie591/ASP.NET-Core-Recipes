@@ -123,12 +123,12 @@ function AddSection() {
         ingredientRow.setAttribute('id', 'ingredients-row');
         ingredientRow.innerHTML = `<div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Name</strong></label>
-                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="25g">
+                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="all-purpose flour">
                                         <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
                                     </div>
                                     <div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Quantity</strong></label>
-                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="Carbs">
+                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="200">
                                         <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
                                     </div>
                                     <div class="col-lg-4 col-md-6">

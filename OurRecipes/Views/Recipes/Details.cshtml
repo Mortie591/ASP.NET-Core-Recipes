@@ -7,7 +7,7 @@
 
 <section class="cards section-bg">
     <div class="section-header">
-        <p>@Model.Name</p>
+        <p>@Model.Title</p>
         <h2>Recipe details</h2>
     </div>
     
@@ -17,7 +17,7 @@
             <div class="col-lg-6 col-md-12">
                 <div>
                     <span>Author </span>
-                    <a asp-area="" asp-controller="Recipes" asp-action="ByUser" asp-route-userName=@Model.Author >@Model.Author</a>
+                    <a asp-area="" asp-controller="Recipes" asp-action="ByUser" asp-route-userName=@Model.AuthorName>@Model.AuthorName</a>
                 </div>
                 <div class="d-flex flex-row">
                     <i class="p-2 bi bi-heart"></i>

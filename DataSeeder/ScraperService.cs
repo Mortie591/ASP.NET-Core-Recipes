@@ -12,7 +12,7 @@ namespace DataSeeder
         
         private readonly List<string> urls = new List<String>();
         private readonly List<string> collections = new List<String>() 
-        { "breakfast-recipes", "chicken-thigh-recipes" , "quick-and-easy-recipes", "dessert-recipes", "easy-pasta-recipes" };
+        { "easy-recipes", "easy-vegetarian-recipes","chocolate-dessert-recipes"};
 
         public ScraperService(ApplicationDbContext db) 
             : base(db)

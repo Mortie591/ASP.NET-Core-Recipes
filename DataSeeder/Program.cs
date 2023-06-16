@@ -19,8 +19,8 @@ namespace DataSeeder
             var dataImportService = serviceProvider.GetService<IDataImportService>();
             //dataImportService.CleanDatabase();
             //dataImportService.ImportRecipes();
-            //var scraperService = serviceProvider.GetService<IScraperService>();
-            //scraperService.PopulateData();
+            var scraperService = serviceProvider.GetService<IScraperService>();
+            scraperService.PopulateData();
         }
 
         private static void ConfigureServices(ServiceCollection services)

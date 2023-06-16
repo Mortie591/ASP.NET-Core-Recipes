@@ -1,5 +1,5 @@
 ﻿@using OurRecipes.Models.Recipes;
-@model EditRecipeInputModel;
+@model EditRecipeViewModel;
 @{
     int nutrientsIndex = 0;
 }
@@ -26,17 +26,17 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Servings"><strong>Servings</strong></label>
-                            <input asp-for="Servings" class="form-control" id="servings" placeholder="Servings">
+                            <input asp-for="Servings" class="form-control" id="servings" value="@Model.Servings" placeholder="Servings">
                             <span asp-validation-for="Servings" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <<label asp-for="PrepTime"><strong> Preparation Time (in minutes)</strong></label>
-                            <input asp-for="PrepTime" class="form-control" id="prepTime" placeholder="25">
+                            <<label asp-for="PrepTime"><strong>Preparation Time (in minutes)</strong></label>
+                            <input asp-for="PrepTime" class="form-control" id="prepTime" value="@Model.PrepTime" placeholder="25">
                             <span asp-validation-for="PrepTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <<label asp-for="CookTime"><strong>Cooking Time (in minutes)</strong></label>
-                            <input asp-for="CookTime" class="form-control" id="prepTime" placeholder="25">
+                            <input asp-for="CookTime" class="form-control" id="cookTime" value="@Model.CookTime" placeholder="25">
                             <span asp-validation-for="CookTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
@@ -91,7 +91,7 @@
                         <div class="col-lg-4 col-md-6">
                             <!--TODO: add remaining countries-->
                             <label asp-for="Cuisine"><strong>Cuisine</strong></label>
-                            <select asp-for="Cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
+                            <select asp-for="Cuisine" class="form-control" id="cuisine" value="@Model.Cuisine" placeholder="Cuisine">
                                 <option>---</option>
                                 <option value="Cuisine-American">American</option>
                                 <option value="Cuisine-British">British</option>
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Season"><strong>Season</strong></label>
-                            <select asp-for="Season" class="form-control" id="season" placeholder="Season">
+                            <select asp-for="Season" class="form-control" id="season" value="@Model.Season" placeholder="Season">
                                 <option>---</option>
                                 <option value="Season-Winter">Winter</option>
                                 <option value="Season-Spring">Spring</option>
@@ -119,7 +119,7 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Difficulty"><strong>Difficulty</strong></label>
-                            <select asp-for="Difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
+                            <select asp-for="Difficulty" class="form-control" id="difficulty" value="@Model.Difficulty" placeholder="Difficulty">
                                 <option>---</option>
                                 <option value="Difficulty-Easy">Easy</option>
                                 <option value="Difficulty-Medium">Medium</option>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
-                            <select asp-for="CookingTechnique" class="form-control" id="cooking-style" placeholder="Cooking Style">
+                            <select asp-for="CookingTechnique" class="form-control" id="cooking-style" value="@Model.CookingTechnique" placeholder="Cooking Style">
                                 <option>---</option>
                                 <option value="CookingTechnique-Roasing">Roasing</option>
                                 <option value="CookingTechnique-Stewing">Stewing</option>
@@ -146,7 +146,7 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="ImageUrl"><strong>Image Url</strong></label>
-                            <input asp-for="ImageUrl" class="form-control" id="img-url" placeholder="Recipe Title">
+                            <input asp-for="ImageUrl" class="form-control" id="img-url" value="@Model.ImageUrl" placeholder="Image URL">
                             <span asp-validation-for="ImageUrl" class="text-danger"></span>
                         </div>
                         <div name="ingredients" class="form-group mt-3 mb-3">
@@ -159,17 +159,17 @@
                                         <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Ingredient Name</strong></label>
-                                                <input asp-for="Components[i].IngredientName" class="form-control" placeholder="25g">
+                                                <input asp-for="Components[i].IngredientName" class="form-control" value="@Model.Components[i].IngredientName" placeholder="Sugar">
                                                 <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
                                             </div>
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Ingredient Quantity</strong></label>
-                                                <input asp-for="Components[i].Quantity" class="form-control" placeholder="Carbs">
+                                                <input asp-for="Components[i].Quantity" class="form-control" value="@Model.Components[i].Quantity" placeholder="200">
                                                 <span asp-validation-for="Components[i].Quantity" class="text-danger"></span>
                                             </div>
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Units</strong></label>
-                                                <select asp-for="Components[i].Unit" class="form-control">
+                                                <select asp-for="Components[i].Unit" value="@Model.Components[i].Unit" class="form-control">
                                                     <option>---</option>
                                                     <option>gr</option>
                                                     <option>kg</option>
@@ -187,23 +187,23 @@
                                     {
                                         <ul name="sections" class="form-group mt-3 mb-3">
                                             <label asp-for="Sections[i].SectionName"><strong>Section Name</strong></label>
-                                            <input asp-for="Sections[i].SectionName" class="form-control" placeholder="Section Name">
+                                            <input asp-for="Sections[i].SectionName" class="form-control" value="@Model.Sections[i].SectionName" placeholder="Section Name">
                                             @for (int j = 0; j < Model.Sections[i].Components.Count; j++)
                                             {
                                                 <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Ingredient Name</strong></label>
-                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" placeholder="All purpose flour">
+                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" value="@Model.Sections[i].Components[j].IngredientName" placeholder="All purpose flour">
                                                         <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Ingredient Quantity</strong></label>
-                                                        <input asp-for="Sections[i].Components[j].Quantity" class="form-control" placeholder="650">
+                                                        <input asp-for="Sections[i].Components[j].Quantity" class="form-control" value="@Model.Sections[i].Components[j].Quantity" placeholder="650">
                                                         <span asp-validation-for="Sections[i].Components[j].Quantity" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Units</strong></label>
-                                                        <select asp-for="Sections[i].Components[j].Unit" class="form-control">
+                                                        <select asp-for="Sections[i].Components[j].Unit" value="@Model.Sections[i].Components[j].Unit" class="form-control">
                                                             <option>---</option>
                                                             <option>gr</option>
                                                             <option>kg</option>
@@ -240,12 +240,12 @@
                                     <li asp-for="NutrientInputModel" name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Quantity</strong></label>
-                                            <input asp-for="Nutrients[i].Quantity" class="form-control" placeholder="25g">
+                                            <input asp-for="Nutrients[i].Quantity" class="form-control" value="@Model.Nutrients[i].Quantity" placeholder="25g">
                                             <span asp-validation-for="Nutrients[i].Quantity" class="text-danger"></span>
                                         </div>
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Name</strong></label>
-                                            <input asp-for="Nutrients[i].Name" class="form-control" placeholder="Carbs">
+                                            <input asp-for="Nutrients[i].Name" class="form-control" value="@Model.Nutrients[i].Name" placeholder="Carbs">
                                             <span asp-validation-for="Nutrients[i].Name" class="text-danger"></span>
                                         </div>
                                     </li>
@@ -264,7 +264,7 @@
                     </div>
                     <div class="form-group mt-3 mb-3">
                         <label asp-for="Description"><strong>Description</strong></label>
-                        <textarea asp-for="Description" class="form-control" id="description" rows="5" placeholder="Descriptioon"></textarea>
+                        <textarea asp-for="Description" class="form-control" id="description" rows="5" value="@Model.Description" placeholder="Descriptioon"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>

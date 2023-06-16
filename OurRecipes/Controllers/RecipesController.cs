@@ -100,25 +100,25 @@ namespace OurRecipes.Controllers
             }
             input.Author = userManager.GetUserId(User);
             this.recipeService.Add(input);
-            return RedirectToAction("Details","Recipes",new {input.Title});
+            return RedirectToAction("Details","Recipes",new {name = input.Title});
         }
         [Authorize]
-        public IActionResult Edit(string id)
+        public ViewResult Edit(string id)
         {
-            var recipe = this.recipeService.GetRecipeById(id);
+            var recipe = this.recipeService.GetEditData(id);
             return this.View(recipe);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EditRecipeInputModel input)
+        public IActionResult Edit(EditRecipeViewModel input)
         {
             if (ModelState.IsValid)
             {
                 return this.View(input);
             }
-            return RedirectToAction("Details", "Recipes", new { input.Title });
+            return RedirectToAction("Details", "Recipes", new  { name=input.Title });
         }
         [Authorize]
         public async Task<IActionResult> Like() //Add to favourites

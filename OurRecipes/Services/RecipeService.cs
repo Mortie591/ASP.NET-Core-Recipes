@@ -5,6 +5,8 @@ using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
+using OurRecipes.Services.Models.ImportDtos;
+using OurRecipes.Services.Models.ScraperDtos;
 using System.Text.RegularExpressions;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
@@ -78,6 +80,49 @@ namespace OurRecipes.Services
             this.context.Recipes.Add(Recipe);
             this.context.SaveChanges();
         }
+        public EditRecipeViewModel GetEditData(string id)
+        {
+            var recipe = GetRecipeById(id)??
+                throw new NullReferenceException(nameof(id));
+            var difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty");
+            var cuisine = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "cuisine");
+            var seasonal = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "seasonal");
+            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "Cooking technique");
+            //var recipeDto = this.mapper.Map<Recipe,EditRecipeViewModel>(recipe);
+            var recipeDto = new EditRecipeViewModel()
+            {
+                Title = recipe.Title,
+                Description = recipe.Description,
+                PrepTime = int.Parse(recipe.PrepTime),
+                CookTime = int.Parse(recipe.CookTime),
+                Servings = int.Parse(recipe.CookTime),
+                Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty" && x.Type.ToLower() != "cuisine" && x.Type.ToLower() != "seasonal").Select(x => x.Name).ToList(),
+                Difficulty = difficulty != null ? difficulty.Name : null,
+                Cuisine = cuisine != null? cuisine.Name:null,
+                Season = seasonal != null? seasonal.Name:null,
+                CookingTechnique = cookingTechnique != null? cookingTechnique.Name:null,
+                Sections = recipe.Sections.Select(x=>new SectionInputModel
+                {
+                    SectionName=x.Name,
+                    Components = x.Components.Select(c=>new ComponentInputModel
+                    {
+                        IngredientName = c.Ingredient.Name,
+                        Quantity = c.Quantity,
+                        Unit = c.Unit==null?null:c.Unit.Name,
+                        Text = c.Text
+                    }).ToList()
+                }).ToList(),
+                Instructions = recipe.Instructions,
+                Nutrients = recipe.Nutrients.Select(x => new NutrientInputModel
+                {
+                    Name = x.Name,
+                    Quantity = $"{x.Quantity}{x.Unit}",
+                }).ToList(),
+                Author = userManager.FindByIdAsync(recipe.AuthorId).Result.UserName
+            };
+           
+            return recipeDto;
+        }
         public void Remove(string id)
         {
             Recipe recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
@@ -92,9 +137,28 @@ namespace OurRecipes.Services
                 Console.WriteLine($"No recipe with id: {id} found");
             }
         }
-        public RecipeViewModel GetRecipeById(string id)
+        public Recipe GetRecipeById(string id)
         {
-            Recipe recipe = context.Recipes.FirstOrDefault(x => x.Id.Equals(id));
+            Recipe recipe = context.Recipes
+                .Include(x => x.Nutrients)
+                .Include(x => x.Sections)
+                .Include(x => x.Components).ThenInclude(x => x.Ingredient)
+                .Include(x => x.Categories)
+                .FirstOrDefault(x => x.Id.Equals(id));
+            if (recipe != null)
+            {
+                return recipe;
+            }
+            return null;
+        }
+        public RecipeViewModel GetRecipeByName(string name)
+        {
+            Recipe recipe = context.Recipes
+                .Include(x => x.Nutrients)
+                .Include(x=>x.Sections)
+                .Include(x => x.Components)
+                .Include(x => x.Categories)
+                .FirstOrDefault(x => x.Title.Equals(name));
             if (recipe != null)
             {
                 RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
@@ -102,50 +166,27 @@ namespace OurRecipes.Services
             }
             return null;
         }
-        public RecipeViewModel GetRecipeByName(string name)
-        {
-            name = HttpUtility.HtmlEncode(name);
-            //TODO: split query
-            Recipe recipe = context.Recipes
-                .Include(x => x.Nutrients)
-                .Include(x => x.Components)
-                .Include(x => x.Categories)
-                .FirstOrDefault(x => x.Title.Equals(name));
-            if (recipe != null)
-            {
-                Regex regex = new Regex(@"([/\d]+[.])|([/\d]+[/\s]+[-])/gm");
-                var author = userManager.FindByIdAsync(recipe.AuthorId).Result;
-                RecipeViewModel recipeViewModel = new RecipeViewModel
-                {
-                    Name = HttpUtility.HtmlDecode(recipe.Title),
-                    Description = HttpUtility.HtmlDecode(recipe.Description),
-                    PrepTime = recipe.PrepTime,
-                    CookTime = recipe.CookTime,
-                    Difficulty = recipe.Categories.FirstOrDefault(x => x.Type == "difficulty") != null ? recipe.Categories.FirstOrDefault(x => x.Type == "difficulty").Name : null,
-                    Servings = int.TryParse(recipe.Servings, out int servings) is true ? servings : 0,
-                    Nutrients = recipe.Nutrients.Where(x => x.Name != "updated_at").ToList(),
-                    ImageUrl = recipe.ImageUrl,
-                    Categories = recipe.Categories.Where(x => x.Type != "difficulty").Select(x => x.Name).ToList(),
-                    Instructions = recipe.Instructions.Split(Environment.NewLine,StringSplitOptions.RemoveEmptyEntries).ToList(),
-                    Sections = recipe.Sections.ToList(),
-                    Components = recipe.Components.ToList(),
-                    Author = author != null ? author.UserName : null
-                };
-                //RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
-                return recipeViewModel;
-            }
-            return null;
-        }
         public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
-            var recipes = this.context.Recipes.Select(x=>new RecipeCardViewModel
+            try
             {
-                Title = HttpUtility.HtmlDecode(x.Title),
-                Rating = x.Likes,
-                imageUrl = x.ImageUrl
-            }).OrderBy(x => Guid.NewGuid()).Take(6).ToList();
-            
-            return recipes;
+                var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(x.Title),
+                    Rating = x.Likes,
+                    ImageUrl = x.ImageUrl,
+                    Categories = x.Categories,
+                    CreatedOnDate = x.CreatedOnDate,
+                }).OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+
+                return recipes;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception();
+            }
+           
         }
         public ICollection<RecipeCardViewModel> GetLatest()
         {
@@ -155,7 +196,7 @@ namespace OurRecipes.Services
                 {
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
-                    imageUrl = x.ImageUrl,
+                    ImageUrl = x.ImageUrl,
                     Categories = x.Categories,
                     CreatedOnDate = x.CreatedOnDate,
                 }).OrderByDescending(x => x.CreatedOnDate).Take(10).ToList();
@@ -171,16 +212,25 @@ namespace OurRecipes.Services
 
         public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName)
         {
-            var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
+            try
             {
-                Title = HttpUtility.HtmlDecode(x.Title),
-                Rating = x.Likes,
-                imageUrl = x.ImageUrl,
-                Categories = x.Categories,
-                CreatedOnDate = x.CreatedOnDate,
-            }).Where(x => x.Categories.Any(c => c.Name.Equals(categoryName))).ToList();
+                var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(x.Title),
+                    Rating = x.Likes,
+                    ImageUrl = x.ImageUrl,
+                    Categories = x.Categories,
+                    CreatedOnDate = x.CreatedOnDate,
+                }).Where(x => x.Categories.Any(c => c.Name.Equals(categoryName))).ToList();
 
-            return recipes;
+                return recipes;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
 
         public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients)
@@ -208,7 +258,7 @@ namespace OurRecipes.Services
                     {
                         Title = HttpUtility.HtmlDecode(recipe.Title),
                         Rating = recipe.Likes,
-                        imageUrl = recipe.ImageUrl,
+                        ImageUrl = recipe.ImageUrl,
                     };
                     recipeCards.Add(viewModel);
                 }
@@ -219,15 +269,24 @@ namespace OurRecipes.Services
         
         public ICollection<RecipeCardViewModel> GetTrending()
         {
-            var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
+            try
             {
-                Title = HttpUtility.HtmlDecode(x.Title),
-                Rating = x.Likes,
-                imageUrl = x.ImageUrl,
-                Categories = x.Categories
-            }).OrderByDescending(x=>x.Rating).ThenByDescending(x=>x.CreatedOnDate).ToList();
+                var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
+                {
+                    Title = HttpUtility.HtmlDecode(x.Title),
+                    Rating = x.Likes,
+                    ImageUrl = x.ImageUrl,
+                    Categories = x.Categories
+                }).OrderByDescending(x => x.Rating).ThenByDescending(x => x.CreatedOnDate).ToList();
 
-            return recipes;
+                return recipes;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
         }
 
         public ICollection<RecipeCardViewModel> GetMyRecipes(string userId)
@@ -236,9 +295,10 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Where(x => x.AuthorId == userId).Select(x => new RecipeCardViewModel
                 {
+                    Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
-                    imageUrl = x.ImageUrl,
+                    ImageUrl = x.ImageUrl,
                     Categories = x.Categories
                 }).ToList();
 
@@ -263,7 +323,7 @@ namespace OurRecipes.Services
                     AuthorName = x.User.UserName,
                     Title = x.Recipe.Title,
                     Rating = x.Recipe.Likes,
-                    imageUrl = x.Recipe.ImageUrl
+                    ImageUrl = x.Recipe.ImageUrl
                 })
                 .ToList();
 
@@ -327,7 +387,7 @@ namespace OurRecipes.Services
                 Title = HttpUtility.HtmlDecode(x.Title),
                 AuthorName = author.UserName,
                 Rating = x.Likes,
-                imageUrl = x.ImageUrl,
+                ImageUrl = x.ImageUrl,
             }).ToList();
                
                 return recipes;

@@ -7,7 +7,7 @@ namespace OurRecipes.Models.Recipes
         public string Id { get; set; }
         public string AuthorName { get; set; }
         public string Title { get; set; }
-        public string imageUrl { get; set; }
+        public string ImageUrl { get; set; }
         public ushort Rating { get; set; }
     }
 }

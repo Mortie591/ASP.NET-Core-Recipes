@@ -5,7 +5,7 @@ namespace OurRecipes.Services
 {
     public interface IRecipeService
     {
-        public RecipeViewModel GetRecipeById(string id);
+        public Recipe GetRecipeById(string id);
         public RecipeViewModel GetRecipeByName(string name);
         public ICollection<RecipeCardViewModel> GetRandomRecipes();
         public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients);
@@ -13,6 +13,7 @@ namespace OurRecipes.Services
         public ICollection<RecipeCardViewModel> GetLatest();
         public ICollection<RecipeCardViewModel> GetTrending();
         public void Add(CreateRecipeInputModel recipeDto);
+        public EditRecipeViewModel GetEditData(string id);
         public ICollection<RecipeCardViewModel> GetMyRecipes(string userId);
         public Task<ICollection<RecipeByUserViewModel>> GetRecipesByUserAsync(string userId);
         public ICollection<RecipeByUserViewModel> GetFavouriteRecipes(string userId);

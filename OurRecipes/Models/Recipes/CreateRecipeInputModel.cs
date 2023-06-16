@@ -26,10 +26,10 @@ namespace OurRecipes.Models.Recipes
         //[RegularExpression(@"/^(?:(?<scheme>[^:\\/?#]+):)?(?:\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*\\/)?(?<file>[^?#]*\\.(?<extension>[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]))(?:\\?(?<query>[^#]*))?(?:#(?<fragment>.*))?$/gm")]
         public string ImageUrl { get; set; }
         public List<string> Categories { get; set; } //Type <-> Name
-        public string Cuisine { get; set; } 
-        public string Season { get; set; }
-        public string Difficulty { get; set; }
-        public string CookingTechnique { get; set; }
+        public string? Cuisine { get; set; } 
+        public string? Season { get; set; }
+        public string? Difficulty { get; set; }
+        public string? CookingTechnique { get; set; }
         public List<SectionInputModel>? Sections { get; set; }
         public List<ComponentInputModel> Components { get; set; }
 
