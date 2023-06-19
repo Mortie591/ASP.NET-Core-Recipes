@@ -29,17 +29,38 @@ namespace OurRecipes.Models.Profiles
                 .ForMember(d => d.Title, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Title)))
                 .ForMember(d => d.PrepTime, s => s.MapFrom(s => s.PrepTime))
                 .ForMember(d => d.CookTime, s => s.MapFrom(s => s.CookTime))
-                .ForMember(d => d.Difficulty, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "difficulty")))
-                .ForMember(d => d.Cuisine, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "cuisine")))
-                .ForMember(d => d.Season, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "seasonal")))
-                .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories.Where(x => x.Type != "difficulty" && x.Type != "cuisine" && x.Type != "seasonal").Select(x => x.Name)))
+                .ForMember(d => d.Difficulty, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "difficulty").Name))
+                .ForMember(d => d.Cuisine, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "cuisine").Name))
+                .ForMember(d => d.CookingTechnique, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "cookingtechnique").Name))
+                .ForMember(d => d.Season, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "seasonal").Name))
+                .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories.Where(x => x.Type != "difficulty" && x.Type != "cuisine" && x.Type != "seasonal" && x.Type != "cookingtechnique").Select(x => x.Name)))
                 .ForMember(d => d.Servings, opt => opt.ConvertUsing(new IntConverter()))
                 .ForMember(d => d.Description, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Description)))
                 .ForMember(d => d.Instructions, s => s.MapFrom(s => s.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
                 .ForMember(d => d.ImageUrl, s => s.MapFrom(s => s.ImageUrl))
-                .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients))
-                .ForMember(d => d.Components, s => s.MapFrom(s => s.Components))
-                .ForMember(d => d.Sections, opt => opt.MapFrom(s => s.Sections));
+                .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients.Select(x => new NutrientInputModel
+                {
+                    Name = x.Name,
+                    Quantity = $"{x.Quantity}{x.Unit}",
+                }).ToList()))
+                .ForMember(d => d.Components, s => s.MapFrom(s => s.Components.Select(c => new ComponentInputModel
+                {
+                    IngredientName = c.Ingredient.Name,
+                    Quantity = c.Quantity,
+                    Unit = c.Unit == null ? null : c.Unit.Name,
+                    Text = c.Text
+                }).ToList()))
+                .ForMember(d => d.Sections, opt => opt.MapFrom(s => s.Sections.Select(x => new SectionInputModel
+                {
+                    SectionName = x.Name,
+                    Components = x.Components.Select(c => new ComponentInputModel
+                    {
+                        IngredientName = c.Ingredient.Name,
+                        Quantity = c.Quantity,
+                        Unit = c.Unit == null ? null : c.Unit.Name,
+                        Text = c.Text
+                    }).ToList()
+                })));
                 
 
             //Not in use, just in case

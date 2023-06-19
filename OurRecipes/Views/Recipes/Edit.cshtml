@@ -43,7 +43,10 @@
                             <!--TODO: Get Categories-->
                             <label asp-for="Categories"><strong>Category</strong></label>
                             <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
-                                <option>---</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category" selected="true">@category</option>
+                                }
                                 <optgroup label="Meal Course">
                                     <option value="Meal Course-Breakfast">Breakfast</option>
                                     <option value="Meal Course-Brunch">Brunch</option>
@@ -92,7 +95,7 @@
                             <!--TODO: add remaining countries-->
                             <label asp-for="Cuisine"><strong>Cuisine</strong></label>
                             <select asp-for="Cuisine" class="form-control" id="cuisine" value="@Model.Cuisine" placeholder="Cuisine">
-                                <option>---</option>
+                                <option>@Model.Cuisine</option>
                                 <option value="Cuisine-American">American</option>
                                 <option value="Cuisine-British">British</option>
                                 <option value="Cuisine-Bulgarian">Bulgarian</option>
@@ -109,7 +112,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Season"><strong>Season</strong></label>
                             <select asp-for="Season" class="form-control" id="season" value="@Model.Season" placeholder="Season">
-                                <option>---</option>
+                                <option>@Model.Season</option>
                                 <option value="Season-Winter">Winter</option>
                                 <option value="Season-Spring">Spring</option>
                                 <option value="Season-Summer">Summer</option>
@@ -120,7 +123,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Difficulty"><strong>Difficulty</strong></label>
                             <select asp-for="Difficulty" class="form-control" id="difficulty" value="@Model.Difficulty" placeholder="Difficulty">
-                                <option>---</option>
+                                <option>@Model.Difficulty</option>
                                 <option value="Difficulty-Easy">Easy</option>
                                 <option value="Difficulty-Medium">Medium</option>
                                 <option value="Difficulty-Challenge">Challenge</option>
@@ -131,7 +134,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
                             <select asp-for="CookingTechnique" class="form-control" id="cooking-style" value="@Model.CookingTechnique" placeholder="Cooking Style">
-                                <option>---</option>
+                                <option>@Model.CookingTechnique</option>
                                 <option value="CookingTechnique-Roasing">Roasing</option>
                                 <option value="CookingTechnique-Stewing">Stewing</option>
                                 <option value="CookingTechnique-Grilling">Grilling</option>
@@ -170,7 +173,7 @@
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Units</strong></label>
                                                 <select asp-for="Components[i].Unit" value="@Model.Components[i].Unit" class="form-control">
-                                                    <option>---</option>
+                                                    <option selected="true">@Model.Components[i].Unit</option>
                                                     <option>gr</option>
                                                     <option>kg</option>
                                                     <option>ml</option>
@@ -204,7 +207,7 @@
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Units</strong></label>
                                                         <select asp-for="Sections[i].Components[j].Unit" value="@Model.Sections[i].Components[j].Unit" class="form-control">
-                                                            <option>---</option>
+                                                            <option selected="true">@Model.Sections[i].Components[j].Unit</option>
                                                             <option>gr</option>
                                                             <option>kg</option>
                                                             <option>ml</option>

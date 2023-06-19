@@ -5,8 +5,7 @@ using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Recipes;
-using OurRecipes.Services.Models.ImportDtos;
-using OurRecipes.Services.Models.ScraperDtos;
+
 using System.Text.RegularExpressions;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
@@ -20,7 +19,6 @@ namespace OurRecipes.Services
         private readonly UserManager<AppIdentityUser> userManager;
 
         public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager) 
-            : base(db)
         {
             this.context = db;
             this.mapper = mapper;
@@ -87,7 +85,7 @@ namespace OurRecipes.Services
             var difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty");
             var cuisine = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "cuisine");
             var seasonal = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "seasonal");
-            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "Cooking technique");
+            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "cookingtechnique");
             //var recipeDto = this.mapper.Map<Recipe,EditRecipeViewModel>(recipe);
             var recipeDto = new EditRecipeViewModel()
             {
@@ -96,19 +94,21 @@ namespace OurRecipes.Services
                 PrepTime = int.Parse(recipe.PrepTime),
                 CookTime = int.Parse(recipe.CookTime),
                 Servings = int.Parse(recipe.CookTime),
-                Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty" && x.Type.ToLower() != "cuisine" && x.Type.ToLower() != "seasonal").Select(x => x.Name).ToList(),
+                Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty" && x.Type.ToLower() != "cuisine"
+                && x.Type.ToLower() != "seasonal" && x.Type.ToLower() != "cookingtechnique")
+                .Select(x => x.Name).ToList(),
                 Difficulty = difficulty != null ? difficulty.Name : null,
-                Cuisine = cuisine != null? cuisine.Name:null,
-                Season = seasonal != null? seasonal.Name:null,
-                CookingTechnique = cookingTechnique != null? cookingTechnique.Name:null,
-                Sections = recipe.Sections.Select(x=>new SectionInputModel
+                Cuisine = cuisine != null ? cuisine.Name : null,
+                Season = seasonal != null ? seasonal.Name : null,
+                CookingTechnique = cookingTechnique != null ? cookingTechnique.Name : null,
+                Sections = recipe.Sections.Select(x => new SectionInputModel
                 {
-                    SectionName=x.Name,
-                    Components = x.Components.Select(c=>new ComponentInputModel
+                    SectionName = x.Name,
+                    Components = x.Components.Select(c => new ComponentInputModel
                     {
                         IngredientName = c.Ingredient.Name,
                         Quantity = c.Quantity,
-                        Unit = c.Unit==null?null:c.Unit.Name,
+                        Unit = c.Unit == null ? null : c.Unit.Name,
                         Text = c.Text
                     }).ToList()
                 }).ToList(),
@@ -120,8 +120,12 @@ namespace OurRecipes.Services
                 }).ToList(),
                 Author = userManager.FindByIdAsync(recipe.AuthorId).Result.UserName
             };
-           
+
             return recipeDto;
+        }
+        public void Edit(EditRecipeViewModel recipeData)
+        {
+
         }
         public void Remove(string id)
         {
@@ -143,6 +147,7 @@ namespace OurRecipes.Services
                 .Include(x => x.Nutrients)
                 .Include(x => x.Sections)
                 .Include(x => x.Components).ThenInclude(x => x.Ingredient)
+                .Include(x => x.Components).ThenInclude(x => x.Unit)
                 .Include(x => x.Categories)
                 .FirstOrDefault(x => x.Id.Equals(id));
             if (recipe != null)
@@ -162,6 +167,13 @@ namespace OurRecipes.Services
             if (recipe != null)
             {
                 RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
+                foreach(var section in recipeViewModel.Sections)
+                {
+                    foreach (var component in section.Components)
+                    {
+                        recipeViewModel.Components.Remove(component);
+                    }
+                }
                 return recipeViewModel;
             }
             return null;
