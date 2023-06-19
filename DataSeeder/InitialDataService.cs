@@ -1,7 +1,8 @@
 ﻿using OurRecipes.Data;
 using OurRecipes.Data.Models;
+using DataSeeder.Models.ScraperDtos;
 
-namespace OurRecipes.Services
+namespace DataSeeder
 {
     public abstract class InitialDataService
     {
@@ -12,6 +13,10 @@ namespace OurRecipes.Services
         protected readonly List<Nutrient> nutrients = new List<Nutrient>();
         protected readonly List<Ingredient> ingredients = new List<Ingredient>();
         protected readonly List<Category> categories = new List<Category>();
+        public InitialDataService(ApplicationDbContext db)
+        {
+            this.context = db; 
+        }
 
         //Check for existing records before adding them to DB
         protected virtual ICollection<Component> GetOrCreateComponents(ICollection<Section> sections)

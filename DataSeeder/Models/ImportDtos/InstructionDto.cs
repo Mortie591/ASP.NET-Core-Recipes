@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Services.Models.ImportDtos
+﻿namespace ODataSeeder.Models.ImportDtos
 {
     public class InstructionDto
     {

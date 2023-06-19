@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Services.Models.ScraperDtos
+﻿namespace DataSeeder.Models.ScraperDtos
 {
     public class ComponentDto
     {

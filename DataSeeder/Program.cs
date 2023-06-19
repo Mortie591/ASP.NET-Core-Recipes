@@ -16,11 +16,13 @@ namespace DataSeeder
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
             var context = serviceProvider.GetService<DbContext>();
-            var dataImportService = serviceProvider.GetService<IDataImportService>();
+            //Uncomment to import data
+            //var dataImportService = serviceProvider.GetService<IDataImportService>();
             //dataImportService.CleanDatabase();
             //dataImportService.ImportRecipes();
-            var scraperService = serviceProvider.GetService<IScraperService>();
-            scraperService.PopulateData();
+            //var scraperService = serviceProvider.GetService<IScraperService>();
+            //scraperService.PopulateData();
+            Console.WriteLine("Test");
         }
 
         private static void ConfigureServices(ServiceCollection services)

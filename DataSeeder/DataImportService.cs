@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
-using OurRecipes.Services.Models.ImportDtos;
+using DataSeeder.Models.ImportDtos;
 using System.Text;
 using System.Text.Json;
 using Component = OurRecipes.Data.Models.Component;

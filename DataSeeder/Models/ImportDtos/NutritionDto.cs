@@ -1,4 +1,4 @@
-﻿namespace OurRecipes.Services.Models.ImportDtos
+﻿namespace DataSeeder.Models.ImportDtos
 {
     public class NutritionDto
     {

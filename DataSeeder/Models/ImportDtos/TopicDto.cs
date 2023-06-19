@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OurRecipes.Services.Models.ImportDtos
+namespace DataSeeder.Models.ImportDtos
 {
 
     public class TopicDto

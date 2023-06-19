@@ -2,7 +2,7 @@
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Services;
-using OurRecipes.Services.Models.ScraperDtos;
+using DataSeeder.Models.ScraperDtos;
 using System.Text;
 
 namespace DataSeeder
@@ -103,6 +103,23 @@ namespace DataSeeder
         //    //https://pixabay.com/api/docs/#api_search_images
         //    return null;
         //}
+        private ICollection<Component> GetOrCreateComponents(ICollection<ComponentDto> componentDtos)
+        {
+            var recipeComponents = new HashSet<Component>();
+
+            foreach (Models.ScraperDtos.ComponentDto comp in componentDtos)
+            {
+                Component component = new Component
+                {
+                    Text = comp.Text,
+                    Unit = GetOrCreateUnit(comp.Unit),
+                    Quantity = comp.Quantity,
+                    Ingredient = GetOrCreateIngredient(comp.IngredientName)
+                };
+                recipeComponents.Add(component);
+            }
+            return recipeComponents;
+        }
         private static async Task<RecipeDto> GatherRecipe(string url)
         {
             var recipeDto = new RecipeDto();
