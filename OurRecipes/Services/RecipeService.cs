@@ -47,7 +47,7 @@ namespace OurRecipes.Services
                     {
                         Ingredient = GetOrCreateIngredient(c.IngredientName),
                         Quantity = c.Quantity,
-                        Unit = GetOrCreateUnit(c.Unit),
+                        Unit = c.Unit!="---"?GetOrCreateUnit(c.Unit):null,
                         Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
                     }).ToList()
@@ -95,7 +95,7 @@ namespace OurRecipes.Services
                 Description = recipe.Description,
                 PrepTime = int.Parse(recipe.PrepTime),
                 CookTime = int.Parse(recipe.CookTime),
-                Servings = int.Parse(recipe.CookTime),
+                Servings = int.Parse(recipe.Servings),
                 
                 Difficulty = difficulty != null ? difficulty.Name : null,
                 Cuisine = cuisine != null ? cuisine.Name : null,
@@ -108,7 +108,7 @@ namespace OurRecipes.Services
                     {
                         IngredientName = c.Ingredient.Name,
                         Quantity = c.Quantity,
-                        Unit = c.Unit == null ? null : c.Unit.Name,
+                        Unit =c.Unit?.Name??String.Empty,
                         Text = c.Text
                     }).ToList()
                 }).ToList(),
@@ -179,27 +179,49 @@ namespace OurRecipes.Services
                 throw new NullReferenceException(nameof(id));
             }
         }
-        public RecipeViewModel GetRecipeByName(string name)
+        public Recipe GetRecipeByName(string name)
         {
             Recipe recipe = context.Recipes
                 .Include(x => x.Nutrients)
                 .Include(x=>x.Sections)
                 .Include(x => x.Components)
                 .Include(x => x.Categories)
-                .FirstOrDefault(x => x.Title.Equals(name));
-            if (recipe != null)
+                .FirstOrDefault(x => x.Title.Contains(name))??
+                throw new NullReferenceException(nameof(name));
+      
+            return recipe;
+        }
+        public RecipeViewModel GetRecipeViewModel(string id)
+        {
+            var recipe = this.GetRecipeById(id);
+            var difficulty = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "difficulty");
+            var cuisine = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cuisine");
+            var seasonal = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "seasonal");
+            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cooking technique");
+
+            var recipeData = new RecipeViewModel()
             {
-                RecipeViewModel recipeViewModel = mapper.Map<Recipe, RecipeViewModel>(recipe);
-                foreach(var section in recipeViewModel.Sections)
-                {
-                    foreach (var component in section.Components)
-                    {
-                        recipeViewModel.Components.Remove(component);
-                    }
-                }
-                return recipeViewModel;
+                Title = recipe.Title,
+                Description = recipe.Description,
+                PrepTime = recipe.PrepTime,
+                CookTime = recipe.CookTime,
+                Servings = int.Parse(recipe.Servings),
+                Difficulty = difficulty?.Name,
+                Cuisine = cuisine?.Name,
+                Season = seasonal?.Name,
+                CookingTechnique = cookingTechnique?.Name,
+                Sections = recipe.Sections?.ToList(),
+                Instructions = recipe.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(),
+                Nutrients = recipe.Nutrients.ToList(),
+            };
+
+            foreach (var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
+                && x.Type?.ToLower() != "seasonal" && x.Type?.ToLower() != "cooking technique"))
+            {
+                recipeData.Categories.Add($"{category.Type}-{category.Name}");
             }
-            return null;
+
+            return recipeData;
         }
         public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
@@ -207,6 +229,7 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
                 {
+                    Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
                     ImageUrl = x.ImageUrl,
@@ -229,6 +252,7 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
                 {
+                    Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
                     ImageUrl = x.ImageUrl,
@@ -251,6 +275,7 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
                 {
+                    Id= x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
                     ImageUrl = x.ImageUrl,
@@ -291,6 +316,7 @@ namespace OurRecipes.Services
                 {
                     RecipeCardViewModel viewModel = new RecipeCardViewModel
                     {
+                        Id = recipe.Id,
                         Title = HttpUtility.HtmlDecode(recipe.Title),
                         Rating = recipe.Likes,
                         ImageUrl = recipe.ImageUrl,
@@ -308,6 +334,7 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
                 {
+                    Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = x.Likes,
                     ImageUrl = x.ImageUrl,
@@ -419,6 +446,7 @@ namespace OurRecipes.Services
             {
             var recipes = this.context.Recipes.Where(x => x.AuthorId == userId).Select(x => new RecipeByUserViewModel
             {
+                Id = x.Id,
                 Title = HttpUtility.HtmlDecode(x.Title),
                 AuthorName = author.UserName,
                 Rating = x.Likes,

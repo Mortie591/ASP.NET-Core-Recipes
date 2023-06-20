@@ -21,9 +21,9 @@ namespace OurRecipes.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
-        public IActionResult Details(string name)
+        public IActionResult Details(string id)
         {
-            var recipe = recipeService.GetRecipeByName(name);
+            var recipe = recipeService.GetRecipeViewModel(id);
             return this.View(recipe);
         }
         public IActionResult Delete(string id)

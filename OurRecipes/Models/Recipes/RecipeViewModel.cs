@@ -19,6 +19,9 @@ namespace OurRecipes.Models.Recipes
         public string PrepTime { get; set; }
         public string CookTime { get; set; }
         public string? Difficulty { get; set; }
+        public string? Cuisine { get; set; }
+        public string? Season { get; set; }
+        public string? CookingTechnique { get; set; }
         public string ImageUrl { get; set; }
         public int Rating { get; set; }
         public List<string> Categories { get; set; } 

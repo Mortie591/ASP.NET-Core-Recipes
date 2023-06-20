@@ -157,8 +157,14 @@ section {
 /*--------------------------------------------------------------
 # Custom 
 --------------------------------------------------------------*/
-textarea{
-    white-space:pre-wrap;
+list-group {
+    border:none;
+}
+.list-group .list-group-item {
+    border: none;
+}
+textarea {
+    white-space: pre-wrap;
 }
 .custom-list {
     list-style: none;

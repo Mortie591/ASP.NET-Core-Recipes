@@ -31,18 +31,18 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <<label asp-for="PrepTime"><strong> Preparation Time (in minutes)</strong></label>
-                            <input asp-for="PrepTime" class="form-control" id="prepTime" placeholder="25">
+                            <input asp-for="PrepTime" class="form-control" id="prepTime" placeholder="10">
                             <span asp-validation-for="PrepTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <<label asp-for="CookTime"><strong>Cooking Time (in minutes)</strong></label>
-                            <input asp-for="CookTime" class="form-control" id="prepTime" placeholder="25">
+                            <input asp-for="CookTime" class="form-control" id="cookTime" placeholder="25">
                             <span asp-validation-for="CookTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Categories"><strong>Category</strong></label>
                             <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
-                                <option>---</option>
+                                <option></option>
                                 <optgroup label="Meal Course">
                                     <option value="Meal Course-Breakfast">Breakfast</option>
                                     <option value="Meal Course-Brunch">Brunch</option>
@@ -91,7 +91,7 @@
                             <!--TODO: add remaining countries-->
                             <label asp-for="Cuisine"><strong>Cuisine</strong></label>
                             <select asp-for="Cuisine" class="form-control" id="cuisine" placeholder="Cuisine">
-                                <option>---</option>
+                                <option></option>
                                 <option value="Cuisine-American">American</option>
                                 <option value="Cuisine-British">British</option>
                                 <option value="Cuisine-Bulgarian">Bulgarian</option>
@@ -119,7 +119,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="Difficulty"><strong>Difficulty</strong></label>
                             <select asp-for="Difficulty" class="form-control" id="difficulty" placeholder="Difficulty">
-                                <option>---</option>
+                                <option></option>
                                 <option value="Difficulty-Easy">Easy</option>
                                 <option value="Difficulty-Medium">Medium</option>
                                 <option value="Difficulty-Challenge">Challenge</option>
@@ -130,7 +130,7 @@
                         <div class="col-lg-4 col-md-6">
                             <label asp-for="CookingTechnique"><strong>Cooking Technique</strong></label>
                             <select asp-for="CookingTechnique" class="form-control" id="cooking-style" placeholder="Cooking Style">
-                                <option>---</option>
+                                <option></option>
                                 <option value="CookingTechnique-Roasing">Roasing</option>
                                 <option value="CookingTechnique-Stewing">Stewing</option>
                                 <option value="CookingTechnique-Grilling">Grilling</option>
@@ -198,7 +198,7 @@
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Units</strong></label>
                                                         <select asp-for="Sections[i].Components[j].Unit" class="form-control">
-                                                            <option>---</option>
+                                                            <option></option>
                                                             <option>gr</option>
                                                             <option>kg</option>
                                                             <option>ml</option>

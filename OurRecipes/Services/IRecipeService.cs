@@ -6,7 +6,8 @@ namespace OurRecipes.Services
     public interface IRecipeService
     {
         public Recipe GetRecipeById(string id);
-        public RecipeViewModel GetRecipeByName(string name);
+        public Recipe GetRecipeByName(string name);
+        public RecipeViewModel GetRecipeViewModel(string id);
         public ICollection<RecipeCardViewModel> GetRandomRecipes();
         public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients);
         public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName);

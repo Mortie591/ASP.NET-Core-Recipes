@@ -16,14 +16,14 @@
                 
                 <div  class="col-lg-4 col-md-6 d-flex align-items-stretch" >
                     <div class="card-member">
-                        <a asp-controller="Recipes" asp-action="Details" asp-route-name="@element.Title" class="member-img" data-aos="fade-up" data-aos-delay="100">
+                        <a asp-controller="Recipes" asp-action="Details" asp-route-id="@element.Id" class="member-img" data-aos="fade-up" data-aos-delay="100">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" class="img-fluid" alt="@element.Title-img">
                         </a>
                         <div class="member-info">
                             <h4>@element.Title</h4>
                             <p>@element.Rating likes</p>
                         </div>
-                        <div class="d-flex justify-content-around">
+                        <div class="d-flex justify-content-around p-2">
                             <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@element.Id" class="btn btn-md btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>
                             <a asp-controller="Recipes" asp-action="Delete" asp-route-id="@element.Id" class="btn btn-md btn-secondary" data-aos="fade-up" data-aos-delay="100">Delete</a>
                         </div>

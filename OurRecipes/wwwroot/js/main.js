@@ -18,7 +18,7 @@ function AddNutrient() {
     nutrientRow.setAttribute('id', 'nutrients-row');
     nutrientRow.innerHTML = `<div class="col-lg-4 col-md-6">
                                       <label><strong>Nutrient Quantity</strong></label>
-                                      <input name="Nutrients[${nutrientsIndex}].Quantity" class="form-control" placeholder="25g">
+                                      <input name="Nutrients[${nutrientsIndex}].Quantity" class="form-control" placeholder="25">
                                       <span asp-validation-for="Nutrients[${nutrientsIndex}].Quantity" class="text-danger"></span>
                                   </div>
                                   <div class="col-lg-4 col-md-6">
@@ -55,11 +55,6 @@ function AddIngredient() {
     ingreedientRow.setAttribute('class', 'row mt-3 mb-3');
     ingreedientRow.setAttribute('id', 'ingredients-row');
     ingreedientRow.innerHTML = `<div class="col-lg-4 col-md-6">
-                                        <label><strong>Ingredient Name</strong></label>
-                                        <input name="Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="Pork chops">
-                                        <span asp-validation-for="Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Quantity</strong></label>
                                         <input name="Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="200">
                                         <span asp-validation-for="Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
@@ -67,8 +62,8 @@ function AddIngredient() {
                                     <div class="col-lg-4 col-md-6">
                                         <label><strong>Units</strong></label>
                                         <select name="Components[${ingredientsIndex}].Unit" class="form-control">
-                                            <option>---</option>
-                                            <option>gr</option>
+                                            <option></option>
+                                            <option>g</option>
                                             <option>kg</option>
                                             <option>ml</option>
                                             <option>l</option>
@@ -77,6 +72,11 @@ function AddIngredient() {
                                             <option>cup</option>
                                             <option>oz</option>
                                         </select>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Name</strong></label>
+                                        <input name="Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="Pork chops">
+                                        <span asp-validation-for="Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
                                     </div>`;
 
     const AddIngredientRow = function (parentNode) {
@@ -110,11 +110,6 @@ function AddSection() {
         ingredientRow.setAttribute('class', 'row mt-3 mb-3');
         ingredientRow.setAttribute('id', 'ingredients-row');
         ingredientRow.innerHTML = `<div class="col-lg-4 col-md-6">
-                                        <label><strong>Ingredient Name</strong></label>
-                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="all-purpose flour">
-                                        <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6">
                                         <label><strong>Ingredient Quantity</strong></label>
                                         <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="form-control" placeholder="200">
                                         <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Quantity" class="text-danger"></span>
@@ -122,8 +117,8 @@ function AddSection() {
                                     <div class="col-lg-4 col-md-6">
                                         <label><strong>Units</strong></label>
                                         <select name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].Unit" class="form-control">
-                                            <option>---</option>
-                                            <option>gr</option>
+                                            <option></option>
+                                            <option>g</option>
                                             <option>kg</option>
                                             <option>ml</option>
                                             <option>l</option>
@@ -132,6 +127,11 @@ function AddSection() {
                                             <option>cup</option>
                                             <option>oz</option>
                                         </select>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <label><strong>Ingredient Name</strong></label>
+                                        <input name="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="form-control" placeholder="all-purpose flour">
+                                        <span asp-validation-for="Sections[${sectionsIndex}].Components[${ingredientsIndex}].IngredientName" class="text-danger"></span>
                                     </div>`;
         parentNode.insertBefore(ingredientRow, event.target);
         console.log("Added new ingredient line")
