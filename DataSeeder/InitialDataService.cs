@@ -87,12 +87,12 @@ namespace DataSeeder
         }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity)
         {
-            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
+            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => x.Name==nutrientName && x.Quantity == quantity);
             if (nutrient != null)
             {
                 return nutrient;
             }
-            nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
+            nutrient = this.nutrients.FirstOrDefault(x => x.Name == nutrientName && x.Quantity == quantity);
             if (nutrient == null)
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity };
@@ -103,12 +103,12 @@ namespace DataSeeder
         }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity, string unitName)
         {
-            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
+            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => x.Name == nutrientName && x.Quantity == quantity && x.Unit.Name==unitName);
             if (nutrient != null)
             {
                 return nutrient;
             }
-            nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
+            nutrient = this.nutrients.FirstOrDefault(x => x.Name == nutrientName && x.Quantity == quantity && x.Unit.Name == unitName);
             if (nutrient == null)
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity, Unit = GetOrCreateUnit(unitName) };

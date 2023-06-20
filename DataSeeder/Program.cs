@@ -18,11 +18,11 @@ namespace DataSeeder
             var context = serviceProvider.GetService<DbContext>();
             //Uncomment to import data
             var dataImportService = serviceProvider.GetService<IDataImportService>();
-            dataImportService.CleanDatabase();
+            //dataImportService.CleanDatabase();
             //dataImportService.ImportRecipes();
-            //var scraperService = serviceProvider.GetService<IScraperService>();
+            var scraperService = serviceProvider.GetService<IScraperService>();
             //scraperService.PopulateData();
-            Console.WriteLine("Test");
+            Console.WriteLine("Done");
         }
 
         private static void ConfigureServices(ServiceCollection services)
