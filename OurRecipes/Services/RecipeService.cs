@@ -18,14 +18,15 @@ namespace OurRecipes.Services
         private readonly IMapper mapper;
         private readonly UserManager<AppIdentityUser> userManager;
 
-        public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager) 
+        public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager)
+            :base(db)
         {
             this.context = db;
             this.mapper = mapper;
             this.userManager = userManager;
         }
 
-        public void Add(CreateRecipeInputModel recipeDto)
+        public void Add(CreateRecipeInputModel recipeDto, string authorId)
         {
             //var sections = recipeDto.Sections;
             //var componens = recipeDto.Components;
@@ -36,9 +37,9 @@ namespace OurRecipes.Services
                 Description = recipeDto.Description,
                 PrepTime = recipeDto.PrepTime.ToString(),
                 CookTime = recipeDto.CookTime.ToString(),
-                Servings = recipeDto.CookTime.ToString(),
+                Servings = recipeDto.Servings.ToString(),
                 CreatedOnDate = DateTime.Now,
-                Categories = AddCategories(recipeDto),
+                Categories = EditOrCreateCategories(recipeDto),
                 Sections = recipeDto.Sections.Select(x=>new Section
                 {
                     Name = x.SectionName,
@@ -52,8 +53,8 @@ namespace OurRecipes.Services
                     }).ToList()
                 }).ToList(),
                 Instructions = recipeDto.Instructions,
-                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity)).ToList(),
-                AuthorId = recipeDto.Author
+                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity,x.UnitName)).ToList(),
+                AuthorId = authorId
             };
             if(Recipe.Sections.Any())
             {
@@ -82,21 +83,20 @@ namespace OurRecipes.Services
         {
             var recipe = GetRecipeById(id)??
                 throw new NullReferenceException(nameof(id));
-            var difficulty = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "difficulty");
-            var cuisine = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "cuisine");
-            var seasonal = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "seasonal");
-            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type.ToLower() == "cookingtechnique");
-            //var recipeDto = this.mapper.Map<Recipe,EditRecipeViewModel>(recipe);
-            var recipeDto = new EditRecipeViewModel()
+            var difficulty = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "difficulty");
+            var cuisine = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cuisine");
+            var seasonal = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "seasonal");
+            var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cooking technique");
+            
+            var recipeData = new EditRecipeViewModel()
             {
+                Id = recipe.Id,
                 Title = recipe.Title,
                 Description = recipe.Description,
                 PrepTime = int.Parse(recipe.PrepTime),
                 CookTime = int.Parse(recipe.CookTime),
                 Servings = int.Parse(recipe.CookTime),
-                Categories = recipe.Categories.Where(x => x.Type.ToLower() != "difficulty" && x.Type.ToLower() != "cuisine"
-                && x.Type.ToLower() != "seasonal" && x.Type.ToLower() != "cookingtechnique")
-                .Select(x => x.Name).ToList(),
+                
                 Difficulty = difficulty != null ? difficulty.Name : null,
                 Cuisine = cuisine != null ? cuisine.Name : null,
                 Season = seasonal != null ? seasonal.Name : null,
@@ -118,16 +118,36 @@ namespace OurRecipes.Services
                     Name = x.Name,
                     Quantity = $"{x.Quantity}{x.Unit}",
                 }).ToList(),
-                Author = userManager.FindByIdAsync(recipe.AuthorId).Result.UserName
-            };
+        };
 
-            return recipeDto;
+            foreach(var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
+                && x.Type?.ToLower() != "seasonal" && x.Type?.ToLower() != "cooking technique"))
+            {
+               
+               recipeData.Categories.Add($"{category.Type}-{category.Name}");
+            }
+
+            return recipeData;
         }
         public void Edit(EditRecipeViewModel recipeData)
         {
+            var recipe = GetRecipeById(recipeData.Id) ??
+                throw new NullReferenceException(nameof(recipeData.Id));
 
+            recipe.Title = recipeData.Title;
+            recipe.Description = recipeData.Description;
+            recipe.PrepTime = recipeData.PrepTime?.ToString();
+            recipe.CookTime = recipeData.CookTime?.ToString();
+            recipe.Servings = recipeData.Servings.ToString();
+            recipe.Categories = EditOrCreateCategories(recipeData);
+            recipe.Sections = EditOrCreateSections(recipeData);
+            recipe.Components = EditOrCreateComponents(recipeData);
+            recipe.Instructions = recipeData.Instructions;
+            recipe.Nutrients = recipeData.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity,x.UnitName)).ToList();
+
+            this.context.SaveChanges();
         }
-        public void Remove(string id)
+        public void Delete(string id)
         {
             Recipe recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
             if (recipe != null)
@@ -138,23 +158,26 @@ namespace OurRecipes.Services
             }
             else
             {
-                Console.WriteLine($"No recipe with id: {id} found");
+               throw new NullReferenceException(nameof(id));
             }
         }
         public Recipe GetRecipeById(string id)
         {
-            Recipe recipe = context.Recipes
+            if (context.Recipes.Any(x => x.Id == id))
+            {
+                Recipe recipe = context.Recipes
                 .Include(x => x.Nutrients)
                 .Include(x => x.Sections)
                 .Include(x => x.Components).ThenInclude(x => x.Ingredient)
                 .Include(x => x.Components).ThenInclude(x => x.Unit)
                 .Include(x => x.Categories)
                 .FirstOrDefault(x => x.Id.Equals(id));
-            if (recipe != null)
-            {
                 return recipe;
             }
-            return null;
+            else
+            {
+                throw new NullReferenceException(nameof(id));
+            }
         }
         public RecipeViewModel GetRecipeByName(string name)
         {
@@ -411,38 +434,80 @@ namespace OurRecipes.Services
         }
 
         //Private methods
-        private List<Category> AddCategories(CreateRecipeInputModel recipeDto)
+        
+        private List<Component> EditOrCreateComponents(EditRecipeViewModel recipeData)
         {
-            var initalCategoryList = recipeDto.Categories;
-            initalCategoryList.Add(recipeDto.Cuisine);
-            initalCategoryList.Add(recipeDto.Difficulty);
-            initalCategoryList.Add(recipeDto.CookingTechnique);
-            initalCategoryList.Add(recipeDto.Season);
+            var components = new List<Component>();
+            var sections = this.EditOrCreateSections(recipeData);
+            foreach (var component in recipeData.Components)
+            {
+                if (sections.Any())
+                {
+                  components.AddRange(GetOrCreateComponents(sections));
+                }
+                if (recipeData.Components.Any())
+                {
+                    foreach (var c in recipeData.Components)
+                    {
+                        Component recipeComponent = new Component
+                        {
+                            Ingredient = GetOrCreateIngredient(c.IngredientName),
+                            Quantity = c.Quantity,
+                            Unit = c.Unit != "---" ? GetOrCreateUnit(c.Unit) : null,
+                            Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+                        };
+                        components.Add(recipeComponent);
+                    }
+                }
+            }
+            return components;
+        }
+        private List<Section> EditOrCreateSections(EditRecipeViewModel recipeData)
+        {
+            var sections = recipeData.Sections?.Select(x => new Section
+            {
+                Name = x.SectionName,
+                Components = x.Components.Select(c => new Component
+                {
+                    Ingredient = GetOrCreateIngredient(c.IngredientName),
+                    Quantity = c.Quantity,
+                    Unit = GetOrCreateUnit(c.Unit),
+                    Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+
+                }).ToList()
+            }).ToList();
+           
+            return sections;
+        }
+        private List<Category> EditOrCreateCategories(CreateRecipeInputModel recipeDto)
+        {
+            var initalCategoryList = new Dictionary<string, List<string>> ();
+            if (recipeDto.Categories.Count > 0)
+            {
+                foreach (var category in recipeDto.Categories)
+                {
+                    var categoryType = category.Split('-', StringSplitOptions.RemoveEmptyEntries)[0];
+                    var categoryName = category.Split('-', StringSplitOptions.RemoveEmptyEntries)[1];
+                    if (!initalCategoryList.ContainsKey(categoryType))
+                    {
+                        initalCategoryList.Add(categoryType, new List<string>());
+                    }
+                    initalCategoryList[categoryType].Add(categoryName);
+                }
+            }
+            initalCategoryList.Add("Cuisine",new List<string> { recipeDto.Cuisine });
+            initalCategoryList.Add("Difficulty",new List<string> { recipeDto.Difficulty });
+            initalCategoryList.Add("Seasonal", new List<string> { recipeDto.Season });
+            initalCategoryList.Add("Cooking Technique", new List<string> { recipeDto.CookingTechnique });
 
             var categories = new List<Category>();
 
             foreach (var category in initalCategoryList)
             {
-                if (category == "---") continue;
-                string[] categoryLine = category.Split('-', 2, StringSplitOptions.RemoveEmptyEntries);
-                var key = categoryLine[0];
-                var value = categoryLine[1];
-
-                var dbCategory = this.context.Categories.FirstOrDefault(x => x.Type == key && x.Name == value);
-
-                if (dbCategory == null)
+                foreach(var categoryItem in category.Value)
                 {
-                    categories.Add(new Category
-                    {
-                        Type = key,
-                        Name = value,
-                    });
+                    categories.Add(GetOrCreateCategory(categoryItem, category.Key));
                 }
-                else
-                {
-                    categories.Add(dbCategory);
-                }
-
             }
 
             return categories;

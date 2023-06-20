@@ -7,5 +7,5 @@ public class ComponentInputModel
     [Required, MinLength(1), MaxLength(255)]
     public string Quantity { get; set; }
     public string? Unit { get; set; }
-    public string Text { get; set; }
+    public string? Text { get; set; }
 }

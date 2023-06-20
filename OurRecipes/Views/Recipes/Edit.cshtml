@@ -1,4 +1,5 @@
-﻿@using OurRecipes.Models.Recipes;
+﻿@using OurRecipes.Data.Models;
+@using OurRecipes.Models.Recipes;
 @model EditRecipeViewModel;
 @{
     int nutrientsIndex = 0;
@@ -43,10 +44,6 @@
                             <!--TODO: Get Categories-->
                             <label asp-for="Categories"><strong>Category</strong></label>
                             <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
-                                @foreach (var category in Model.Categories)
-                                {
-                                    <option value="@category" selected="true">@category</option>
-                                }
                                 <optgroup label="Meal Course">
                                     <option value="Meal Course-Breakfast">Breakfast</option>
                                     <option value="Meal Course-Brunch">Brunch</option>
@@ -161,11 +158,6 @@
                                     {
                                         <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                             <div class="col-lg-4 col-md-6">
-                                                <label><strong>Ingredient Name</strong></label>
-                                                <input asp-for="Components[i].IngredientName" class="form-control" value="@Model.Components[i].IngredientName" placeholder="Sugar">
-                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
-                                            </div>
-                                            <div class="col-lg-4 col-md-6">
                                                 <label><strong>Ingredient Quantity</strong></label>
                                                 <input asp-for="Components[i].Quantity" class="form-control" value="@Model.Components[i].Quantity" placeholder="200">
                                                 <span asp-validation-for="Components[i].Quantity" class="text-danger"></span>
@@ -174,7 +166,7 @@
                                                 <label><strong>Units</strong></label>
                                                 <select asp-for="Components[i].Unit" value="@Model.Components[i].Unit" class="form-control">
                                                     <option selected="true">@Model.Components[i].Unit</option>
-                                                    <option>gr</option>
+                                                    <option>g</option>
                                                     <option>kg</option>
                                                     <option>ml</option>
                                                     <option>l</option>
@@ -183,6 +175,11 @@
                                                     <option>cup</option>
                                                     <option>oz</option>
                                                 </select>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Name</strong></label>
+                                                <input asp-for="Components[i].IngredientName" class="form-control" value="@Model.Components[i].IngredientName" placeholder="Sugar">
+                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
                                             </div>
                                         </li>
                                     }
@@ -195,11 +192,6 @@
                                             {
                                                 <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                                     <div class="col-lg-4 col-md-6">
-                                                        <label><strong>Ingredient Name</strong></label>
-                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" value="@Model.Sections[i].Components[j].IngredientName" placeholder="All purpose flour">
-                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-6">
                                                         <label><strong>Ingredient Quantity</strong></label>
                                                         <input asp-for="Sections[i].Components[j].Quantity" class="form-control" value="@Model.Sections[i].Components[j].Quantity" placeholder="650">
                                                         <span asp-validation-for="Sections[i].Components[j].Quantity" class="text-danger"></span>
@@ -208,7 +200,7 @@
                                                         <label><strong>Units</strong></label>
                                                         <select asp-for="Sections[i].Components[j].Unit" value="@Model.Sections[i].Components[j].Unit" class="form-control">
                                                             <option selected="true">@Model.Sections[i].Components[j].Unit</option>
-                                                            <option>gr</option>
+                                                            <option>g</option>
                                                             <option>kg</option>
                                                             <option>ml</option>
                                                             <option>l</option>
@@ -217,6 +209,11 @@
                                                             <option>cup</option>
                                                             <option>oz</option>
                                                         </select>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Name</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" value="@Model.Sections[i].Components[j].IngredientName" placeholder="All-purpose flour">
+                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
                                                     </div>
                                                 </li>
                                             }
@@ -243,8 +240,15 @@
                                     <li asp-for="NutrientInputModel" name="nutrients-row" class="row mt-3 mb-3" id="nutrients-row">
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Quantity</strong></label>
-                                            <input asp-for="Nutrients[i].Quantity" class="form-control" value="@Model.Nutrients[i].Quantity" placeholder="25g">
+                                            <input asp-for="Nutrients[i].Quantity" class="form-control" value="@Model.Nutrients[i].Quantity" placeholder="25">
                                             <span asp-validation-for="Nutrients[i].Quantity" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <label><strong>Units</strong></label>
+                                            <select asp-for="Nutrients[i].UnitName" class="form-control">
+                                                <option></option>
+                                                <option>g</option>
+                                            </select>
                                         </div>
                                         <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Name</strong></label>
@@ -275,6 +279,6 @@
             </div><!-- End New Recipe Form -->
 
         </div>
-
+       
     </div>
 </section><!-- End Create a Recipe Section -->

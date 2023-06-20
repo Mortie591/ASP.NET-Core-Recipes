@@ -13,16 +13,23 @@ namespace OurRecipes.Controllers
     {
         private readonly IRecipeService recipeService;
         private readonly UserManager<AppIdentityUser> userManager;
+        private readonly SignInManager<AppIdentityUser> signInManager;
 
-        public RecipesController(IRecipeService recipeService, UserManager<AppIdentityUser> userManager)
+        public RecipesController(IRecipeService recipeService, UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser>signInManager)
         {
             this.recipeService = recipeService;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         public IActionResult Details(string name)
         {
             var recipe = recipeService.GetRecipeByName(name);
             return this.View(recipe);
+        }
+        public IActionResult Delete(string id)
+        {
+            recipeService.Delete(id);
+            return RedirectToAction("MyRecipes", "Recipes");
         }
         public IActionResult ByCategory(string categoryName)
         {
@@ -94,19 +101,30 @@ namespace OurRecipes.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreateRecipeInputModel input)
         {
-            if (ModelState.IsValid)
+            string authorId = userManager.GetUserId(User);
+            if (!ModelState.IsValid)
             {
                 return this.View(input);
             }
-            input.Author = userManager.GetUserId(User);
-            this.recipeService.Add(input);
+            this.recipeService.Add(input, authorId);
             return RedirectToAction("Details","Recipes",new {name = input.Title});
         }
         [Authorize]
-        public ViewResult Edit(string id)
+        public IActionResult Edit(string id)
         {
             var recipe = this.recipeService.GetEditData(id);
-            return this.View(recipe);
+            var currentUserId = userManager.GetUserId(User);
+            var recipeAuthorId = this.recipeService.GetRecipeById(recipe.Id)?.AuthorId;
+
+            if (currentUserId== recipeAuthorId)
+            {
+                return this.View(recipe);
+            }
+            else
+            {
+                return Forbid();
+            }
+            
         }
 
         [HttpPost]
@@ -114,10 +132,13 @@ namespace OurRecipes.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EditRecipeViewModel input)
         {
-            if (ModelState.IsValid)
+            var recipeAuthorId = this.recipeService.GetRecipeById(input.Id)?.AuthorId;
+            if (!ModelState.IsValid || recipeAuthorId!=userManager.GetUserId(User))
             {
                 return this.View(input);
             }
+
+            this.recipeService.Edit(input);
             return RedirectToAction("Details", "Recipes", new  { name=input.Title });
         }
         [Authorize]
@@ -125,7 +146,7 @@ namespace OurRecipes.Controllers
         {
             return this.View();
         }
-        [Authorize]
+        [Authorize] 
         public IActionResult Unlike() //remove from favourites
         {
             return View();

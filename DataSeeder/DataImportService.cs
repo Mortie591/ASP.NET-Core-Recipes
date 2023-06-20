@@ -75,17 +75,17 @@ namespace DataSeeder
         {
 
             this.context.Database.EnsureDeleted();
-            this.context.Database.EnsureCreated();
+            //this.context.Database.EnsureCreated();
             this.context.SaveChanges();
 
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Tags', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Units', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Nutrients', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Ingredients', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Components', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Sections', RESEED, 0)");
-            this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Categories', RESEED, 0)");
-            this.context.SaveChanges();
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Tags', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Units', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Nutrients', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Ingredients', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Components', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Sections', RESEED, 0)");
+            //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Categories', RESEED, 0)");
+            //this.context.SaveChanges();
         }
         private ICollection<Section> CreateSections(RecipeDto recipe)
         {

@@ -7,26 +7,6 @@
 */
 
 
-//function AddInstruction() {
-//    let parent = event.target.parentNode;
-//    let liElements = parent.querySelectorAll('li');
-//    let instructionsIndex = liElements.length;
-
-//    let instructionRow = document.createElement('li');
-//    instructionRow.setAttribute('name', 'instructions-row');
-//    instructionRow.setAttribute('class', 'row mt-3 mb-3');
-//    instructionRow.setAttribute('id', 'instructions-row');
-//    instructionRow.innerHTML = `<textarea asp-for="Instructions[${instructionsIndex}]" class="form-control" id="instructions" placeholder="Heat the oil in a medium pan over a medium heat."></textarea>
-//                                    <span asp-validation-for="Instructions" class="text-danger"></span>`;
-
-//    const AddInstructionsRow = function (parentNode) {
-//        parentNode.insertBefore(instructionRow, event.target);
-//        console.log("Added new instruction row");
-//        document.querySelector('#remove-instruction').classList.remove('disabled');
-//    };
-//    AddInstructionsRow(parent);
-//}
-
 function AddNutrient() {
     let parent = event.target.parentNode;
     let liElements = parent.querySelectorAll('li');
@@ -42,10 +22,18 @@ function AddNutrient() {
                                       <span asp-validation-for="Nutrients[${nutrientsIndex}].Quantity" class="text-danger"></span>
                                   </div>
                                   <div class="col-lg-4 col-md-6">
+                                            <label><strong>Units</strong></label>
+                                            <select asp-for="Nutrients[[${nutrientsIndex}].UnitName" class="form-control">
+                                                <option></option>
+                                                <option>g</option>
+                                            </select>
+                                        </div>
+                                  <div class="col-lg-4 col-md-6">
                                       <label><strong>Nutrient Name</strong></label>
                                   <input name="Nutrients[${nutrientsIndex}].Name" class="form-control" placeholder="Carbs">
                                   <span asp-validation-for="Nutrients[${nutrientsIndex}].Name" class="text-danger"></span>
-                                  </div>`;
+                                  </div>
+                                  `;
     
     const AddNutrientRow = function (parentNode) {
         parentNode.insertBefore(nutrientRow, event.target);
@@ -213,21 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
    * Custom
    */
-
-  //Remove instructionss row
-    //let removeInstructionsButtonElement = document.querySelector('#remove-instruction');
-    //const RemoveInstructionRow = function (parentNode) {
-    //    let liElements = parentNode.querySelectorAll('li');
-    //    if (liElements.length > 0) {
-    //        let lastListElement = liElements[liElements.length - 1];
-    //        parentNode.removeChild(lastListElement);
-    //        console.log('Removed last instruction row');
-    //        if (parentNode.querySelectorAll('li').length == 0) {
-    //            removeInstructionsButtonElement.classList.add('disabled');
-    //        }
-    //    } else {
-    //        console.log('No elements to remove')
-    //    }
 
     //Remove Ingredients row
     let removeIngredientButtonElement = document.querySelector('#remove-ingredient'); 

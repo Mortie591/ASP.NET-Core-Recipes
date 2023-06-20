@@ -41,7 +41,8 @@ namespace OurRecipes.Models.Profiles
                 .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients.Select(x => new NutrientInputModel
                 {
                     Name = x.Name,
-                    Quantity = $"{x.Quantity}{x.Unit}",
+                    Quantity = x.Quantity,
+                    UnitName = x.Unit.Name
                 }).ToList()))
                 .ForMember(d => d.Components, s => s.MapFrom(s => s.Components.Select(c => new ComponentInputModel
                 {

@@ -132,14 +132,7 @@
             {
                 <li class="nutrition-block">
                     <div name="nutrition name">@nutrient.Name</div>
-                    @if (nutrient.Name.ToLower() == "kcal")
-                    {
-                        <div name="nutrient quantity">@nutrient.Quantity</div>
-                    }
-                    else
-                    {
-                        <div name="nutrient quantity">@nutrient.Quantity g</div>
-                    }
+                    <div name="nutrient quantity">@nutrient.Quantity @nutrient.Unit?.Name</div>
                 </li>
             }
         </ul>

@@ -12,12 +12,13 @@ namespace OurRecipes.Services
         public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName);
         public ICollection<RecipeCardViewModel> GetLatest();
         public ICollection<RecipeCardViewModel> GetTrending();
-        public void Add(CreateRecipeInputModel recipeDto);
+        public void Add(CreateRecipeInputModel recipeDto, string authorId);
         public EditRecipeViewModel GetEditData(string id);
+        public void Edit(EditRecipeViewModel recipeData);
         public ICollection<RecipeCardViewModel> GetMyRecipes(string userId);
         public Task<ICollection<RecipeByUserViewModel>> GetRecipesByUserAsync(string userId);
         public ICollection<RecipeByUserViewModel> GetFavouriteRecipes(string userId);
-        public void Remove(string id);
+        public void Delete(string id);
         public Task LikeRecipe(string id, string userId);
         public Task UnlikeRecipe(string id, string userId);
 

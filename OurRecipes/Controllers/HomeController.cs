@@ -23,7 +23,7 @@ namespace OurRecipes.Controllers
             //this.dataImportService.ImportRecipes();
             //this.scraperService.PopulateData();
            
-            var recipes  = recipeService.GetRandomRecipes();
+            var recipes  = recipeService.GetLatest();
             return View(recipes);
         }
 

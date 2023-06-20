@@ -40,7 +40,6 @@
                             <span asp-validation-for="CookTime" class="text-danger"></span>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <!--TODO: Get Categories-->
                             <label asp-for="Categories"><strong>Category</strong></label>
                             <select asp-for="Categories" class="form-control" id="categories" placeholder="Category" multiple>
                                 <option>---</option>
@@ -158,11 +157,6 @@
                                     {
                                         <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
                                             <div class="col-lg-4 col-md-6">
-                                                <label><strong>Ingredient Name</strong></label>
-                                                <input asp-for="Components[i].IngredientName" class="form-control" placeholder="25g">
-                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
-                                            </div>
-                                            <div class="col-lg-4 col-md-6">
                                                 <label><strong>Ingredient Quantity</strong></label>
                                                 <input asp-for="Components[i].Quantity" class="form-control" placeholder="Carbs">
                                                 <span asp-validation-for="Components[i].Quantity" class="text-danger"></span>
@@ -181,6 +175,11 @@
                                                     <option>oz</option>
                                                 </select>
                                             </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <label><strong>Ingredient Name</strong></label>
+                                                <input asp-for="Components[i].IngredientName" class="form-control" placeholder="25g">
+                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
+                                            </div>
                                         </li>
                                     }
                                     @for (int i = 0; i < Model.Sections.Count; i++)
@@ -191,11 +190,6 @@
                                             @for (int j = 0; j < Model.Sections[i].Components.Count; j++)
                                             {
                                                 <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <label><strong>Ingredient Name</strong></label>
-                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" placeholder="All purpose flour">
-                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
-                                                    </div>
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Ingredient Quantity</strong></label>
                                                         <input asp-for="Sections[i].Components[j].Quantity" class="form-control" placeholder="650">
@@ -214,6 +208,11 @@
                                                             <option>cup</option>
                                                             <option>oz</option>
                                                         </select>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <label><strong>Ingredient Name</strong></label>
+                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" placeholder="All purpose flour">
+                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
                                                     </div>
                                                 </li>
                                             }
@@ -244,6 +243,13 @@
                                             <span asp-validation-for="Nutrients[i].Quantity" class="text-danger"></span>
                                         </div>
                                         <div class="col-lg-4 col-md-6">
+                                            <label><strong>Units</strong></label>
+                                            <select asp-for="Nutrients[i].UnitName" class="form-control">
+                                                <option></option>
+                                                <option>g</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
                                             <label><strong>Nutrient Name</strong></label>
                                             <input asp-for="Nutrients[i].Name" class="form-control" placeholder="Carbs">
                                             <span asp-validation-for="Nutrients[i].Name" class="text-danger"></span>
@@ -256,10 +262,9 @@
                                 </ul>
                             </fieldset>
                     </div>
-
                     <div class="form-group mt-3 mb-3">
                         <label asp-for="Instructions"><strong>Instructions</strong></label>
-                        <textarea asp-for="Instructions" class="form-control" id="instructions" placeholder="1. Heat the oil in a medium pan over a medium heat."></textarea>
+                        <textarea asp-for="Instructions" class="form-control" id="instructions" placeholder="Heat the oil in a medium pan over a medium heat."></textarea>
                         <span asp-validation-for="Instructions" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-3 mb-3">

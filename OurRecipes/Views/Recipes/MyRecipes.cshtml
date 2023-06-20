@@ -23,10 +23,12 @@
                             <h4>@element.Title</h4>
                             <p>@element.Rating likes</p>
                         </div>
-                        <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@element.Id" class="w-100 btn btn-lg btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>
+                        <div class="d-flex justify-content-around">
+                            <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@element.Id" class="btn btn-md btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>
+                            <a asp-controller="Recipes" asp-action="Delete" asp-route-id="@element.Id" class="btn btn-md btn-secondary" data-aos="fade-up" data-aos-delay="100">Delete</a>
+                        </div>
                     </div>
                 </div>
-                
             }
         </div>
     </div>
