@@ -23,13 +23,22 @@ namespace OurRecipes.Controllers
         }
         public IActionResult Details(string id)
         {
+            //TODO: Add subcategories
             var recipe = recipeService.GetRecipeViewModel(id);
             return this.View(recipe);
         }
+        [Authorize]
         public IActionResult Delete(string id)
         {
-            recipeService.Delete(id);
-            return RedirectToAction("MyRecipes", "Recipes");
+            var recipeAuthor = this.recipeService.GetRecipeById(id)?.AuthorId??
+                throw new NullReferenceException(nameof(id));
+
+            if (userManager.GetUserId(User) == recipeAuthor)
+            {
+                recipeService.Delete(id);
+                return RedirectToAction("MyRecipes", "Recipes");
+            }
+            return Forbid();
         }
         public IActionResult ByCategory(string categoryName)
         {
@@ -107,7 +116,7 @@ namespace OurRecipes.Controllers
                 return this.View(input);
             }
             this.recipeService.Add(input, authorId);
-            return RedirectToAction("Details","Recipes",new {name = input.Title});
+            return RedirectToAction("MyRecipes","Recipes");
         }
         [Authorize]
         public IActionResult Edit(string id)
@@ -133,13 +142,17 @@ namespace OurRecipes.Controllers
         public IActionResult Edit(EditRecipeViewModel input)
         {
             var recipeAuthorId = this.recipeService.GetRecipeById(input.Id)?.AuthorId;
-            if (!ModelState.IsValid || recipeAuthorId!=userManager.GetUserId(User))
+            if (!ModelState.IsValid)
             {
                 return this.View(input);
             }
+            else if(recipeAuthorId != userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
 
             this.recipeService.Edit(input);
-            return RedirectToAction("Details", "Recipes", new  { name=input.Title });
+            return RedirectToAction("Details", "Recipes", new  { id=input.Id });
         }
         [Authorize]
         public async Task<IActionResult> Like() //Add to favourites

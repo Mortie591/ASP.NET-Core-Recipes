@@ -135,7 +135,6 @@ function AddSection() {
                                     </div>`;
         parentNode.insertBefore(ingredientRow, event.target);
         console.log("Added new ingredient line")
-        removeIngredientFromSection.classList.remove('disabled');
     };
 
     addIngredientToSection.addEventListener('click', (event) => {
@@ -173,7 +172,6 @@ function AddSection() {
 
     parent.appendChild(sectionElement);
     console.log("Added new section")
-    document.querySelector('#remove-section').classList.remove('disabled');
 };
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -13,6 +13,7 @@ namespace OurRecipes.Models.Recipes
             Nutrients = new List<Nutrient>();
             Instructions = new List<string>();
         }
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int Servings { get; set; }
@@ -29,6 +30,7 @@ namespace OurRecipes.Models.Recipes
         public List<Component> Components { get; set; }
         public List<string> Instructions { get; set; }
         public List<Nutrient> Nutrients { get; set; }
-        public string AuthorName { get; set; }
+        public string AuthorId { get; set; }
+        public AppIdentityUser Author { get; set; }
     }
 }

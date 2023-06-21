@@ -1,8 +1,16 @@
-﻿@using OurRecipes.Models.Recipes;
+﻿@using OurRecipes.Data.Models;
+@using OurRecipes.Models.Recipes;
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppIdentityUser> SignInManager
+@inject UserManager<AppIdentityUser> UserManager
+
+
 @model RecipeViewModel;
 @{
     ViewData["Title"] = "Recipe details";
     int count = 1;
+    string currentUserId = UserManager.GetUserId(User);
 }
 
 <section class="cards section-bg">
@@ -10,14 +18,16 @@
         <p>@Model.Title</p>
         <h2>Recipe details</h2>
     </div>
-    
+
     <div class="container recipe-container" data-aos="fade-up">
         <div class="row justify-content-center">
             <img class="cover-img col-lg-6 col-md-11" src="~/img/chicken-recipes-card.jpg" />
             <div class="col-lg-6 col-md-12">
                 <div>
                     <span>Author </span>
-                    <a asp-area="" asp-controller="Recipes" asp-action="ByUser" asp-route-userName=@Model.AuthorName>@Model.AuthorName</a>
+                    @if(@Model.Author!=null){
+                    <a asp-area="" asp-controller="Recipes" asp-action="ByUser" asp-route-userName=@Model.Author.UserName>@Model.Author.UserName</a>
+                    }
                 </div>
                 <div class="d-flex flex-row">
                     <i class="p-2 bi bi-heart"></i>
@@ -30,102 +40,112 @@
                     <div class="d-flex justify-content-start">
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
-                             <div class="p-2 cook-prep-time">Prep: @Model.PrepTime mins</div>
+                            <div class="p-2 cook-prep-time">Prep: @Model.PrepTime mins</div>
                         </div>
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
                             <div class="p-2 cook-prep-time">Cook: @Model.CookTime mins</div>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <div class="d-flex">
+                                <img class="p-2" style="width:32px;height:32px;" src="~/img/servings.svg" />
+                                <div class="p-2 servings">Servings:  @Model.Servings</div>
+                            </div>
+                            <div class="d-flex">
+                                <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
+                                <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Difficulty">@Model.Difficulty</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-start">
-                        <div class="d-flex">
-                            <img class="p-2" style="width:32px;height:32px;" src="~/img/servings.svg" />
-                            <div class="p-2 servings">Servings:  @Model.Servings</div>
-                        </div>
-                        <div class="d-flex">
-                            <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
-                            <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Difficulty">@Model.Difficulty</a>
-                        </div>
-                     </div>
-                </div>
-                <div class="categories p-2">
-                    <h5>Categories: </h5>
-                    <ul class="d-flex flex-row custom-list">
-                        @foreach (var category in Model.Categories)
-                        {
+                    <div class="categories p-2">
+                        <h5>Categories: </h5>
+                        <ul class="d-flex flex-row custom-list">
+                            @foreach (var category in Model.Categories)
+                            {
                                 <li class="px-2 link">
                                     @if (category.Split("-").Length > 1)
                                     {
-                                        <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@category">@category.Split("-",StringSplitOptions.RemoveEmptyEntries)[1]</a>
-                                    }else{
+                                        <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@category.Split("-",StringSplitOptions.RemoveEmptyEntries)[1]">@category.Split("-",StringSplitOptions.RemoveEmptyEntries)[1]</a>
+                                    }
+                                    else
+                                    {
                                         <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@category">@category</a>
                                     }
-                            </li>
-                        }
-                    </ul>
-                    
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                    <div class="description">
+                        <p>
+                            @Model.Description
+                        </p>
+                    </div>
+
                 </div>
-                <div class="description">
-                    <p>
-                        @Model.Description
-                    </p>
-                </div>
-                
             </div>
         </div>
-        </div>
-    <div class="container p-3" data-aos="fade-up">
-        <div class="row justify-content-center">
-            <div class="ingredients col-lg-6 col-md-12">
-                <h4>Ingredients</h4>
-                <ul class="list-group list-group custom-list">
-                    @foreach (var component in Model.Components)
-                    {
-                        <li class="list-group-item list-group-item-action">
-                            <p>@count. @component.Text</p>
-                        </li>
-                            count++;
-                    }
-                    @if (Model.Sections!=null && Model.Sections.Count > 0)
-                    {
-                        @foreach (var item in Model.Sections)
+        <div class="container p-3" data-aos="fade-up">
+            <div class="row justify-content-center">
+                <div class="ingredients col-lg-6 col-md-12">
+                    <h4>Ingredients</h4>
+                    <ul class="list-group list-group custom-list">
+                        @foreach (var component in Model.Components)
                         {
-                            <li>
-                                <h5>@item.Name</h5>
+                            <li class="list-group-item list-group-item-action">
+                                <p>@count. @component.Text</p>
                             </li>
-                            @foreach (var component in item.Components)
+                            count++;
+                        }
+                        @if (Model.Sections != null && Model.Sections.Count > 0)
+                        {
+                            @foreach (var item in Model.Sections)
                             {
-                                <li class="list-group-item list-group-item-action">
-                                    <p>@count. @component.Text</p>
+                                <li>
+                                    <h5>@item.Name</h5>
                                 </li>
-                                count++;
+                                @foreach (var component in item.Components)
+                                {
+                                    <li class="list-group-item list-group-item-action">
+                                        <p>@count. @component.Text</p>
+                                    </li>
+                                    count++;
+                                }
                             }
                         }
+                    </ul>
+                </div>
+                <div class="instructions col-lg-6 col-md-12">
+                    <h4>Instructions</h4>
+                    <ul class="list-group custom-list"></ul>
+                    @foreach (var instruction in Model.Instructions)
+                    {
+                        <li class="list-group-item list-group-item-action">
+                            <p class="p-2">@count. @instruction</p>
+                        </li>
+                        count++;
                     }
-                </ul>
-            </div>
-            <div class="instructions col-lg-6 col-md-12">
-                <h4>Instructions</h4>
-                <ul class="list-group custom-list"></ul>
-                @for (int i = 1; i < Model.Instructions.ToArray().Length-1; i++)
-                {
-                    <li class="list-group-item list-group-item-action">
-                        <p class="p-2">@i. @Model.Instructions[i]</p>
-                    </li>
-                }
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <h5>Nutrition per serving:</h5>
-        <ul class="custom-list">
-            @foreach (var nutrient in Model.Nutrients)
-            {
-                <li class="nutrition-block">
-                    <div name="nutrition name">@nutrient.Name</div>
-                    <div name="nutrient quantity">@nutrient.Quantity @nutrient.Unit?.Name</div>
-                </li>
-            }
-        </ul>
-    </div>
+        <div class="container">
+            <h5>Nutrition per serving:</h5>
+            <ul class="custom-list">
+                @foreach (var nutrient in Model.Nutrients)
+                {
+                    <li class="nutrition-block">
+                        <div name="nutrition name">@nutrient.Name</div>
+                        <div name="nutrient quantity">@nutrient.Quantity @nutrient.Unit?.Name</div>
+                    </li>
+                }
+            </ul>
+        </div>
+        @if (currentUserId == Model.AuthorId)
+        {
+            <div class="d-flex justify-content-evenly">
+                <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@Model.Id" class="w-25 btn btn-lg btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>
+                <a asp-controller="Recipes" asp-action="Delete" class="w-25 btn btn-lg btn-primary" data-aos="fade-up" data-aos-delay="100">Delete</a>
+            </div>
+        }
 </section>
-<partial name="_Comment"/>
+<partial name="_Comment" />

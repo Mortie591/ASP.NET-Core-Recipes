@@ -97,10 +97,10 @@ namespace OurRecipes.Services
                 CookTime = int.Parse(recipe.CookTime),
                 Servings = int.Parse(recipe.Servings),
                 
-                Difficulty = difficulty != null ? difficulty.Name : null,
-                Cuisine = cuisine != null ? cuisine.Name : null,
-                Season = seasonal != null ? seasonal.Name : null,
-                CookingTechnique = cookingTechnique != null ? cookingTechnique.Name : null,
+                Difficulty = difficulty?.Name,
+                Cuisine = cuisine?.Name,
+                Season = seasonal?.Name,
+                CookingTechnique = cookingTechnique?.Name,
                 Sections = recipe.Sections.Select(x => new SectionInputModel
                 {
                     SectionName = x.Name,
@@ -112,15 +112,45 @@ namespace OurRecipes.Services
                         Text = c.Text
                     }).ToList()
                 }).ToList(),
+                
                 Instructions = recipe.Instructions,
                 Nutrients = recipe.Nutrients.Select(x => new NutrientInputModel
                 {
                     Name = x.Name,
-                    Quantity = $"{x.Quantity}{x.Unit}",
+                    Quantity = $"{x.Quantity}{x.Unit?.Name}",
                 }).ToList(),
         };
+            if (recipe.Sections.Any())
+            {
+                recipeData.Components = new List<ComponentInputModel>();
 
-            foreach(var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
+                foreach (var component in recipe.Components)
+                {
+                    if (!IsInSection(component,recipe.Sections))
+                    {
+                        recipeData.Components.Add(new ComponentInputModel
+                        {
+                            IngredientName = component.Ingredient.Name,
+                            Quantity = component.Quantity,
+                            Unit = component.Unit?.Name ?? String.Empty,
+                            Text = component.Text
+                        });
+                    
+                    }
+                }
+            }
+            else
+            {
+                recipeData.Components = recipe.Components.Select(c => new ComponentInputModel
+                {
+                    IngredientName = c.Ingredient.Name,
+                    Quantity = c.Quantity,
+                    Unit = c.Unit?.Name ?? String.Empty,
+                    Text = c.Text
+                }).ToList();
+            }
+
+            foreach (var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
                 && x.Type?.ToLower() != "seasonal" && x.Type?.ToLower() != "cooking technique"))
             {
                
@@ -129,6 +159,19 @@ namespace OurRecipes.Services
 
             return recipeData;
         }
+
+        private bool IsInSection(Component component, ICollection<Section> sections)
+        {
+            foreach(Section section in sections)
+            {
+                if(section.Components.Any(x=>x.Id==component.Id))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void Edit(EditRecipeViewModel recipeData)
         {
             var recipe = GetRecipeById(recipeData.Id) ??
@@ -171,6 +214,7 @@ namespace OurRecipes.Services
                 .Include(x => x.Components).ThenInclude(x => x.Ingredient)
                 .Include(x => x.Components).ThenInclude(x => x.Unit)
                 .Include(x => x.Categories)
+                .Include(x => x.Author)
                 .FirstOrDefault(x => x.Id.Equals(id));
                 return recipe;
             }
@@ -201,6 +245,7 @@ namespace OurRecipes.Services
 
             var recipeData = new RecipeViewModel()
             {
+                Id = recipe.Id,
                 Title = recipe.Title,
                 Description = recipe.Description,
                 PrepTime = recipe.PrepTime,
@@ -210,10 +255,30 @@ namespace OurRecipes.Services
                 Cuisine = cuisine?.Name,
                 Season = seasonal?.Name,
                 CookingTechnique = cookingTechnique?.Name,
+                AuthorId = recipe.AuthorId,
+                Author = recipe.Author,
+                Components = recipe.Components.ToList(),
                 Sections = recipe.Sections?.ToList(),
                 Instructions = recipe.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Nutrients = recipe.Nutrients.ToList(),
             };
+
+            if (recipe.Sections.Any())
+            {
+                recipeData.Components = new List<Component>();
+
+                foreach (var component in recipe.Components)
+                {
+                    if (!IsInSection(component, recipe.Sections))
+                    {
+                        recipeData.Components.Add(component);
+                    }
+                }
+            }
+            else
+            {
+                recipeData.Components = recipe.Components.ToList();
+            }
 
             foreach (var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
                 && x.Type?.ToLower() != "seasonal" && x.Type?.ToLower() != "cooking technique"))
@@ -466,44 +531,38 @@ namespace OurRecipes.Services
         private List<Component> EditOrCreateComponents(EditRecipeViewModel recipeData)
         {
             var components = new List<Component>();
-            var sections = this.EditOrCreateSections(recipeData);
             foreach (var component in recipeData.Components)
             {
-                if (sections.Any())
+                Component recipeComponent = new Component
                 {
-                  components.AddRange(GetOrCreateComponents(sections));
-                }
-                if (recipeData.Components.Any())
-                {
-                    foreach (var c in recipeData.Components)
-                    {
-                        Component recipeComponent = new Component
-                        {
-                            Ingredient = GetOrCreateIngredient(c.IngredientName),
-                            Quantity = c.Quantity,
-                            Unit = c.Unit != "---" ? GetOrCreateUnit(c.Unit) : null,
-                            Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
-                        };
-                        components.Add(recipeComponent);
-                    }
-                }
+                    Ingredient = GetOrCreateIngredient(component.IngredientName),
+                    Quantity = component.Quantity,
+                    Unit = component.Unit != null ? GetOrCreateUnit(component.Unit) : null,
+                    Text = $"{component.Quantity} {component.Unit} {component.IngredientName}"
+                };
+                components.Add(recipeComponent);
             }
             return components;
         }
         private List<Section> EditOrCreateSections(EditRecipeViewModel recipeData)
         {
-            var sections = recipeData.Sections?.Select(x => new Section
+            var sections = new List<Section>();
+            foreach(var section in recipeData.Sections)
             {
-                Name = x.SectionName,
-                Components = x.Components.Select(c => new Component
+                var newSection = new Section
                 {
-                    Ingredient = GetOrCreateIngredient(c.IngredientName),
-                    Quantity = c.Quantity,
-                    Unit = GetOrCreateUnit(c.Unit),
-                    Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+                    Name = section.SectionName,
+                    Components = section.Components.Select(c => new Component
+                    {
+                        Ingredient = GetOrCreateIngredient(c.IngredientName),
+                        Quantity = c.Quantity,
+                        Unit = GetOrCreateUnit(c.Unit),
+                        Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
-                }).ToList()
-            }).ToList();
+                    }).ToList()
+                };
+                sections.Add(newSection);
+            }
            
             return sections;
         }
@@ -534,7 +593,10 @@ namespace OurRecipes.Services
             {
                 foreach(var categoryItem in category.Value)
                 {
-                    categories.Add(GetOrCreateCategory(categoryItem, category.Key));
+                    if (!String.IsNullOrEmpty(categoryItem))
+                    {
+                        categories.Add(GetOrCreateCategory(categoryItem, category.Key));
+                    }
                 }
             }
 

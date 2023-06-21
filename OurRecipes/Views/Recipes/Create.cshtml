@@ -164,8 +164,8 @@
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Units</strong></label>
                                                 <select asp-for="Components[i].Unit" class="form-control">
-                                                    <option>---</option>
-                                                    <option>gr</option>
+                                                    <option></option>
+                                                    <option>g</option>
                                                     <option>kg</option>
                                                     <option>ml</option>
                                                     <option>l</option>
@@ -199,7 +199,7 @@
                                                         <label><strong>Units</strong></label>
                                                         <select asp-for="Sections[i].Components[j].Unit" class="form-control">
                                                             <option></option>
-                                                            <option>gr</option>
+                                                            <option>g</option>
                                                             <option>kg</option>
                                                             <option>ml</option>
                                                             <option>l</option>
@@ -216,16 +216,18 @@
                                                     </div>
                                                 </li>
                                             }
+                                            <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add Ingredient</button>
+                                            <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove Ingredient</button>
                                         </ul>
                                     }
                                    
                                     <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
-                                    <button class="btn btn-md btn-secondary disabled" id="remove-ingredient">Remove</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
                                 </ul>
 
                                 <div class="form-group mt-3 mb-3">
                                     <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
-                                    <button class="btn btn-md btn-secondary disabled" id="remove-section">Remove Section</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
                                 </div>
                             </fieldset>
                             <div class="validate"></div>

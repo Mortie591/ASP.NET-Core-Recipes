@@ -1,6 +1,8 @@
 ﻿@using OurRecipes.Data.Models;
 @using OurRecipes.Models.Recipes;
-@model EditRecipeViewModel;
+
+@model EditRecipeViewModel
+
 @{
     int nutrientsIndex = 0;
 }
@@ -183,6 +185,8 @@
                                             </div>
                                         </li>
                                     }
+                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
                                     @for (int i = 0; i < Model.Sections.Count; i++)
                                     {
                                         <ul name="sections" class="form-group mt-3 mb-3">
@@ -217,16 +221,16 @@
                                                     </div>
                                                 </li>
                                             }
+                                            <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add Ingredient</button>
+                                            <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove Ingredient</button>
                                         </ul>
                                     }
-
-                                    <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
-                                    <button class="btn btn-md btn-secondary disabled" id="remove-ingredient">Remove</button>
+                                    
                                 </ul>
 
                                 <div class="form-group mt-3 mb-3">
                                     <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
-                                    <button class="btn btn-md btn-secondary disabled" id="remove-section">Remove Section</button>
+                                    <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
                                 </div>
                             </fieldset>
                             <div class="validate"></div>
@@ -274,12 +278,16 @@
                         <textarea asp-for="Description" class="form-control" id="description" rows="5" value="@Model.Description" placeholder="Descriptioon"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+
+                    <div class="d-flex justify-content-evenly">
+                        <button type="submit" class="p-2 w-25 btn btn-lg btn-primary">Submit</button>
+                        <a asp-controller="Recipes" asp-action="Details" asp-route-id="@Model.Id" class="p-2 w-25 btn btn-lg btn-secondary" data-aos="fade-up" data-aos-delay="100">Cancel</a>
+                    </div>
+                    
                 </form>
             </div><!-- End New Recipe Form -->
 
         </div>
-        <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@Model.Id" class="w-100 btn btn-lg btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>
 
     </div>
 </section><!-- End Create a Recipe Section -->

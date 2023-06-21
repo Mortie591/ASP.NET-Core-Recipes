@@ -18,7 +18,7 @@ namespace OurRecipes.Models.Profiles
                 .ForMember(d => d.Servings, opt=>opt.ConvertUsing(new IntConverter()))
                 .ForMember(d => d.Description, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Description)))
                 .ForMember(d=>d.Instructions,s=>s.MapFrom(s=> s.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
-                .ForMember(d => d.AuthorName, s => s.MapFrom(s => s.Author.UserName))
+                .ForMember(d => d.AuthorId, s => s.MapFrom(s => s.AuthorId))
                 .ForMember(d => d.ImageUrl, s => s.MapFrom(s => s.ImageUrl))
                 .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients))
                 .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories.Where(x => x.Type != "Difficulty").Select(x => x.Name)))
