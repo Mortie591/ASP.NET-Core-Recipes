@@ -103,14 +103,16 @@ namespace OurRecipes.Services
                 CookingTechnique = cookingTechnique?.Name,
                 Sections = recipe.Sections.Select(x => new SectionInputModel
                 {
+                    Id =x.Id,
                     SectionName = x.Name,
-                    Components = x.Components.Select(c => new ComponentInputModel
+                    Components = x.Components.Any()?x.Components.Select(c => new ComponentInputModel
                     {
+                        Id = c.Id,
                         IngredientName = c.Ingredient.Name,
                         Quantity = c.Quantity,
                         Unit =c.Unit?.Name??String.Empty,
                         Text = c.Text
-                    }).ToList()
+                    }).ToList():new List<ComponentInputModel>()
                 }).ToList(),
                 
                 Instructions = recipe.Instructions,
@@ -130,6 +132,7 @@ namespace OurRecipes.Services
                     {
                         recipeData.Components.Add(new ComponentInputModel
                         {
+                            Id = component.Id,
                             IngredientName = component.Ingredient.Name,
                             Quantity = component.Quantity,
                             Unit = component.Unit?.Name ?? String.Empty,
@@ -143,6 +146,7 @@ namespace OurRecipes.Services
             {
                 recipeData.Components = recipe.Components.Select(c => new ComponentInputModel
                 {
+                    Id = c.Id,
                     IngredientName = c.Ingredient.Name,
                     Quantity = c.Quantity,
                     Unit = c.Unit?.Name ?? String.Empty,
@@ -210,7 +214,10 @@ namespace OurRecipes.Services
             {
                 Recipe recipe = context.Recipes
                 .Include(x => x.Nutrients)
-                .Include(x => x.Sections)
+                .Include(x => x.Sections).ThenInclude(x=>x.Components)
+                .ThenInclude(x => x.Ingredient)
+                .Include(x => x.Sections).ThenInclude(x => x.Components)
+                .ThenInclude(x => x.Unit)
                 .Include(x => x.Components).ThenInclude(x => x.Ingredient)
                 .Include(x => x.Components).ThenInclude(x => x.Unit)
                 .Include(x => x.Categories)
@@ -530,41 +537,66 @@ namespace OurRecipes.Services
         
         private List<Component> EditOrCreateComponents(EditRecipeViewModel recipeData)
         {
-            var components = new List<Component>();
-            foreach (var component in recipeData.Components)
+            var dbComponents = this.context.Components
+                .Include(x => x.Unit)
+                .Include(x => x.Ingredient)
+                .ToList();
+            var editComponents = new List<Component>();
+            var components = recipeData.Components;
+            foreach (var component in components)
             {
-                Component recipeComponent = new Component
+                Component dbComponent = dbComponents.FirstOrDefault(x => x.Id == component.Id);
+                if (dbComponent != null)
                 {
-                    Ingredient = GetOrCreateIngredient(component.IngredientName),
-                    Quantity = component.Quantity,
-                    Unit = component.Unit != null ? GetOrCreateUnit(component.Unit) : null,
-                    Text = $"{component.Quantity} {component.Unit} {component.IngredientName}"
-                };
-                components.Add(recipeComponent);
+                    editComponents.Add(dbComponent);
+                }
+                else
+                {
+                    Component newComponent = new Component
+                    {
+                        Ingredient = GetOrCreateIngredient(component.IngredientName),
+                        Quantity = component.Quantity,
+                        Unit = component.Unit != null ? GetOrCreateUnit(component.Unit) : null,
+                        Text = $"{component.Quantity} {component.Unit} {component.IngredientName}"
+                    };
+                    editComponents.Add(newComponent);
+                }
             }
-            return components;
+            return editComponents;
         }
         private List<Section> EditOrCreateSections(EditRecipeViewModel recipeData)
         {
-            var sections = new List<Section>();
-            foreach(var section in recipeData.Sections)
+            var dbSections = this.context.Sections
+                .Include(x => x.Components)
+                .ToList();
+            var editSections = new List<Section>();
+            var sections = recipeData.Sections;
+            foreach (var section in sections)
             {
-                var newSection = new Section
+                Section dbSection = dbSections.FirstOrDefault(x => x.Id == section.Id);
+                if (dbSection != null)
                 {
-                    Name = section.SectionName,
-                    Components = section.Components.Select(c => new Component
+                    editSections.Add(dbSection);
+                }
+                else
+                {
+                    Section newSection = new Section
                     {
-                        Ingredient = GetOrCreateIngredient(c.IngredientName),
-                        Quantity = c.Quantity,
-                        Unit = GetOrCreateUnit(c.Unit),
-                        Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+                        Name = section.SectionName,
+                        Components = section.Components.Select(c => new Component
+                        {
+                            Ingredient = GetOrCreateIngredient(c.IngredientName),
+                            Quantity = c.Quantity,
+                            Unit = GetOrCreateUnit(c.Unit),
+                            Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
-                    }).ToList()
-                };
-                sections.Add(newSection);
+                        }).ToList()
+                    };
+                    editSections.Add(newSection);
+                }
             }
-           
-            return sections;
+            
+            return editSections;
         }
         private List<Category> EditOrCreateCategories(CreateRecipeInputModel recipeDto)
         {

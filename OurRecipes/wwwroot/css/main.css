@@ -157,13 +157,18 @@ section {
 /*--------------------------------------------------------------
 # Custom 
 --------------------------------------------------------------*/
-list-group {
+.no-border {
     border:none;
 }
-.list-group .list-group-item {
-    border: none;
+.list-group-item {
+    background-color: inherit;
+    padding: 0px;
 }
-textarea {
+.list-group-item:hover {
+    transform: scale(1.1) ;
+}
+
+.textarea {
     white-space: pre-wrap;
 }
 .custom-list {
@@ -190,18 +195,17 @@ textarea {
     background-color: lightgrey;
     border-color: #ccc3c3;
 }
-.list-group-item {
-    background-color: inherit;
-    padding: 0px;
-}
-/*--------------------------------------------------------------
+    .nutrition-block:hover{
+        transform:rotate(5deg);
+    }
+    /*--------------------------------------------------------------
 # Buttons
 --------------------------------------------------------------*/
-.btn-primary {
-    color: #fff;
-    background-color: #ce1212;
-    border-color: #de3131;
-}
+    .btn-primary {
+        color: #fff;
+        background-color: #ce1212;
+        border-color: #de3131;
+    }
 
     .btn-primary:hover {
         color: #fff;

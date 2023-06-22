@@ -141,6 +141,7 @@ namespace OurRecipes.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EditRecipeViewModel input)
         {
+            //TODO: get recipe from db and fill in section and component IDs
             var recipeAuthorId = this.recipeService.GetRecipeById(input.Id)?.AuthorId;
             if (!ModelState.IsValid)
             {

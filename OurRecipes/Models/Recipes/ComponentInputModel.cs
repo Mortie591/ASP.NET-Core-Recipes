@@ -2,6 +2,7 @@
 
 public class ComponentInputModel
 {
+    public int Id { get; set; }
     [Required,MinLength(3),MaxLength(255)]
     public string IngredientName { get; set; }
     [Required, MinLength(1), MaxLength(255)]

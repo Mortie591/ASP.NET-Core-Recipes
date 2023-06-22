@@ -11,6 +11,7 @@
     ViewData["Title"] = "Recipe details";
     int count = 1;
     string currentUserId = UserManager.GetUserId(User);
+    int instructionIndex = 1;
 }
 
 <section class="cards section-bg">
@@ -89,10 +90,10 @@
             <div class="row justify-content-center">
                 <div class="ingredients col-lg-6 col-md-12">
                     <h4>Ingredients</h4>
-                    <ul class="list-group list-group custom-list">
+                    <ul class="list-group custom-list">
                         @foreach (var component in Model.Components)
                         {
-                            <li class="list-group-item list-group-item-action">
+                            <li class="list-group-item list-group-item-action no-border">
                                 <p>@count. @component.Text</p>
                             </li>
                             count++;
@@ -106,7 +107,7 @@
                                 </li>
                                 @foreach (var component in item.Components)
                                 {
-                                    <li class="list-group-item list-group-item-action">
+                                    <li class="list-group-item list-group-item-action no-border">
                                         <p>@count. @component.Text</p>
                                     </li>
                                     count++;
@@ -117,13 +118,13 @@
                 </div>
                 <div class="instructions col-lg-6 col-md-12">
                     <h4>Instructions</h4>
-                    <ul class="list-group custom-list"></ul>
+                    <ul class="list-group"></ul>
                     @foreach (var instruction in Model.Instructions)
                     {
-                        <li class="list-group-item list-group-item-action">
-                            <p class="p-2">@count. @instruction</p>
+                        <li class="list-group-item list-group-item-action no-border">
+                            <p>@instructionIndex. @instruction</p>
                         </li>
-                        count++;
+                        instructionIndex++;
                     }
                 </div>
             </div>
