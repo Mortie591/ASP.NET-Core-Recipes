@@ -155,7 +155,7 @@
                             <fieldset class="form-group mt-3 mb-3" id="ingredients-fieldset">
                                 <legend for="ingredients"><strong>Ingredients</strong></legend>
 
-                                <ul name="ingredients" class="form-group mt-3 mb-3">
+                                <ul name="ingredients" id="all-ingredients" class="form-group mt-3 mb-3">
                                     @for (int i = 0; i < Model.Components.Count; i++)
                                     {
                                         <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
@@ -180,18 +180,24 @@
                                             </div>
                                             <div class="col-lg-4 col-md-6">
                                                 <label><strong>Ingredient Name</strong></label>
-                                                <input asp-for="Components[i].IngredientName" class="form-control" value="@Model.Components[i].IngredientName" placeholder="Sugar">
-                                                <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
+                                                <div class="d-flex">
+                                                    <input asp-for="Components[i].IngredientName" class="form-control" value="@Model.Components[i].IngredientName" placeholder="Sugar">
+                                                    <span asp-validation-for="Components[i].IngredientName" class="text-danger"></span>
+                                                    <button class="btn btn-md btn-secondary" id="remove-ingredient" type="button" onclick="removeIngredient()">Remove</button>
+                                                </div>
                                             </div>
                                         </li>
                                     }
                                     <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add</button>
-                                    <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove</button>
+                                    <button class="btn btn-md btn-outline-success" id="add-section" type="button" onclick="AddSection()">Add Section</button>
                                     @for (int i = 0; i < Model.Sections.Count; i++)
                                     {
                                         <ul name="sections" class="form-group mt-3 mb-3">
                                             <label asp-for="Sections[i].SectionName"><strong>Section Name</strong></label>
-                                            <input asp-for="Sections[i].SectionName" class="form-control" value="@Model.Sections[i].SectionName" placeholder="Section Name">
+                                            <div class="d-flex">
+                                                <input asp-for="Sections[i].SectionName" class="form-control" value="@Model.Sections[i].SectionName" placeholder="Section Name">
+                                                <button class="btn btn-secondary" id="remove-section" type="button" onclick="removeSection()">Remove Section</button>
+                                            </div>
                                             @for (int j = 0; j < Model.Sections[i].Components.Count; j++)
                                             {
                                                 <li asp-for="ComponentInputModel" name="ingredients-row" class="row mt-3 mb-3" id="ingredients-row">
@@ -216,22 +222,19 @@
                                                     </div>
                                                     <div class="col-lg-4 col-md-6">
                                                         <label><strong>Ingredient Name</strong></label>
-                                                        <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" value="@Model.Sections[i].Components[j].IngredientName" placeholder="All-purpose flour">
-                                                        <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
+                                                        <div class="d-flex">
+                                                            <input asp-for="Sections[i].Components[j].IngredientName" class="form-control" value="@Model.Sections[i].Components[j].IngredientName" placeholder="All-purpose flour">
+                                                            <span asp-validation-for="Sections[i].Components[j].IngredientName" class="text-danger"></span>
+                                                            <button class="btn btn-md btn-secondary" id="remove-ingredient" type="button" onclick="removeIngredient()">Remove</button>
+                                                        </div>
                                                     </div>
                                                 </li>
                                             }
-                                            <button class="btn btn-md btn-primary" id="add-ingredient" type="button" onclick="AddIngredient()">Add Ingredient</button>
-                                            <button class="btn btn-md btn-secondary" id="remove-ingredient">Remove Ingredient</button>
+                                            <button class="btn btn-md btn-primary" id="add-ingredient-section" type="button" onclick="addIngredientToSection()">Add Ingredient</button>
                                         </ul>
                                     }
                                     
                                 </ul>
-
-                                <div class="form-group mt-3 mb-3">
-                                    <button class="btn btn-md btn-primary" id="add-section" type="button" onclick="AddSection()">Add Section</button>
-                                    <button class="btn btn-md btn-secondary" id="remove-section">Remove Section</button>
-                                </div>
                             </fieldset>
                             <div class="validate"></div>
                         </div>
