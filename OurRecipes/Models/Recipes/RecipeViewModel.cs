@@ -30,6 +30,7 @@ namespace OurRecipes.Models.Recipes
         public List<Component> Components { get; set; }
         public List<string> Instructions { get; set; }
         public List<Nutrient> Nutrients { get; set; }
+        public List<UserFavourite> UserFavourites { get; set; }
         public string AuthorId { get; set; }
         public AppIdentityUser Author { get; set; }
     }

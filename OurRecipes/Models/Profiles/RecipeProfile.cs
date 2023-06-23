@@ -9,21 +9,21 @@ namespace OurRecipes.Models.Profiles
     {
         public RecipeProfile()
         {
-            CreateMap<Recipe, RecipeViewModel>()
-                .ForMember(d => d.Title, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Title)))
-                .ForMember(d => d.PrepTime, s => s.MapFrom(s => s.PrepTime))
-                .ForMember(d => d.CookTime, s => s.MapFrom(s => s.CookTime))
-                .ForMember(d => d.Rating, s => s.MapFrom(s => s.Likes))
-                .ForMember(d => d.Difficulty, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "Difficulty").Name))
-                .ForMember(d => d.Servings, opt=>opt.ConvertUsing(new IntConverter()))
-                .ForMember(d => d.Description, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Description)))
-                .ForMember(d=>d.Instructions,s=>s.MapFrom(s=> s.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
-                .ForMember(d => d.AuthorId, s => s.MapFrom(s => s.AuthorId))
-                .ForMember(d => d.ImageUrl, s => s.MapFrom(s => s.ImageUrl))
-                .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients))
-                .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories.Where(x => x.Type != "Difficulty").Select(x => x.Name)))
-                .ForMember(d => d.Components, s => s.MapFrom(s => s.Components))
-                .ForMember(d => d.Sections, s => s.MapFrom(s => s.Sections));
+            //CreateMap<Recipe, RecipeViewModel>()
+            //    .ForMember(d => d.Title, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Title)))
+            //    .ForMember(d => d.PrepTime, s => s.MapFrom(s => s.PrepTime))
+            //    .ForMember(d => d.CookTime, s => s.MapFrom(s => s.CookTime))
+            //    .ForMember(d => d.Rating, s => s.MapFrom(s => s.UserFavourites.Count))
+            //    .ForMember(d => d.Difficulty, s => s.MapFrom(s => s.Categories.FirstOrDefault(x => x.Type == "Difficulty").Name))
+            //    .ForMember(d => d.Servings, opt=>opt.ConvertUsing(new IntConverter()))
+            //    .ForMember(d => d.Description, s => s.MapFrom(s => HttpUtility.HtmlDecode(s.Description)))
+            //    .ForMember(d=>d.Instructions,s=>s.MapFrom(s=> s.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
+            //    .ForMember(d => d.AuthorId, s => s.MapFrom(s => s.AuthorId))
+            //    .ForMember(d => d.ImageUrl, s => s.MapFrom(s => s.ImageUrl))
+            //    .ForMember(d => d.Nutrients, s => s.MapFrom(s => s.Nutrients))
+            //    .ForMember(d => d.Categories, s => s.MapFrom(s => s.Categories.Where(x => x.Type != "Difficulty").Select(x => x.Name)))
+            //    .ForMember(d => d.Components, s => s.MapFrom(s => s.Components))
+            //    .ForMember(d => d.Sections, s => s.MapFrom(s => s.Sections));
 
 
 

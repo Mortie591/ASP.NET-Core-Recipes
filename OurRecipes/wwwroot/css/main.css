@@ -158,7 +158,7 @@ section {
 # Custom 
 --------------------------------------------------------------*/
 .no-border {
-    border:none;
+    border: none;
 }
 .list-group-item {
     background-color: inherit;

@@ -31,14 +31,31 @@
                     }
                 </div>
                 <div class="d-flex flex-row">
-                    <i class="p-2 bi bi-heart"></i>
-                    <div class="p-2">@Model.Rating likes</div>
-                    <div class="p-2">
-                        <a href="#Comments">Comments</a>
+                    <div>
+                        <i class="p-2 bi bi-heart-fill"></i>
+                        @Model.Rating likes
+                    </div>
+                    <div>
+                        @if (Model.UserFavourites.Any(x => x.UserId == currentUserId))
+                        {
+                            <a asp-action="Unlike" asp-route-id="@Model.Id" class="p-2 bi bi-heart-fill"></a>
+                            <span>Liked</span>
+                        }
+                        else
+                        {
+                            <a asp-action="Like" asp-route-id="@Model.Id" class="p-2 bi bi-heart"></a>
+                            <span>Like</span>
+                        }
+                       
+                    </div>
+                    
+                    <div>
+                        <a href="#Comments">
+                            <span class="p-2">Comments</span>
+                        </a>
                     </div>
                 </div>
-                <div class="plan">
-                    <div class="d-flex justify-content-start">
+                <div class="plan d-flex flex-row">
                         <div class="d-flex">
                             <i class="p-2 bi bi-clock"></i>
                             <div class="p-2 cook-prep-time">Prep: @Model.PrepTime mins</div>
@@ -47,17 +64,34 @@
                             <i class="p-2 bi bi-clock"></i>
                             <div class="p-2 cook-prep-time">Cook: @Model.CookTime mins</div>
                         </div>
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex">
+                            <img class="p-2" style="width:32px;height:32px;" src="~/img/servings.svg" />
+                            <div class="p-2 servings">Servings:  @Model.Servings</div>
+                        </div>
+                 </div>
+                        <div class="categories flex-row justify-content-evenly">
                             <div class="d-flex">
-                                <img class="p-2" style="width:32px;height:32px;" src="~/img/servings.svg" />
-                                <div class="p-2 servings">Servings:  @Model.Servings</div>
+                                <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
+                                <span class="p-2">Difficulty: </span>
+                                <a class="p-2" asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Difficulty">@Model.Difficulty</a>
                             </div>
                             <div class="d-flex">
                                 <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
-                                <a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Difficulty">@Model.Difficulty</a>
+                                <span class="p-2">Cuisine: </span>
+                                <a class="p-2" asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Cuisine">@Model.Cuisine</a>
+                            </div>
+                            <div class="d-flex">
+                                <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
+                                <span class="p-2">Cooking Technique: </span>
+                                <a class="p-2" asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.CookingTechnique">@Model.CookingTechnique</a>
+                            </div>
+                            <div class="d-flex">
+                                <img class="p-2" style="width:32px;height:32px;" src="~/img/difficulty.svg" />
+                                <span class="p-2">Season: </span>
+                                <a class="p-2" asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@Model.Season">@Model.Season</a>
                             </div>
                         </div>
-                    </div>
+                    
                     <div class="categories p-2">
                         <h5>Categories: </h5>
                         <ul class="d-flex flex-row custom-list">

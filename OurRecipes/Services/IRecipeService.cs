@@ -20,8 +20,8 @@ namespace OurRecipes.Services
         public Task<ICollection<RecipeByUserViewModel>> GetRecipesByUserAsync(string userId);
         public ICollection<RecipeByUserViewModel> GetFavouriteRecipes(string userId);
         public void Delete(string id);
-        public Task LikeRecipe(string id, string userId);
-        public Task UnlikeRecipe(string id, string userId);
+        public void LikeRecipe(string id, string userId);
+        public void UnlikeRecipe(string id, string userId);
 
     }
 }

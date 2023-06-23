@@ -29,7 +29,6 @@ namespace OurRecipes.Data.Models
         public string? PrepTime { get; set; }
         [MaxLength(20)]
         public string? CookTime { get; set; }
-        public ushort Likes { get; set; } = 0;//connect with user? -> My Favourite recipes (all liked ones)
         public string? ImageUrl { get; set; }
         public string? OriginalUrl { get; set; }
         public DateTime CreatedOnDate { get; set; }

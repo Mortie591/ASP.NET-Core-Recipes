@@ -156,14 +156,27 @@ namespace OurRecipes.Controllers
             return RedirectToAction("Details", "Recipes", new  { id=input.Id });
         }
         [Authorize]
-        public async Task<IActionResult> Like() //Add to favourites
+        public IActionResult Like(string id) //Add to favourites
         {
-            return this.View();
+            string userId = this.userManager.GetUserId(User);
+
+            if (userId != null)
+            {
+                this.recipeService.LikeRecipe(id, userId);
+            }
+            
+            return RedirectToAction("Details","Recipes",new {id=id});
         }
         [Authorize] 
-        public IActionResult Unlike() //remove from favourites
+        public IActionResult Unlike(string id) //remove from favourites
         {
-            return View();
+            string userId = this.userManager.GetUserId(User);
+            if (userId != null)
+            {
+                this.recipeService.UnlikeRecipe(id, userId);
+            }
+
+            return RedirectToAction("Details", "Recipes", new { id = id });
         }
 
     }

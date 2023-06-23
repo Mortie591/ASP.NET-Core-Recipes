@@ -221,6 +221,7 @@ namespace OurRecipes.Services
                 .Include(x => x.Components).ThenInclude(x => x.Ingredient)
                 .Include(x => x.Components).ThenInclude(x => x.Unit)
                 .Include(x => x.Categories)
+                .Include(x=>x.UserFavourites)
                 .Include(x => x.Author)
                 .FirstOrDefault(x => x.Id.Equals(id));
                 return recipe;
@@ -255,6 +256,8 @@ namespace OurRecipes.Services
                 Id = recipe.Id,
                 Title = recipe.Title,
                 Description = recipe.Description,
+                Rating = recipe.UserFavourites.Count,
+                UserFavourites = recipe.UserFavourites.ToList(),
                 PrepTime = recipe.PrepTime,
                 CookTime = recipe.CookTime,
                 Servings = int.Parse(recipe.Servings),
@@ -303,7 +306,7 @@ namespace OurRecipes.Services
                 {
                     Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
-                    Rating = x.Likes,
+                    Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
                     Categories = x.Categories,
                     CreatedOnDate = x.CreatedOnDate,
@@ -326,7 +329,7 @@ namespace OurRecipes.Services
                 {
                     Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
-                    Rating = x.Likes,
+                    Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
                     Categories = x.Categories,
                     CreatedOnDate = x.CreatedOnDate,
@@ -349,7 +352,7 @@ namespace OurRecipes.Services
                 {
                     Id= x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
-                    Rating = x.Likes,
+                    Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
                     Categories = x.Categories,
                     CreatedOnDate = x.CreatedOnDate,
@@ -375,7 +378,7 @@ namespace OurRecipes.Services
                 x.Id,
                 x.Title,
                 x.Components,
-                x.Likes,
+                Likes = x.UserFavourites.Count,
                 x.ImageUrl
             });
             
@@ -390,7 +393,7 @@ namespace OurRecipes.Services
                     {
                         Id = recipe.Id,
                         Title = HttpUtility.HtmlDecode(recipe.Title),
-                        Rating = recipe.Likes,
+                        Rating = (ushort)recipe.Likes,
                         ImageUrl = recipe.ImageUrl,
                     };
                     recipeCards.Add(viewModel);
@@ -408,7 +411,7 @@ namespace OurRecipes.Services
                 {
                     Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
-                    Rating = x.Likes,
+                    Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
                     Categories = x.Categories
                 }).OrderByDescending(x => x.Rating).ThenByDescending(x => x.CreatedOnDate).ToList();
@@ -420,7 +423,6 @@ namespace OurRecipes.Services
 
                 throw;
             }
-           
         }
 
         public ICollection<RecipeCardViewModel> GetMyRecipes(string userId)
@@ -431,7 +433,7 @@ namespace OurRecipes.Services
                 {
                     Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
-                    Rating = x.Likes,
+                    Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
                     Categories = x.Categories
                 }).ToList();
@@ -456,7 +458,7 @@ namespace OurRecipes.Services
                     Id = x.RecipeId,
                     AuthorName = x.User.UserName,
                     Title = x.Recipe.Title,
-                    Rating = x.Recipe.Likes,
+                    Rating = (ushort)x.Recipe.UserFavourites.Count,
                     ImageUrl = x.Recipe.ImageUrl
                 })
                 .ToList();
@@ -469,18 +471,27 @@ namespace OurRecipes.Services
             }
         }
 
-        public async Task LikeRecipe(string id, string userId)
+        public void LikeRecipe(string id, string userId)
         {
             var user = this.context.Users.FirstOrDefault(x => x.Id == userId);
             var recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
             if (user != null && recipe!=null)
             {
-                user.UserFavourites.Add(new UserFavourite
+                bool isLiked = this.context.UserFavourites.Any(x=>x.RecipeId==id && x.UserId==userId);
+                if(!isLiked)
                 {
-                    UserId = userId,
-                    RecipeId = recipe.Id,
-                });
-                this.context.SaveChanges();
+                    this.context.UserFavourites.Add(new UserFavourite
+                    {
+                        UserId = userId,
+                        RecipeId = recipe.Id,
+                    });
+                    this.context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine($"User {userId} already liked recipe {id}");
+                }
+                
             }
             else
             {
@@ -488,16 +499,16 @@ namespace OurRecipes.Services
             }
         }
 
-        public async Task UnlikeRecipe(string id, string userId)
+        public void UnlikeRecipe(string id, string userId)
         {
             var user = this.context.Users.FirstOrDefault(x => x.Id == userId);
             var recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
             try
             {
-                var userFavouriteItem = user.UserFavourites.FirstOrDefault(x => x.Recipe == recipe);
+                var userFavouriteItem = this.context.UserFavourites.FirstOrDefault(x => x.Recipe == recipe && x.UserId == userId);
                 if(userFavouriteItem != null)
                 {
-                    user.UserFavourites.Remove(userFavouriteItem);
+                    this.context.UserFavourites.Remove(userFavouriteItem);
                     this.context.SaveChanges();
                 }
                 else
@@ -521,7 +532,7 @@ namespace OurRecipes.Services
                 Id = x.Id,
                 Title = HttpUtility.HtmlDecode(x.Title),
                 AuthorName = author.UserName,
-                Rating = x.Likes,
+                Rating = (ushort)x.UserFavourites.Count,
                 ImageUrl = x.ImageUrl,
             }).ToList();
                
