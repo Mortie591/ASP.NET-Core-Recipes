@@ -537,65 +537,57 @@ namespace OurRecipes.Services
         
         private List<Component> EditOrCreateComponents(EditRecipeViewModel recipeData)
         {
-            var dbComponents = this.context.Components
-                .Include(x => x.Unit)
-                .Include(x => x.Ingredient)
-                .ToList();
-            var editComponents = new List<Component>();
+            var editComponents = new HashSet<Component>();
             var components = recipeData.Components;
             foreach (var component in components)
             {
-                Component dbComponent = dbComponents.FirstOrDefault(x => x.Id == component.Id);
-                if (dbComponent != null)
+                var editComponent = GetOrCreateComponent(component.IngredientName, component.Quantity, component.Unit);
+                if (!editComponents.Any(x=>x.Id==component.Id))
                 {
-                    editComponents.Add(dbComponent);
-                }
-                else
-                {
-                    Component newComponent = new Component
-                    {
-                        Ingredient = GetOrCreateIngredient(component.IngredientName),
-                        Quantity = component.Quantity,
-                        Unit = component.Unit != null ? GetOrCreateUnit(component.Unit) : null,
-                        Text = $"{component.Quantity} {component.Unit} {component.IngredientName}"
-                    };
-                    editComponents.Add(newComponent);
+                    editComponents.Add(editComponent);
                 }
             }
-            return editComponents;
+            var dbComponents = this.context.Components.Where(x => x.Recipes.Any(x => x.Id == recipeData.Id));
+            if(dbComponents.Count()>0 && editComponents.Count< dbComponents.Count())
+            {
+                foreach(var component in dbComponents)
+                {
+                    if (!editComponents.Any(x=>x.Id==component.Id))
+                    {
+                        this.context.Recipes.First(x=>x.Id== recipeData.Id).Components.Remove(component);
+                        this.context.SaveChanges();
+                    }
+                }
+            }
+            return editComponents.ToList();
         }
         private List<Section> EditOrCreateSections(EditRecipeViewModel recipeData)
         {
-            var dbSections = this.context.Sections
-                .Include(x => x.Components)
-                .ToList();
             var editSections = new List<Section>();
             var sections = recipeData.Sections;
             foreach (var section in sections)
             {
-                Section dbSection = dbSections.FirstOrDefault(x => x.Id == section.Id);
-                if (dbSection != null)
-                {
-                    editSections.Add(dbSection);
-                }
-                else
-                {
-                    Section newSection = new Section
-                    {
-                        Name = section.SectionName,
-                        Components = section.Components.Select(c => new Component
-                        {
-                            Ingredient = GetOrCreateIngredient(c.IngredientName),
-                            Quantity = c.Quantity,
-                            Unit = GetOrCreateUnit(c.Unit),
-                            Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
+                var editSection = GetOrCreateSection(section.SectionName, recipeData.Id, section.Components);
 
-                        }).ToList()
-                    };
-                    editSections.Add(newSection);
+                editSections.Add(editSection);
+            }
+
+
+
+
+            var dbSections= this.context.Sections.Where(x => x.Recipes.Any(x => x.Id == recipeData.Id));
+            if (dbSections.Count() > 0 && editSections.Count < dbSections.Count())
+            {
+                foreach (var section in dbSections)
+                {
+                    if (!editSections.Any(x => x.Id == section.Id))
+                    {
+                        this.context.Recipes.First(x => x.Id == recipeData.Id).Sections.Remove(section);
+                        this.context.SaveChanges();
+                    }
                 }
             }
-            
+
             return editSections;
         }
         private List<Category> EditOrCreateCategories(CreateRecipeInputModel recipeDto)

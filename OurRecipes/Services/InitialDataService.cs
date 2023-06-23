@@ -182,6 +182,67 @@ namespace OurRecipes.Services
             return category;
         }
 
+        protected virtual Component GetOrCreateComponent(string ingredientName, string quantity, string unitName)
+        {
+            var dbComponent = this.context.Components.FirstOrDefault(x=>x.Ingredient.Name== ingredientName 
+            && x.Quantity==quantity && x.Unit.Name==unitName);
+            if(dbComponent != null)
+            {
+                return dbComponent;
+            }
+            else
+            {
+                dbComponent = new Component
+                {
+                    Ingredient = GetOrCreateIngredient(ingredientName),
+                    Quantity = quantity,
+                    Unit =  !String.IsNullOrEmpty(unitName) ? GetOrCreateUnit(unitName) : null,
+                    Text = $"{quantity} {unitName} {ingredientName}"
+                };
+                return dbComponent;
+            }
+        }
+        protected virtual Section GetOrCreateSection(string name, string recipeId, ICollection<ComponentInputModel> formComponents)
+        {
+            var dbSection = this.context.Sections.FirstOrDefault(x => x.Name == name && x.Recipes.Any(r => r.Id == recipeId));
+            var editComponents = new HashSet<Component>();
+            if(dbSection != null)
+            {
+                foreach(var component in formComponents)
+                {
+                    var editComponent = GetOrCreateComponent(component.IngredientName,component.Quantity,component.Unit);
+                    if (!editComponents.Any(x => x.Id == editComponent.Id))
+                    {
+                        editComponents.Add(editComponent);
+                    }
+                }
+
+                dbSection.Components=editComponents;
+
+                if (dbSection.Components.Count() > 0 && editComponents.Count < dbSection.Components.Count())
+                {
+                    foreach (var component in dbSection.Components)
+                    {
+                        if (!editComponents.Any(x => x.Id == component.Id))
+                        {
+                            dbSection.Components.Remove(component);
+                            this.context.SaveChanges();
+                        }
+                    }
+                }
+                return dbSection;
+            }
+            else
+            {
+                var newSection = new Section
+                {
+                    Name = name,
+                    Components = (ICollection<Data.Models.Component>)formComponents.Select(
+                        c => GetOrCreateComponent(c.IngredientName, c.Quantity, c.Unit))
+                };
+                return newSection;
+            }
+        }
     }
 }
  
