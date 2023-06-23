@@ -3,9 +3,9 @@
     public interface ICommentService
     {
         
-        public void AddComment(); 
-        public void AddReply(string commentId);
-        public void RemoveComment(string id);
-        public void RemoveReply(string id);
+        public void AddComment(string recipeId,string userId); 
+        public void AddReply(string commentId, string userId);
+        public void RemoveComment(string id,string recipeId, string userId);
+        public void RemoveReply(string replyId,string commentId, string userId);
     }
 }

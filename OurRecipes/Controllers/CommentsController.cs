@@ -17,12 +17,7 @@ namespace OurRecipes.Controllers
             this.recipeService = recipeService;
             this.userManager = userManager;
         }
-        public async Task<IActionResult> WhoAmI() //test
-        {
-            var user = await userManager.GetUserAsync(this.User);
-
-            return this.Json(user);
-        }
+        
         public IActionResult Comment()
         {
             return View();
