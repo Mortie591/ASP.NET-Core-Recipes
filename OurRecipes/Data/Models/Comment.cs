@@ -7,6 +7,7 @@ namespace OurRecipes.Data.Models
         public Comment()
         {
             this.Replies = new HashSet<Reply>();
+            this.Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
         [Required, MaxLength(250)]

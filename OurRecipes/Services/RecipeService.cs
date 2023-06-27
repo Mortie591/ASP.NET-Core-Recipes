@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
+using OurRecipes.Models.Comments;
 using OurRecipes.Models.Recipes;
 
 using System.Text.RegularExpressions;
@@ -271,6 +272,13 @@ namespace OurRecipes.Services
                 Sections = recipe.Sections?.ToList(),
                 Instructions = recipe.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Nutrients = recipe.Nutrients.ToList(),
+                Comments = recipe.Comments.Select(x => new CommentViewModel
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    RecipeId = x.RecipeId,
+                    Content = x.Content
+                }).ToList()
             };
 
             if (recipe.Sections.Any())
@@ -295,7 +303,7 @@ namespace OurRecipes.Services
             {
                 recipeData.Categories.Add($"{category.Type}-{category.Name}");
             }
-
+            
             return recipeData;
         }
         public ICollection<RecipeCardViewModel> GetRandomRecipes()

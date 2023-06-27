@@ -1,0 +1,32 @@
+﻿@using OurRecipes.Models.Comments;
+@using OurRecipes.Models.Recipes;
+@model CommentInputModel;
+@{
+    var routeData = new Dictionary<string, string>
+    {
+    {"RecipeId",Model.RecipeId },
+    {"UserId",Model.UserId}
+    };
+}
+
+<section id="add-comment" class="section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <p>Add <span>New</span> Comment</p>
+            <h2>New Recipe</h2>
+        </div>
+        <div class="row gy-4">
+            <form method="post" role="form" class="form-group" data-aos="fade-up" data-aos-delay="100">
+                <div class="form-group mt-3 mb-3">
+                    <label asp-for="Content"><strong>Content</strong></label>
+                    <textarea asp-for="Content" class="form-control" id="comment" rows="4" placeholder="Comment..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <button type="submit" asp-controller="Comments" asp-action="_AddComment" asp-all-route-data=routeData class="m-2 btn btn-lg btn-primary">Submit</button>
+                    <button type="button" class="m-2 btn btn-lg btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

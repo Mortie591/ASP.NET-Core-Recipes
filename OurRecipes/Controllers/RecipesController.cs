@@ -111,6 +111,7 @@ namespace OurRecipes.Controllers
         public IActionResult Create(CreateRecipeInputModel input)
         {
             string authorId = userManager.GetUserId(User);
+
             if (!ModelState.IsValid)
             {
                 return this.View(input);
@@ -141,7 +142,6 @@ namespace OurRecipes.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EditRecipeViewModel input)
         {
-            //TODO: get recipe from db and fill in section and component IDs
             var recipeAuthorId = this.recipeService.GetRecipeById(input.Id)?.AuthorId;
             if (!ModelState.IsValid)
             {

@@ -1,4 +1,5 @@
 ﻿@using OurRecipes.Data.Models;
+@using OurRecipes.Models.Comments;
 @using OurRecipes.Models.Recipes;
 @using Microsoft.AspNetCore.Identity
 
@@ -50,8 +51,8 @@
                     </div>
                     
                     <div>
-                        <a href="#Comments">
-                            <span class="p-2">Comments</span>
+                        <a href="#recipe-comments">
+                            <span class="p-2" >Comments</span>
                         </a>
                     </div>
                 </div>
@@ -183,4 +184,5 @@
             </div>
         }
 </section>
-<partial name="_Comment" />
+<partial  name="_ViewComments" model='Model.Comments' />
+<partial name="_AddComment" model='new CommentInputModel{RecipeId=Model.Id, UserId=UserManager.GetUserId(User)}' />

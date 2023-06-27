@@ -39,6 +39,7 @@ namespace OurRecipes
             
             builder.Services.AddTransient<IRecipeService, RecipeService>();
             builder.Services.AddTransient<ICategoryService, CategoryService>();
+            builder.Services.AddTransient<ICommentService, CommentService>();
             builder.Services.AddAutoMapper(c=>c.AddProfile<RecipeProfile>(),typeof(Program));
 
             var app = builder.Build();

@@ -1,4 +1,5 @@
 ﻿using OurRecipes.Data.Models;
+using OurRecipes.Models.Comments;
 using System.ComponentModel.DataAnnotations;
 
 namespace OurRecipes.Models.Recipes
@@ -12,6 +13,7 @@ namespace OurRecipes.Models.Recipes
             Components = new List<Component>();
             Nutrients = new List<Nutrient>();
             Instructions = new List<string>();
+            Comments = new List<CommentViewModel>();
         }
         public string Id { get; set; }
         public string Title { get; set; }
@@ -33,5 +35,6 @@ namespace OurRecipes.Models.Recipes
         public List<UserFavourite> UserFavourites { get; set; }
         public string AuthorId { get; set; }
         public AppIdentityUser Author { get; set; }
+        public List<CommentViewModel> Comments { get; set; }
     }
 }
