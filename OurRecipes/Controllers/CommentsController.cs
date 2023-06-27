@@ -47,13 +47,14 @@ namespace OurRecipes.Controllers
         {
             var userId = userManager.GetUserId(User);
             var comment = this.commentService.GetComment(id);
+            var recipeId = comment.RecipeId;
             if(comment.UserId != userId)
             {
                 return Forbid();
             }else
             {
                 this.commentService.RemoveComment(id);
-            return RedirectToAction("ViewComments", "Comments");
+                return RedirectToAction("Details", "Recipes", new { id = recipeId }, "#recipe-comments");
             }
         }
 

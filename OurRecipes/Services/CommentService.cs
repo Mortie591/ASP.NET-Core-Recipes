@@ -51,7 +51,8 @@ namespace OurRecipes.Services
                 {
                     Id = comment.Id,
                     Content = comment.Content,
-                    UserId = comment.UserId
+                    UserId = comment.UserId,
+                    RecipeId= comment.RecipeId
                 };
             }
             else

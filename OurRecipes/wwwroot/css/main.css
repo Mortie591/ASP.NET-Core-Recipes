@@ -61,7 +61,7 @@ h6 {
 --------------------------------------------------------------*/
 section {
     overflow: hidden;
-    padding: 80px 0;
+    padding: 20px 0;
 }
 
 .section-bg {
@@ -157,6 +157,14 @@ section {
 /*--------------------------------------------------------------
 # Custom 
 --------------------------------------------------------------*/
+.comments-group {
+    list-style: none;
+}
+.comments-group-item{
+    border-bottom:solid;
+    border-width:thin;
+    border-color:#eee;
+}
 .no-border {
     border: none;
 }
@@ -165,7 +173,7 @@ section {
     padding: 0px;
 }
 .list-group-item:hover {
-    transform: scale(1.1) ;
+    
 }
 
 .textarea {

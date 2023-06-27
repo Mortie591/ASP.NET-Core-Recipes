@@ -1,19 +1,37 @@
-﻿@using OurRecipes.Models.Comments;
+﻿@using OurRecipes.Data.Models;
+@using OurRecipes.Models.Comments;
 @model List<CommentViewModel>;
-<section class="section-bg" id="recipe-comments">
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppIdentityUser> SignInManager
+@inject UserManager<AppIdentityUser> UserManager
+
+<section id="recipe-comments">
     <div class="container recipe-container-container" data-aos="fade-up">
         <div class="section-header">
             <p>Comments</p>
         </div>
-        <a href="#add-comment">Add Comment</a>
+        <a href="#add-comment">Add New Comment</a>
         @if (Model.Count > 0)
         {
+            <ul class="comments-group">
             @foreach (var comment in Model)
             {
-                <strong>@comment.UserName</strong>
-                <div asp-for="Content" id="comment" rows="4" placeholder="Comment..."></div>
-                <a asp-action="Replies">Reply</a>
+                    <li class="comments-group-item list-group-item-action">
+                        <div>
+                            <strong>@@@comment.UserName</strong>
+                            <div asp-for="Content" id="comment">@comment.Content</div>
+                            <a class="p-2" asp-controller="Comments" asp-action="ViewReplies" asp-route-commentId="@comment.Id">View replies</a>
+                            <a class="p-2" asp-controller="Comments" asp-action="AddReply">Reply</a>
+                            @if (UserManager.GetUserId(User) == comment.UserId)
+                            {
+                                <a class="p-2" asp-controller="Comments" asp-action="RemoveComment" asp-route-id="@comment.Id">Delete</a>
+                            }
+                        </div>
+                </li>
             }
+            </ul>
         }
         else
         {

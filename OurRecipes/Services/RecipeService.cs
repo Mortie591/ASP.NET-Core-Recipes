@@ -266,6 +266,7 @@ namespace OurRecipes.Services
                 {
                     Id = x.Id,
                     UserId = x.UserId,
+                    UserName = x.User.UserName,
                     RecipeId = x.RecipeId,
                     Content = x.Content
                 }).ToList()
