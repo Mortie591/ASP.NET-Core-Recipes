@@ -37,6 +37,7 @@ namespace OurRecipes.Services
             var Recipe = new Recipe()
             {
                 Title = recipeDto.Title,
+                ImageUrl = recipeDto.ImageUrl,
                 Description = recipeDto.Description,
                 PrepTime = recipeDto.PrepTime.ToString(),
                 CookTime = recipeDto.CookTime.ToString(),
@@ -185,6 +186,7 @@ namespace OurRecipes.Services
                 throw new NullReferenceException(nameof(recipeData.Id));
 
             recipe.Title = recipeData.Title;
+            recipe.ImageUrl = recipeData.ImageUrl;
             recipe.Description = recipeData.Description;
             recipe.PrepTime = recipeData.PrepTime?.ToString();
             recipe.CookTime = recipeData.CookTime?.ToString();
@@ -248,6 +250,7 @@ namespace OurRecipes.Services
             {
                 Id = recipe.Id,
                 Title = recipe.Title,
+                ImageUrl = recipe.ImageUrl,
                 Description = recipe.Description,
                 Rating = recipe.UserFavourites.Count,
                 UserFavourites = recipe.UserFavourites.ToList(),

@@ -4,12 +4,17 @@ using OurRecipes.Data.Models;
 using OurRecipes.Services;
 using DataSeeder.Models.ScraperDtos;
 using System.Text;
+using System.Web;
+using System.Net.Http.Json;
+using Newtonsoft.Json.Linq;
+using DataSeeder.Models;
+using System.Text.Json;
 
 namespace DataSeeder
 {
     public class ScraperService:InitialDataService, IScraperService
     {
-        
+        private readonly HttpClient _httpClient = new HttpClient();
         private readonly List<string> urls = new List<String>();
         private readonly List<string> collections = new List<String>() 
         { "easy-recipes", "easy-vegetarian-recipes","chocolate-dessert-recipes","easy-pasta-recipes"};
@@ -27,6 +32,7 @@ namespace DataSeeder
             {
                 if (recipeDto != null)
                 {
+                    var imageUrl=await GetImageUrl(this._httpClient,recipeDto.Title);
                     Recipe recipe = new Recipe
                     {
                         Title = recipeDto.Title,
@@ -34,7 +40,7 @@ namespace DataSeeder
                         Servings = recipeDto.Servings==null?"": recipeDto.Servings,
                         PrepTime = recipeDto.PrepTime,
                         CookTime = recipeDto.CookTime,
-                        ImageUrl = recipeDto?.ImageUrl,
+                        ImageUrl = recipeDto.ImageUrl,
                         OriginalUrl = recipeDto.OriginalUrl,
                         CreatedOnDate = DateTime.Now,
                         Instructions = recipeDto.Instructions,
@@ -66,7 +72,22 @@ namespace DataSeeder
             }
             
         }
-        
+
+        private async Task<string> GetImageUrl(HttpClient client,string title)
+        {
+            title = HttpUtility.UrlEncode(title);
+            string apiKey = "36940976-984b944bf6bcd10a97e6750ab";
+            var url = $"https://pixabay.com/api/?key={apiKey}&q={title}&image_type=photo";
+            string imageUrl = string.Empty;
+            var json = await client.GetStringAsync(url);
+            if (json != null)
+            {
+                var imageObj = JsonSerializer.Deserialize<List<ImageDto>>(json);
+                imageUrl = imageObj.FirstOrDefault().imageURL;
+            }
+            return imageUrl;
+        }
+
         public async Task<ICollection<RecipeDto>> InitializeScraping()
         {
             var recipes = new List<RecipeDto>();
