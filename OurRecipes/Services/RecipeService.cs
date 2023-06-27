@@ -214,16 +214,6 @@ namespace OurRecipes.Services
             if (context.Recipes.Any(x => x.Id == id))
             {
                 Recipe recipe = context.Recipes
-                .Include(x => x.Nutrients)
-                .Include(x => x.Sections).ThenInclude(x=>x.Components)
-                .ThenInclude(x => x.Ingredient)
-                .Include(x => x.Sections).ThenInclude(x => x.Components)
-                .ThenInclude(x => x.Unit)
-                .Include(x => x.Components).ThenInclude(x => x.Ingredient)
-                .Include(x => x.Components).ThenInclude(x => x.Unit)
-                .Include(x => x.Categories)
-                .Include(x=>x.UserFavourites)
-                .Include(x => x.Author)
                 .FirstOrDefault(x => x.Id.Equals(id));
                 return recipe;
             }
@@ -345,9 +335,9 @@ namespace OurRecipes.Services
 
                 return recipes;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception();
+                throw new Exception(ex.Message);
             }
             
         }

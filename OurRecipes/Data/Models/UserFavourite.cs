@@ -8,10 +8,10 @@ namespace OurRecipes.Data.Models
 
         [ForeignKey(nameof(AppIdentityUser))]
         public string? UserId { get; set; }
-        public AppIdentityUser User { get; set; }
+        public virtual AppIdentityUser User { get; set; }
 
         [ForeignKey(nameof(Recipe))]
         public string? RecipeId { get; set; }
-        public Recipe Recipe { get; set; }
+        public virtual Recipe Recipe { get; set; }
     }
 }

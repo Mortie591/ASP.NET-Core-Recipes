@@ -34,7 +34,7 @@ namespace OurRecipes.Data.Models
         public DateTime CreatedOnDate { get; set; }
         public bool? IsDeleted { get; set; } = false;
         public virtual ICollection<Category> Categories { get; set; }
-        public ICollection<Section>? Sections { get; set; }
+        public virtual ICollection<Section>? Sections { get; set; }
         public virtual ICollection<Component> Components { get; set; }
         public string Instructions { get; set; }
         public virtual ICollection<Nutrient> Nutrients { get; set; } 
@@ -43,7 +43,7 @@ namespace OurRecipes.Data.Models
         
         [ForeignKey(nameof(AppIdentityUser))]
         public string? AuthorId { get; set; }
-        public AppIdentityUser? Author { get; set; }
-        public ICollection<UserFavourite>? UserFavourites { get; set; }
+        public virtual AppIdentityUser? Author { get; set; }
+        public virtual ICollection<UserFavourite>? UserFavourites { get; set; }
     }
 }

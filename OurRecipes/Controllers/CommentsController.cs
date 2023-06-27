@@ -21,19 +21,11 @@ namespace OurRecipes.Controllers
             this.commentService = commentService;
         }
 
-        public IActionResult ViewComments(string recipeId)
+        public IActionResult _ViewComments(string recipeId)
         {
             var viewComments = this.commentService.GetComments(recipeId);
             return View(viewComments);
         }
-        //[Authorize]
-        //public IActionResult _AddComment(string recipeId)
-        //{
-        //    string authorId = userManager.GetUserId(User);
-        //    var commentInputModel =  new CommentInputModel { RecipeId = recipeId,UserId=authorId };
-            
-        //    return PartialView("_AddComment",commentInputModel);
-        //}
 
         [HttpPost]
         [Authorize]
@@ -47,7 +39,7 @@ namespace OurRecipes.Controllers
                 return this.View(input);
             }
             this.commentService.AddComment(input);
-            return Redirect($"/Recipes/Details/{input.RecipeId}#recipe-comments");
+            return RedirectToAction("Details", "Recipes", new {id=input.RecipeId},"#recipe-comments");
         }
 
         [Authorize]

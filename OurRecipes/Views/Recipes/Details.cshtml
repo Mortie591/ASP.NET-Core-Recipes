@@ -184,5 +184,5 @@
             </div>
         }
 </section>
-<partial  name="_ViewComments" model='Model.Comments' />
-<partial name="_AddComment" model='new CommentInputModel{RecipeId=Model.Id, UserId=UserManager.GetUserId(User)}' />
+<partial  name="_ViewComments" model='Model.Comments'/>
+<partial name="_AddComment" model='new CommentInputModel{RecipeId=Model.Id, UserId=currentUserId}' />
