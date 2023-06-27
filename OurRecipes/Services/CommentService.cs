@@ -52,7 +52,15 @@ namespace OurRecipes.Services
                     Id = comment.Id,
                     Content = comment.Content,
                     UserId = comment.UserId,
-                    RecipeId= comment.RecipeId
+                    RecipeId= comment.RecipeId,
+                    Replies = comment.Replies.Select(x => new ReplyViewModel
+                    {
+                        Id = x.Id,
+                        Content = x.Content,
+                        CommentId = x.CommentId,
+                        UserId = x.UserId,
+                        UserName = x.User.UserName
+                    }).ToList()
                 };
             }
             else
@@ -71,8 +79,18 @@ namespace OurRecipes.Services
             {
                 viewComments.Add(new CommentViewModel
                 {
+                    Id = comment.Id,
+                    UserId = comment.UserId,
                     UserName = comment.User.UserName,
-                    Content = comment.Content
+                    Content = comment.Content,
+                    Replies = comment.Replies.Select(x => new ReplyViewModel
+                    {
+                        Id = x.Id,
+                        Content = x.Content,
+                        CommentId = x.CommentId,
+                        UserId = x.UserId,
+                        UserName = x.User?.UserName
+                    }).ToList()
                 });
             }
             return viewComments;
@@ -104,7 +122,8 @@ namespace OurRecipes.Services
                 {
                     Id = reply.Id,
                     Content = reply.Content,
-                    UserId = reply.UserId
+                    UserId = reply.UserId,
+                    CommentId = reply.CommentId,
                 };
             }
             else

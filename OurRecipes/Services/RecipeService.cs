@@ -18,13 +18,15 @@ namespace OurRecipes.Services
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly UserManager<AppIdentityUser> userManager;
+        private readonly ICommentService commentService;
 
-        public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager)
+        public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager, ICommentService commentService)
             :base(db)
         {
             this.context = db;
             this.mapper = mapper;
             this.userManager = userManager;
+            this.commentService = commentService;
         }
 
         public void Add(CreateRecipeInputModel recipeDto, string authorId)
@@ -262,14 +264,7 @@ namespace OurRecipes.Services
                 Sections = recipe.Sections?.ToList(),
                 Instructions = recipe.Instructions.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Nutrients = recipe.Nutrients.ToList(),
-                Comments = recipe.Comments.Select(x => new CommentViewModel
-                {
-                    Id = x.Id,
-                    UserId = x.UserId,
-                    UserName = x.User.UserName,
-                    RecipeId = x.RecipeId,
-                    Content = x.Content
-                }).ToList()
+                Comments = this.commentService.GetComments(recipe.Id).ToList(),
             };
 
             if (recipe.Sections.Any())

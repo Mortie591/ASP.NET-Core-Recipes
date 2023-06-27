@@ -22,12 +22,14 @@
                         <div>
                             <strong>@@@comment.UserName</strong>
                             <div asp-for="Content" id="comment">@comment.Content</div>
-                            <a class="p-2" asp-controller="Comments" asp-action="ViewReplies" asp-route-commentId="@comment.Id">View replies</a>
-                            <a class="p-2" asp-controller="Comments" asp-action="AddReply">Reply</a>
+                            <a class="p-2" type="button" onclick="replies()">@comment.Replies.Count replies</a>
+                            <a class="p-2" type="button" onclick="addReply()">Reply</a>
                             @if (UserManager.GetUserId(User) == comment.UserId)
                             {
                                 <a class="p-2" asp-controller="Comments" asp-action="RemoveComment" asp-route-id="@comment.Id">Delete</a>
                             }
+                            <partial name="_ViewReplies" model='comment.Replies'/>
+                            <partial name="_AddReply" model='new ReplyInputModel{CommentId=comment.Id, UserId=UserManager.GetUserId(User),ReplyToUserName=@comment.UserName}' />
                         </div>
                 </li>
             }

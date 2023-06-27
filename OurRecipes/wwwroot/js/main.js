@@ -9,6 +9,28 @@
 /**
 * Custom
 */
+
+function replies() {
+    let parent = event.target.parentNode;
+    var repliesElement = parent.querySelector('#view-replies');
+    var style = window.getComputedStyle(parent.querySelector('#view-replies')).display;
+    if (style=="block") {
+        repliesElement.style ="display:none";
+
+    } else {
+        repliesElement.style = "display:block";
+
+    }
+}
+function addReply() {
+    let parent = event.target.parentNode;
+    var repliesElement = parent.querySelector('#add-reply');
+    repliesElement.style = "display:block";
+}
+function cancel() {
+    let addReplyElement = event.target.parentNode.parentNode.parentNode.parentNode;
+    addReplyElement.style = "display:none";
+}
 function AddNutrient() {
     let parent = event.target.parentNode;
     let liElements = parent.querySelectorAll('li');

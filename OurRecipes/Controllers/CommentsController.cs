@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OurRecipes.Data.Models;
 using OurRecipes.Models.Comments;
 using OurRecipes.Services;
+using System.ComponentModel.Design;
 
 namespace OurRecipes.Controllers
 {
@@ -24,7 +25,7 @@ namespace OurRecipes.Controllers
         public IActionResult _ViewComments(string recipeId)
         {
             var viewComments = this.commentService.GetComments(recipeId);
-            return View(viewComments);
+            return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
         }
 
         [HttpPost]
@@ -32,7 +33,6 @@ namespace OurRecipes.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult _AddComment(CommentInputModel input)
         {
-            string authorId = userManager.GetUserId(User);
             
             if (!ModelState.IsValid)
             {
@@ -54,34 +54,43 @@ namespace OurRecipes.Controllers
             }else
             {
                 this.commentService.RemoveComment(id);
-                return RedirectToAction("Details", "Recipes", new { id = recipeId }, "#recipe-comments");
+                return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
             }
         }
 
-        public IActionResult ViewReplies(string commentId)
-        {
-            var viewReplies = this.commentService.GetReplies(commentId);
-            return View(viewReplies);
-        }
+        //public IActionResult _ViewReplies(string commentId)
+        //{
+        //    var recipeId = this.commentService.GetComment(commentId)?.RecipeId;
+        //    var viewReplies = this.commentService.GetReplies(commentId);
+        //    return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
+        //}
+
+        //public IActionResult _AddReply(string commentId)
+        //{
+        //    var replyInputModel = new ReplyInputModel();
+        //    return PartialView(replyInputModel);
+        //}
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult AddReply(ReplyInputModel input)
+        public IActionResult _AddReply(ReplyInputModel input)
         {
-            string authorId = userManager.GetUserId(User);
+            var recipeId = this.commentService.GetComment(input.CommentId)?.RecipeId;
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("ViewReplies", "Comments");
+                return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
             }
             this.commentService.AddReply(input);
-            return RedirectToAction("ViewReplies", "Comments");
+            return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
         }
         [Authorize]
         public IActionResult RemoveReply(string id)
         {
             var userId = userManager.GetUserId(User);
             var reply = this.commentService.GetReply(id);
+            var commentId = reply.CommentId;
+            var recipeId = this.commentService.GetComment(commentId).RecipeId;
             if (reply.UserId != userId)
             {
                 return Forbid();
@@ -89,7 +98,7 @@ namespace OurRecipes.Controllers
             else
             {
                 this.commentService.RemoveReply(id);
-                return RedirectToAction("ViewReplies", "Comments");
+                return RedirectToAction("Details", "Recipes", new { id = recipeId }, "recipe-comments");
             }
         }
     }
