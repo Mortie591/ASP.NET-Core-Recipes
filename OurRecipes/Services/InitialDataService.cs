@@ -8,7 +8,6 @@ namespace OurRecipes.Services
         protected readonly ApplicationDbContext context;
         protected readonly List<Recipe> recipes = new List<Recipe>();
         protected readonly List<Unit> units = new List<Unit>();
-        protected readonly List<Tag> tags = new List<Tag>();
         protected readonly List<Nutrient> nutrients = new List<Nutrient>();
         protected readonly List<Ingredient> ingredients = new List<Ingredient>();
         protected readonly List<Category> categories = new List<Category>();
@@ -50,40 +49,6 @@ namespace OurRecipes.Services
             }
             return unit;
         }
-        protected virtual Tag GetOrCreateTag(string tagName, string type)
-        {
-            Tag tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            if (tag != null)
-            {
-                return tag;
-            }
-            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName)
-            && string.Equals(x.Type, type));
-            if (tag == null)
-            {
-                tag = new Tag { Name = tagName, Type = type };
-                this.tags.Add(tag);
-                this.context.Tags.Add(tag);
-            }
-            return tag;
-        }
-        protected virtual Tag GetOrCreateTag(string tagName)
-        {
-            var tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            if(tag != null)
-            {
-                return tag;
-            }
-            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            
-            if (tag == null)
-            {
-                tag = new Tag { Name = tagName, Type = tagName };
-                this.tags.Add(tag);
-                this.context.Tags.Add(tag);
-            }
-            return tag;
-        }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity)
         {
             Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
@@ -102,12 +67,14 @@ namespace OurRecipes.Services
         }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity, string unitName)
         {
-            Nutrient nutrient = this.context.Nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName));
+            Nutrient nutrient = this.context.Nutrients
+                .FirstOrDefault(x => string.Equals(x.Name, nutrientName) && string.Equals(x.Unit.Name, unitName) && x.Quantity == quantity);
             if (nutrient != null)
             {
                 return nutrient;
             }
-            nutrient = this.nutrients.FirstOrDefault(x => string.Equals(x.Name, nutrientName) && x.Quantity == quantity);
+            nutrient = this.nutrients
+                .FirstOrDefault(x => string.Equals(x.Name, nutrientName) && string.Equals(x.Unit.Name, unitName) && x.Quantity == quantity);
             if (nutrient == null)
             {
                 nutrient = new Nutrient { Name = nutrientName, Quantity = quantity, Unit = GetOrCreateUnit(unitName) };

@@ -61,7 +61,7 @@ h6 {
 --------------------------------------------------------------*/
 section {
     overflow: hidden;
-    padding: 20px 0;
+    padding: 40px 0;
 }
 
 .section-bg {
@@ -157,6 +157,12 @@ section {
 /*--------------------------------------------------------------
 # Custom 
 --------------------------------------------------------------*/
+.card-img{
+    height:300px;
+    width: 340px;
+    overflow:hidden;
+}
+
 .comments-group {
     list-style: none;
 }

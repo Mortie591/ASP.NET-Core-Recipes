@@ -12,7 +12,6 @@ namespace OurRecipes.Data.Models
             this.Categories = new HashSet<Category>();
             this.Comments = new HashSet<Comment>();
             this.Sections = new HashSet<Section>();
-            this.Tags = new HashSet<Tag>();
             this.Components = new HashSet<Component>();
             this.Nutrients = new HashSet<Nutrient>();
             this.UserFavourites = new HashSet<UserFavourite>();
@@ -38,7 +37,6 @@ namespace OurRecipes.Data.Models
         public virtual ICollection<Component> Components { get; set; }
         public string Instructions { get; set; }
         public virtual ICollection<Nutrient> Nutrients { get; set; } 
-        public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         
         [ForeignKey(nameof(AppIdentityUser))]

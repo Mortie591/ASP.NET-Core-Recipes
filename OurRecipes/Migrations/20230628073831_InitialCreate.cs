@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OurRecipes.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +57,8 @@ namespace OurRecipes.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    imageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,20 +90,6 @@ namespace OurRecipes.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sections", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,7 +221,6 @@ namespace OurRecipes.Migrations
                     Servings = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PrepTime = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CookTime = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Likes = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OriginalUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -281,6 +267,26 @@ namespace OurRecipes.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Components_Units_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Units",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Nutrients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Quantity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnitId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Nutrients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Nutrients_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
                         principalColumn: "Id");
@@ -336,32 +342,6 @@ namespace OurRecipes.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Nutrients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Quantity = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UnitId = table.Column<int>(type: "int", nullable: true),
-                    RecipeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Nutrients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Nutrients_Recipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "Recipes",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Nutrients_Units_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "Units",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RecipeSection",
                 columns: table => new
                 {
@@ -381,30 +361,6 @@ namespace OurRecipes.Migrations
                         name: "FK_RecipeSection_Sections_SectionsId",
                         column: x => x.SectionsId,
                         principalTable: "Sections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RecipeTag",
-                columns: table => new
-                {
-                    RecipesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TagsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RecipeTag", x => new { x.RecipesId, x.TagsId });
-                    table.ForeignKey(
-                        name: "FK_RecipeTag_Recipes_RecipesId",
-                        column: x => x.RecipesId,
-                        principalTable: "Recipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeTag_Tags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -451,6 +407,30 @@ namespace OurRecipes.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ComponentRecipe_Recipes_RecipesId",
+                        column: x => x.RecipesId,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NutrientRecipe",
+                columns: table => new
+                {
+                    NutrientsId = table.Column<int>(type: "int", nullable: false),
+                    RecipesId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NutrientRecipe", x => new { x.NutrientsId, x.RecipesId });
+                    table.ForeignKey(
+                        name: "FK_NutrientRecipe_Nutrients_NutrientsId",
+                        column: x => x.NutrientsId,
+                        principalTable: "Nutrients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NutrientRecipe_Recipes_RecipesId",
                         column: x => x.RecipesId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
@@ -557,15 +537,9 @@ namespace OurRecipes.Migrations
                 column: "UnitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredients_Name",
-                table: "Ingredients",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Nutrients_RecipeId",
-                table: "Nutrients",
-                column: "RecipeId");
+                name: "IX_NutrientRecipe_RecipesId",
+                table: "NutrientRecipe",
+                column: "RecipesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Nutrients_UnitId",
@@ -581,11 +555,6 @@ namespace OurRecipes.Migrations
                 name: "IX_RecipeSection_SectionsId",
                 table: "RecipeSection",
                 column: "SectionsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeTag_TagsId",
-                table: "RecipeTag",
-                column: "TagsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Replies_CommentId",
@@ -633,13 +602,10 @@ namespace OurRecipes.Migrations
                 name: "ComponentRecipe");
 
             migrationBuilder.DropTable(
-                name: "Nutrients");
+                name: "NutrientRecipe");
 
             migrationBuilder.DropTable(
                 name: "RecipeSection");
-
-            migrationBuilder.DropTable(
-                name: "RecipeTag");
 
             migrationBuilder.DropTable(
                 name: "Replies");
@@ -657,7 +623,7 @@ namespace OurRecipes.Migrations
                 name: "Components");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Nutrients");
 
             migrationBuilder.DropTable(
                 name: "Comments");

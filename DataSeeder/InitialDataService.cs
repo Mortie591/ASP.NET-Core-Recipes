@@ -1,6 +1,9 @@
 ﻿using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using DataSeeder.Models.ScraperDtos;
+using DataSeeder.Models;
+using System.Web;
+using System.Text.Json;
 
 namespace DataSeeder
 {
@@ -9,10 +12,10 @@ namespace DataSeeder
         protected readonly ApplicationDbContext context;
         protected readonly List<Recipe> recipes = new List<Recipe>();
         protected readonly List<Unit> units = new List<Unit>();
-        protected readonly List<Tag> tags = new List<Tag>();
         protected readonly List<Nutrient> nutrients = new List<Nutrient>();
         protected readonly List<Ingredient> ingredients = new List<Ingredient>();
         protected readonly List<Category> categories = new List<Category>();
+        private readonly HttpClient _httpClient = new HttpClient();
         public InitialDataService(ApplicationDbContext db)
         {
             this.context = db; 
@@ -50,40 +53,6 @@ namespace DataSeeder
                 this.context.Units.Add(unit);
             }
             return unit;
-        }
-        protected virtual Tag GetOrCreateTag(string tagName, string type)
-        {
-            Tag tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            if (tag != null)
-            {
-                return tag;
-            }
-            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName)
-            && string.Equals(x.Type, type));
-            if (tag == null)
-            {
-                tag = new Tag { Name = tagName, Type = type };
-                this.tags.Add(tag);
-                this.context.Tags.Add(tag);
-            }
-            return tag;
-        }
-        protected virtual Tag GetOrCreateTag(string tagName)
-        {
-            var tag = this.context.Tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            if(tag != null)
-            {
-                return tag;
-            }
-            tag = this.tags.FirstOrDefault(x => string.Equals(x.Name, tagName));
-            
-            if (tag == null)
-            {
-                tag = new Tag { Name = tagName, Type = tagName };
-                this.tags.Add(tag);
-                this.context.Tags.Add(tag);
-            }
-            return tag;
         }
         protected virtual Nutrient GetOrCreateNutrient(string nutrientName, string quantity)
         {
@@ -151,15 +120,20 @@ namespace DataSeeder
         }
         protected virtual Category GetOrCreateCategory(string categoryName)
         {
+            var categoryImg = GetImageUrl(this._httpClient, categoryName).Result;
             Category category = this.context.Categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
             if (category != null)
             {
+                if (category.imageUrl == null)
+                {
+                    category.imageUrl = categoryImg;
+                }
                 return category;
             }
             category = this.categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
             if (category == null)
             {
-                category = new Category { Name = categoryName };
+                category = new Category { Name = categoryName, Type=categoryName,imageUrl= categoryImg };
                 this.categories.Add(category);
                 this.context.Categories.Add(category);
 
@@ -168,21 +142,43 @@ namespace DataSeeder
         }
         protected virtual Category GetOrCreateCategory(string categoryName, string categoryType)
         {
+            var categoryImg = GetImageUrl(this._httpClient, categoryName).Result;
             Category category = this.context.Categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
             if (category != null)
             {
+                if (category.imageUrl == null)
+                {
+                    category.imageUrl = categoryImg;
+                }
                 return category;
             }
             category = this.categories.FirstOrDefault(x => string.Equals(x.Name, categoryName));
             if (category == null)
             {
-                category = new Category { Name = categoryName,Type = categoryType };
+                category = new Category { Name = categoryName,Type = categoryType,imageUrl=categoryImg };
                 this.categories.Add(category);
                 this.context.Categories.Add(category);
             }
             return category;
         }
 
+        protected virtual async Task<string> GetImageUrl(HttpClient client, string title)
+        {
+            title = HttpUtility.UrlEncode(title);
+            string apiKey = "36940976-984b944bf6bcd10a97e6750ab";
+            var url = $"https://pixabay.com/api/?key={apiKey}&q={title}";
+            string imageUrl = string.Empty;
+            var json = await client.GetStringAsync(url);
+            if (json != null)
+            {
+                var result = JsonSerializer.Deserialize<pixabayDto>(json);
+                var images = result?.hits.ToList();
+                
+                imageUrl = images?.FirstOrDefault()?.imageURL?? images?.FirstOrDefault()?.largeImageURL;
+            }
+            Thread.Sleep(100);
+            return imageUrl;
+        }
     }
 }
  

@@ -34,12 +34,12 @@ namespace OurRecipes.Services
                 .Select(x => new CollectionCardViewModel
                 {
                     Name = x.Name,
+                    ImageUrl = x.imageUrl,
                     RecipeCount = x.Recipes.Count()
                 })
                 .ToList();
             return categories;
         }
-
         
     }
 }

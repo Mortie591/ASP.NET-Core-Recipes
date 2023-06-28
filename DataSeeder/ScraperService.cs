@@ -1,4 +1,4 @@
-﻿                            using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using OurRecipes.Data;
 using OurRecipes.Data.Models;
 using OurRecipes.Services;
@@ -32,7 +32,7 @@ namespace DataSeeder
             {
                 if (recipeDto != null)
                 {
-                    var imageUrl=await GetImageUrl(this._httpClient,recipeDto.Title);
+                    var imageUrl=GetImageUrl(this._httpClient,recipeDto.Title).Result;
                     Recipe recipe = new Recipe
                     {
                         Title = recipeDto.Title,
@@ -40,16 +40,18 @@ namespace DataSeeder
                         Servings = recipeDto.Servings==null?"": recipeDto.Servings,
                         PrepTime = recipeDto.PrepTime,
                         CookTime = recipeDto.CookTime,
-                        ImageUrl = recipeDto.ImageUrl,
+                        ImageUrl = imageUrl,
                         OriginalUrl = recipeDto.OriginalUrl,
                         CreatedOnDate = DateTime.Now,
                         Instructions = recipeDto.Instructions,
                         Categories = recipeDto.Categories.Select(GetOrCreateCategory).ToList(),
-                        Tags = recipeDto.Tags.Select(GetOrCreateTag).ToList(),
                         Components = GetOrCreateComponents(recipeDto.Components),
                         Nutrients = recipeDto.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity, x.Unit)).ToList()
                     };
-
+                    foreach(var tag in recipeDto.Tags)
+                    {
+                        recipe.Categories.Add(GetOrCreateCategory(tag));
+                    }
                     if (recipe.Components.Any(c => c.Quantity == null))
                     {
                         Console.WriteLine($"{recipe.Title} is invalid");
@@ -57,13 +59,14 @@ namespace DataSeeder
                     }
                     else
                     {
-                        if (!this.context.Recipes.Select(x => x.Title).Contains(recipe.Title))
+                        if (!this.context.Recipes.Select(x => x.Title).Equals(recipe.Title))
                         {
-                            if (!this.recipes.Select(x => x.Title).Contains(recipe.Title))
+                            if (!this.recipes.Select(x => x.Title).Equals(recipe.Title))
                             {
                                 this.context.Recipes.Add(recipe);
 
                                 this.context.SaveChanges();
+                                Console.WriteLine("Added new recipe");
 
                             }
                         }
@@ -73,20 +76,7 @@ namespace DataSeeder
             
         }
 
-        private async Task<string> GetImageUrl(HttpClient client,string title)
-        {
-            title = HttpUtility.UrlEncode(title);
-            string apiKey = "36940976-984b944bf6bcd10a97e6750ab";
-            var url = $"https://pixabay.com/api/?key={apiKey}&q={title}&image_type=photo";
-            string imageUrl = string.Empty;
-            var json = await client.GetStringAsync(url);
-            if (json != null)
-            {
-                var imageObj = JsonSerializer.Deserialize<List<ImageDto>>(json);
-                imageUrl = imageObj.FirstOrDefault().imageURL;
-            }
-            return imageUrl;
-        }
+        
 
         public async Task<ICollection<RecipeDto>> InitializeScraping()
         {
@@ -128,8 +118,12 @@ namespace DataSeeder
         {
             var recipeComponents = new HashSet<Component>();
 
-            foreach (Models.ScraperDtos.ComponentDto comp in componentDtos)
+            foreach (ComponentDto comp in componentDtos)
             {
+                if (comp.Quantity == null)
+                {
+                    continue;
+                }
                 Component component = new Component
                 {
                     Text = comp.Text,
@@ -358,6 +352,5 @@ namespace DataSeeder
             }
             return urls;
         }
-
     }
 }

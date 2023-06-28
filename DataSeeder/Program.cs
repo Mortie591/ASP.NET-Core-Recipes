@@ -21,7 +21,7 @@ namespace DataSeeder
             //dataImportService.CleanDatabase();
             //dataImportService.ImportRecipes();
             var scraperService = serviceProvider.GetService<IScraperService>();
-            //scraperService.PopulateData();
+            scraperService.PopulateData();
             Console.WriteLine("Done");
         }
 

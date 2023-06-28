@@ -41,8 +41,12 @@ namespace DataSeeder
                     Sections = CreateSections(recipeDto),
                     Instructions = InstructionsAsString(recipeDto),
                     Nutrients = recipeDto.Nutritients.Select(x => GetOrCreateNutrient(x.name, x.quantity)).ToList(),
-                    Tags = recipeDto.Tags.Select(x => GetOrCreateTag(x.Name, x.Type)).ToList()
                 };
+                foreach(var tag in recipeDto.Tags)
+                {
+                    recipe.Categories.Add(GetOrCreateCategory(tag.Name, tag.Type));
+                }
+                
                 recipe.Components = GetOrCreateComponents(recipe.Sections);
 
                 if (recipe.Components.Any(c => c.Quantity == null))
@@ -75,7 +79,7 @@ namespace DataSeeder
         {
 
             this.context.Database.EnsureDeleted();
-            //this.context.Database.EnsureCreated();
+            this.context.Database.Migrate();
             this.context.SaveChanges();
 
             //this.context.Database.ExecuteSqlRaw("DBCC CHECKIDENT('Tags', RESEED, 0)");

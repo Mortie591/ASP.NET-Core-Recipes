@@ -47,7 +47,7 @@ function AddNutrient() {
                                   </div>
                                   <div class="col-lg-4 col-md-6">
                                             <label><strong>Units</strong></label>
-                                            <select asp-for="Nutrients[[${nutrientsIndex}].UnitName" class="form-control">
+                                            <select name="Nutrients[[${nutrientsIndex}].UnitName" class="form-control">
                                                 <option></option>
                                                 <option>g</option>
                                             </select>

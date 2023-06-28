@@ -12,15 +12,18 @@ using OurRecipes.Data;
 namespace OurRecipes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230623092951_RemoveLikesFromRecipeEntity")]
-    partial class RemoveLikesFromRecipeEntity
+    [Migration("20230628080956_AllowNullsForCategroyImage")]
+    partial class AllowNullsForCategroyImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -288,6 +291,9 @@ namespace OurRecipes.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("imageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -500,29 +506,6 @@ namespace OurRecipes.Migrations
                     b.ToTable("Sections");
                 });
 
-            modelBuilder.Entity("OurRecipes.Data.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tags");
-                });
-
             modelBuilder.Entity("OurRecipes.Data.Models.Unit", b =>
                 {
                     b.Property<int>("Id")
@@ -577,21 +560,6 @@ namespace OurRecipes.Migrations
                     b.HasIndex("SectionsId");
 
                     b.ToTable("RecipeSection");
-                });
-
-            modelBuilder.Entity("RecipeTag", b =>
-                {
-                    b.Property<string>("RecipesId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RecipeTag");
                 });
 
             modelBuilder.Entity("CategoryRecipe", b =>
@@ -790,21 +758,6 @@ namespace OurRecipes.Migrations
                     b.HasOne("OurRecipes.Data.Models.Section", null)
                         .WithMany()
                         .HasForeignKey("SectionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RecipeTag", b =>
-                {
-                    b.HasOne("OurRecipes.Data.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OurRecipes.Data.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

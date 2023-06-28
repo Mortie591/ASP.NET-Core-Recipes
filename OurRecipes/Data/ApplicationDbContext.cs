@@ -22,7 +22,6 @@ namespace OurRecipes.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Nutrient> Nutrients { get; set; }
-        public DbSet<Tag> Tags { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reply> Replies { get; set; }
         public DbSet<UserFavourite> UserFavourites { get; set; }

@@ -177,13 +177,13 @@
                 @foreach (var nutrient in Model.Nutrients)
                 {
                     <li class="nutrition-block">
-                        <div name="nutrition name">@nutrient.Name</div>
-                        <div name="nutrient quantity">@nutrient.Quantity @nutrient.Unit?.Name</div>
+                        <div name="nutrition-name">@nutrient.Name</div>
+                    <div name="nutrition-quantity">@nutrient.Quantity @nutrient.Unit?.Name</div>
                     </li>
                 }
             </ul>
         </div>
-        @if (currentUserId == Model.AuthorId)
+        @if (SignInManager.IsSignedIn(User) && currentUserId == Model.AuthorId)
         {
             <div class="d-flex justify-content-evenly">
                 <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@Model.Id" class="w-25 btn btn-lg btn-warning" data-aos="fade-up" data-aos-delay="100">Edit</a>

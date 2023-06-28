@@ -51,13 +51,13 @@ namespace OurRecipes.Services
                     {
                         Ingredient = GetOrCreateIngredient(c.IngredientName),
                         Quantity = c.Quantity,
-                        Unit = c.Unit!="---"?GetOrCreateUnit(c.Unit):null,
+                        Unit = !String.IsNullOrEmpty(c.Unit)?GetOrCreateUnit(c.Unit):null,
                         Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
                     }).ToList()
                 }).ToList(),
                 Instructions = recipeDto.Instructions,
-                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity,x.UnitName)).ToList(),
+                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity,x?.UnitName)).ToList(),
                 AuthorId = authorId
             };
             if(Recipe.Sections.Any())

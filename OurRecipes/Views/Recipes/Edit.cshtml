@@ -16,7 +16,14 @@
 
         <div class="row gy-4">
             <div>
-                <img class="img-fluid cover-img" src="/img/new-recipe-cover.jpg" data-aos-delay="200" />
+                @if (String.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img class="cover-img col-lg-6 col-md-11" src="~/img/chicken-recipes-card.jpg" />
+                }
+                else
+                {
+                    <img class="cover-img col-lg-6 col-md-11" src="@Model.ImageUrl" />
+                }
             </div>
 
             <div class="row-lg-8 d-flex justify-content-center">

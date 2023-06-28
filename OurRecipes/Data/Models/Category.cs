@@ -12,6 +12,7 @@ namespace OurRecipes.Data.Models
         [Required, MaxLength(100)]
         public string Name { get; set; }
         public string? Type { get; set; }
+        public string? imageUrl { get; set; }
         public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }
