@@ -10,25 +10,38 @@
             <p>My <span>Favourite</span> Recipes</p>
             <h2>My Favourite Recipes</h2>
         </div>
-        <div class="row gy-4">
+        <div>
             @foreach (var element in Model)
             {
-                <a asp-controller="Recipes" asp-action="Details" asp-route-id="@element.Id" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-member">
-                        <div class="member-img cover-img col-lg-6 col-md-11">
-                            @if (String.IsNullOrEmpty(element.ImageUrl))
-                            {
-                                <img class="card-img" src="~/img/chicken-recipes-card.jpg" />
-                            }
-                            else
-                            {
-                                <img class="card-img" src="@element.ImageUrl" />
-                            }
+                <a asp-controller="Recipes" asp-action="Details" asp-route-id="@element.Id">
+                    <div class="tb-item">
+                        <div>
+                            <h6>@element.Title</h6>
                         </div>
-                        <div class="member-info">
-                            <h4>@element.Title</h4>
-                            <p>@element.Rating likes</p>
-                            <p>Author: @element.AuthorName</p>
+                        <div class="d-flex justify-content-lg-start">
+                            <div class="member-img">
+                                @if (String.IsNullOrEmpty(element.ImageUrl))
+                                {
+                                    <img class="card-img" src="~/img/chicken-recipes-card.jpg" />
+                                }
+                                else
+                                {
+                                    <img class="card-img" src="@element.ImageUrl" />
+                                }
+                                <div>
+                                    <p>@element.AuthorName</p>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <span>@element.Description</span>
+                                <h6>Categories:</h6>
+                                <div class="d-flex-inline justify-content-start">
+                                    @foreach (var category in element.Categories)
+                                    {
+                                        <a class="p-2" style="color:red;text-decoration:underline" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="@category.Name">@category.Name</a>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </a>

@@ -96,6 +96,7 @@ namespace OurRecipes.Services
             {
                 Id = recipe.Id,
                 Title = recipe.Title,
+                ImageUrl = recipe.ImageUrl,
                 Description = recipe.Description,
                 PrepTime = int.Parse(recipe.PrepTime),
                 CookTime = int.Parse(recipe.CookTime),
@@ -199,6 +200,7 @@ namespace OurRecipes.Services
 
             this.context.SaveChanges();
         }
+
         public void Delete(string id)
         {
             Recipe recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
@@ -213,6 +215,7 @@ namespace OurRecipes.Services
                throw new NullReferenceException(nameof(id));
             }
         }
+
         public Recipe GetRecipeById(string id)
         {
             if (context.Recipes.Any(x => x.Id == id))
@@ -226,6 +229,7 @@ namespace OurRecipes.Services
                 throw new NullReferenceException(nameof(id));
             }
         }
+
         public Recipe GetRecipeByName(string name)
         {
             Recipe recipe = context.Recipes
@@ -238,6 +242,7 @@ namespace OurRecipes.Services
       
             return recipe;
         }
+
         public RecipeViewModel GetRecipeViewModel(string id)
         {
             var recipe = this.GetRecipeById(id);
@@ -295,6 +300,7 @@ namespace OurRecipes.Services
             
             return recipeData;
         }
+
         public ICollection<RecipeCardViewModel> GetRandomRecipes()
         {
             try
@@ -318,6 +324,7 @@ namespace OurRecipes.Services
             }
            
         }
+
         public ICollection<RecipeCardViewModel> GetLatest()
         {
             try
@@ -453,10 +460,11 @@ namespace OurRecipes.Services
                 .Select(x => new RecipeByUserViewModel
                 {
                     Id = x.RecipeId,
-                    AuthorName = x.User.UserName,
+                    AuthorName = x.Recipe.Author.UserName,
                     Title = x.Recipe.Title,
-                    Rating = (ushort)x.Recipe.UserFavourites.Count,
-                    ImageUrl = x.Recipe.ImageUrl
+                    Description = x.Recipe.Description,
+                    ImageUrl = x.Recipe.ImageUrl,
+                    Categories = x.Recipe.Categories
                 })
                 .ToList();
 

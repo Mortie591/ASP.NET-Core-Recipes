@@ -8,6 +8,8 @@ namespace OurRecipes.Models.Recipes
         public string AuthorName { get; set; }
         public string Title { get; set; }
         public string ImageUrl { get; set; }
+        public string Description { get; set; }
         public ushort Rating { get; set; }
+        public ICollection<Category> Categories { get; set; }
     }
 }
