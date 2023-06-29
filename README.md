@@ -11,7 +11,7 @@ A simple training ASP.NET Core application that allows its users to browse, crea
  ## External resources
  ### General:
 * Theme: [Yummy-Theme](https://bootstrapmade.com/yummy-bootstrap-restaurant-website-template/)
- ### Resorces for tests
+ ### Resources for tests
 * Images API: [https://pixabay.com](https://pixabay.com/api/docs/#api_search_images)
 * Recipes API: [https://rapidapi.com/](https://rapidapi.com/apidojo/api/tasty/)
 * Additional recipes from https://www.bbcgoodfood.com/recipes
