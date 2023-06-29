@@ -119,7 +119,7 @@
                         <li><a asp-area="" asp-controller="Recipes" asp-action="ByCategory" asp-route-categoryName="Snacks">Snacks</a></li>
                     }
                     <li>
-                        <form asp-controller="Recipes" asp-action="ByIngredients" class="input-group ps-5">
+                        <form asp-controller="Recipes" asp-action="ByIngredients" method="get" class="input-group ps-5">
                             <div id="navbar-search-autocomplete" class="form-outline">
                                 <input type="search" name="ingredientsInput" class="form-control" placeholder="Search by ingredients" />
                             </div>

@@ -13,7 +13,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace OurRecipes.Services
 {
-    public class RecipeService : InitialDataService,IRecipeService
+    public class RecipeService : InitialDataService, IRecipeService
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -21,7 +21,7 @@ namespace OurRecipes.Services
         private readonly ICommentService commentService;
 
         public RecipeService(ApplicationDbContext db, IMapper mapper, UserManager<AppIdentityUser> userManager, ICommentService commentService)
-            :base(db)
+            : base(db)
         {
             this.context = db;
             this.mapper = mapper;
@@ -44,54 +44,54 @@ namespace OurRecipes.Services
                 Servings = recipeDto.Servings.ToString(),
                 CreatedOnDate = DateTime.Now,
                 Categories = EditOrCreateCategories(recipeDto),
-                Sections = recipeDto.Sections.Select(x=>new Section
+                Sections = recipeDto.Sections.Select(x => new Section
                 {
                     Name = x.SectionName,
-                    Components = x.Components.Select(c=>new Component
+                    Components = x.Components.Select(c => new Component
                     {
                         Ingredient = GetOrCreateIngredient(c.IngredientName),
                         Quantity = c.Quantity,
-                        Unit = !String.IsNullOrEmpty(c.Unit)?GetOrCreateUnit(c.Unit):null,
+                        Unit = !String.IsNullOrEmpty(c.Unit) ? GetOrCreateUnit(c.Unit) : null,
                         Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
 
                     }).ToList()
                 }).ToList(),
                 Instructions = recipeDto.Instructions,
-                Nutrients = recipeDto.Nutrients.Select(x=>GetOrCreateNutrient(x.Name,x.Quantity,x?.UnitName)).ToList(),
+                Nutrients = recipeDto.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity, x?.UnitName)).ToList(),
                 AuthorId = authorId
             };
-            if(Recipe.Sections.Any())
+            if (Recipe.Sections.Any())
             {
                 Recipe.Components = GetOrCreateComponents(Recipe.Sections);
             }
-            if(recipeDto.Components.Any())
+            if (recipeDto.Components.Any())
             {
-                foreach(var c in recipeDto.Components)
+                foreach (var c in recipeDto.Components)
                 {
                     Component recipeComponent = new Component
                     {
                         Ingredient = GetOrCreateIngredient(c.IngredientName),
                         Quantity = c.Quantity,
-                        Unit = c.Unit!="---"?GetOrCreateUnit(c.Unit):null,
+                        Unit = c.Unit != "---" ? GetOrCreateUnit(c.Unit) : null,
                         Text = $"{c.Quantity} {c.Unit} {c.IngredientName}"
                     };
                     Recipe.Components.Add(recipeComponent);
                 }
-                
+
             }
-            
+
             this.context.Recipes.Add(Recipe);
             this.context.SaveChanges();
         }
         public EditRecipeViewModel GetEditData(string id)
         {
-            var recipe = GetRecipeById(id)??
+            var recipe = GetRecipeById(id) ??
                 throw new NullReferenceException(nameof(id));
             var difficulty = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "difficulty");
             var cuisine = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cuisine");
             var seasonal = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "seasonal");
             var cookingTechnique = recipe.Categories.FirstOrDefault(x => x.Type?.ToLower() == "cooking technique");
-            
+
             var recipeData = new EditRecipeViewModel()
             {
                 Id = recipe.Id,
@@ -101,39 +101,39 @@ namespace OurRecipes.Services
                 PrepTime = int.Parse(recipe.PrepTime),
                 CookTime = int.Parse(recipe.CookTime),
                 Servings = int.Parse(recipe.Servings),
-                
+
                 Difficulty = difficulty?.Name,
                 Cuisine = cuisine?.Name,
                 Season = seasonal?.Name,
                 CookingTechnique = cookingTechnique?.Name,
                 Sections = recipe.Sections.Select(x => new SectionInputModel
                 {
-                    Id =x.Id,
+                    Id = x.Id,
                     SectionName = x.Name,
-                    Components = x.Components.Any()?x.Components.Select(c => new ComponentInputModel
+                    Components = x.Components.Any() ? x.Components.Select(c => new ComponentInputModel
                     {
                         Id = c.Id,
                         IngredientName = c.Ingredient.Name,
                         Quantity = c.Quantity,
-                        Unit =c.Unit?.Name??String.Empty,
+                        Unit = c.Unit?.Name ?? String.Empty,
                         Text = c.Text
-                    }).ToList():new List<ComponentInputModel>()
+                    }).ToList() : new List<ComponentInputModel>()
                 }).ToList(),
-                
+
                 Instructions = recipe.Instructions,
                 Nutrients = recipe.Nutrients.Select(x => new NutrientInputModel
                 {
                     Name = x.Name,
                     Quantity = $"{x.Quantity}{x.Unit?.Name}",
                 }).ToList(),
-        };
+            };
             if (recipe.Sections.Any())
             {
                 recipeData.Components = new List<ComponentInputModel>();
 
                 foreach (var component in recipe.Components)
                 {
-                    if (!IsInSection(component,recipe.Sections))
+                    if (!IsInSection(component, recipe.Sections))
                     {
                         recipeData.Components.Add(new ComponentInputModel
                         {
@@ -143,7 +143,7 @@ namespace OurRecipes.Services
                             Unit = component.Unit?.Name ?? String.Empty,
                             Text = component.Text
                         });
-                    
+
                     }
                 }
             }
@@ -162,8 +162,8 @@ namespace OurRecipes.Services
             foreach (var category in recipe.Categories.Where(x => x.Type?.ToLower() != "difficulty" && x.Type?.ToLower() != "cuisine"
                 && x.Type?.ToLower() != "seasonal" && x.Type?.ToLower() != "cooking technique"))
             {
-               
-               recipeData.Categories.Add($"{category.Type}-{category.Name}");
+
+                recipeData.Categories.Add($"{category.Type}-{category.Name}");
             }
 
             return recipeData;
@@ -171,9 +171,9 @@ namespace OurRecipes.Services
 
         private bool IsInSection(Component component, ICollection<Section> sections)
         {
-            foreach(Section section in sections)
+            foreach (Section section in sections)
             {
-                if(section.Components.Any(x=>x.Id==component.Id))
+                if (section.Components.Any(x => x.Id == component.Id))
                 {
                     return true;
                 }
@@ -196,7 +196,7 @@ namespace OurRecipes.Services
             recipe.Sections = EditOrCreateSections(recipeData);
             recipe.Components = EditOrCreateComponents(recipeData);
             recipe.Instructions = recipeData.Instructions;
-            recipe.Nutrients = recipeData.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity,x.UnitName)).ToList();
+            recipe.Nutrients = recipeData.Nutrients.Select(x => GetOrCreateNutrient(x.Name, x.Quantity, x.UnitName)).ToList();
 
             this.context.SaveChanges();
         }
@@ -212,7 +212,7 @@ namespace OurRecipes.Services
             }
             else
             {
-               throw new NullReferenceException(nameof(id));
+                throw new NullReferenceException(nameof(id));
             }
         }
 
@@ -234,12 +234,12 @@ namespace OurRecipes.Services
         {
             Recipe recipe = context.Recipes
                 .Include(x => x.Nutrients)
-                .Include(x=>x.Sections)
+                .Include(x => x.Sections)
                 .Include(x => x.Components)
                 .Include(x => x.Categories)
-                .FirstOrDefault(x => x.Title.Contains(name))??
+                .FirstOrDefault(x => x.Title.Contains(name)) ??
                 throw new NullReferenceException(nameof(name));
-      
+
             return recipe;
         }
 
@@ -259,9 +259,9 @@ namespace OurRecipes.Services
                 Description = recipe.Description,
                 Rating = recipe.UserFavourites.Count,
                 UserFavourites = recipe.UserFavourites.ToList(),
-                PrepTime = recipe.PrepTime,
-                CookTime = recipe.CookTime,
-                Servings = int.Parse(recipe.Servings),
+                PrepTime = recipe?.PrepTime,
+                CookTime = recipe?.CookTime,
+                Servings = String.IsNullOrEmpty(recipe?.Servings) ? 0 : int.Parse(recipe.Servings),
                 Difficulty = difficulty?.Name,
                 Cuisine = cuisine?.Name,
                 Season = seasonal?.Name,
@@ -297,7 +297,7 @@ namespace OurRecipes.Services
             {
                 recipeData.Categories.Add($"{category.Type}-{category.Name}");
             }
-            
+
             return recipeData;
         }
 
@@ -322,7 +322,7 @@ namespace OurRecipes.Services
 
                 throw new Exception();
             }
-           
+
         }
 
         public ICollection<RecipeCardViewModel> GetLatest()
@@ -345,7 +345,7 @@ namespace OurRecipes.Services
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
         public ICollection<RecipeCardViewModel> GetRecipesByCategory(string categoryName)
@@ -354,7 +354,7 @@ namespace OurRecipes.Services
             {
                 var recipes = this.context.Recipes.Select(x => new RecipeCardViewModel
                 {
-                    Id= x.Id,
+                    Id = x.Id,
                     Title = HttpUtility.HtmlDecode(x.Title),
                     Rating = (ushort)x.UserFavourites.Count,
                     ImageUrl = x.ImageUrl,
@@ -369,29 +369,28 @@ namespace OurRecipes.Services
 
                 throw;
             }
-            
+
         }
 
         public ICollection<RecipeCardViewModel> GetRecipesByIngredients(params string[] ingredients)
         {
             var recipeCards = new List<RecipeCardViewModel>();
             var recipes = this.context.Recipes
-                .Include(x=>x.Components).ThenInclude(x=>x.Ingredient)
-                .Select(x => new 
-            {
-                x.Id,
-                x.Title,
-                x.Components,
-                Likes = x.UserFavourites.Count,
-                x.ImageUrl
-            });
-            
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Title,
+                    x.Components,
+                    Likes = x.UserFavourites.Count,
+                    x.ImageUrl
+                });
+
             foreach (var recipe in recipes)
             {
-                var components = recipe.Components.Where(c=>c.Ingredient!=null).Select(c => c.Ingredient.Name).ToList();
+                var components = recipe.Components.Where(c => c.Ingredient != null).Select(c => c.Ingredient.Name).ToList();
                 //var result = ingredients.Intersect(components);
                 var result = CompareIngredients(ingredients, components);
-                if (result.Count() == ingredients.Length)
+                if (result != null && result.Count > 0)
                 {
                     RecipeCardViewModel viewModel = new RecipeCardViewModel
                     {
@@ -403,10 +402,10 @@ namespace OurRecipes.Services
                     recipeCards.Add(viewModel);
                 }
             }
-            
+
             return recipeCards;
         }
-        
+
         public ICollection<RecipeCardViewModel> GetTrending()
         {
             try
@@ -449,7 +448,7 @@ namespace OurRecipes.Services
 
                 throw new Exception();
             }
-            
+
         }
 
         public ICollection<RecipeByUserViewModel> GetFavouriteRecipes(string userId)
@@ -480,10 +479,10 @@ namespace OurRecipes.Services
         {
             var user = this.context.Users.FirstOrDefault(x => x.Id == userId);
             var recipe = this.context.Recipes.FirstOrDefault(x => x.Id == id);
-            if (user != null && recipe!=null)
+            if (user != null && recipe != null)
             {
-                bool isLiked = this.context.UserFavourites.Any(x=>x.RecipeId==id && x.UserId==userId);
-                if(!isLiked)
+                bool isLiked = this.context.UserFavourites.Any(x => x.RecipeId == id && x.UserId == userId);
+                if (!isLiked)
                 {
                     this.context.UserFavourites.Add(new UserFavourite
                     {
@@ -496,7 +495,7 @@ namespace OurRecipes.Services
                 {
                     Console.WriteLine($"User {userId} already liked recipe {id}");
                 }
-                
+
             }
             else
             {
@@ -511,7 +510,7 @@ namespace OurRecipes.Services
             try
             {
                 var userFavouriteItem = this.context.UserFavourites.FirstOrDefault(x => x.Recipe == recipe && x.UserId == userId);
-                if(userFavouriteItem != null)
+                if (userFavouriteItem != null)
                 {
                     this.context.UserFavourites.Remove(userFavouriteItem);
                     this.context.SaveChanges();
@@ -520,9 +519,9 @@ namespace OurRecipes.Services
                 {
                     throw new Exception("No such user favourite item");
                 }
-                
+
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 throw new NullReferenceException();
             }
@@ -532,15 +531,15 @@ namespace OurRecipes.Services
             var author = await userManager.FindByIdAsync(userId);
             try
             {
-            var recipes = this.context.Recipes.Where(x => x.AuthorId == userId).Select(x => new RecipeByUserViewModel
-            {
-                Id = x.Id,
-                Title = HttpUtility.HtmlDecode(x.Title),
-                AuthorName = author.UserName,
-                Rating = (ushort)x.UserFavourites.Count,
-                ImageUrl = x.ImageUrl,
-            }).ToList();
-               
+                var recipes = this.context.Recipes.Where(x => x.AuthorId == userId).Select(x => new RecipeByUserViewModel
+                {
+                    Id = x.Id,
+                    Title = HttpUtility.HtmlDecode(x.Title),
+                    AuthorName = author.UserName,
+                    Rating = (ushort)x.UserFavourites.Count,
+                    ImageUrl = x.ImageUrl,
+                }).ToList();
+
                 return recipes;
             }
             catch (Exception)
@@ -550,7 +549,7 @@ namespace OurRecipes.Services
         }
 
         //Private methods
-        
+
         private List<Component> EditOrCreateComponents(EditRecipeViewModel recipeData)
         {
             var editComponents = new HashSet<Component>();
@@ -558,19 +557,19 @@ namespace OurRecipes.Services
             foreach (var component in components)
             {
                 var editComponent = GetOrCreateComponent(component.IngredientName, component.Quantity, component.Unit);
-                if (!editComponents.Any(x=>x.Id==component.Id))
+                if (!editComponents.Any(x => x.Id == component.Id))
                 {
                     editComponents.Add(editComponent);
                 }
             }
             var dbComponents = this.context.Components.Where(x => x.Recipes.Any(x => x.Id == recipeData.Id));
-            if(dbComponents.Count()>0 && editComponents.Count< dbComponents.Count())
+            if (dbComponents.Count() > 0 && editComponents.Count < dbComponents.Count())
             {
-                foreach(var component in dbComponents)
+                foreach (var component in dbComponents)
                 {
-                    if (!editComponents.Any(x=>x.Id==component.Id))
+                    if (!editComponents.Any(x => x.Id == component.Id))
                     {
-                        this.context.Recipes.First(x=>x.Id== recipeData.Id).Components.Remove(component);
+                        this.context.Recipes.First(x => x.Id == recipeData.Id).Components.Remove(component);
                         this.context.SaveChanges();
                     }
                 }
@@ -591,7 +590,7 @@ namespace OurRecipes.Services
 
 
 
-            var dbSections= this.context.Sections.Where(x => x.Recipes.Any(x => x.Id == recipeData.Id));
+            var dbSections = this.context.Sections.Where(x => x.Recipes.Any(x => x.Id == recipeData.Id));
             if (dbSections.Count() > 0 && editSections.Count < dbSections.Count())
             {
                 foreach (var section in dbSections)
@@ -608,7 +607,7 @@ namespace OurRecipes.Services
         }
         private List<Category> EditOrCreateCategories(CreateRecipeInputModel recipeDto)
         {
-            var initalCategoryList = new Dictionary<string, List<string>> ();
+            var initalCategoryList = new Dictionary<string, List<string>>();
             if (recipeDto.Categories.Count > 0)
             {
                 foreach (var category in recipeDto.Categories)
@@ -622,8 +621,8 @@ namespace OurRecipes.Services
                     initalCategoryList[categoryType].Add(categoryName);
                 }
             }
-            initalCategoryList.Add("Cuisine",new List<string> { recipeDto.Cuisine });
-            initalCategoryList.Add("Difficulty",new List<string> { recipeDto.Difficulty });
+            initalCategoryList.Add("Cuisine", new List<string> { recipeDto.Cuisine });
+            initalCategoryList.Add("Difficulty", new List<string> { recipeDto.Difficulty });
             initalCategoryList.Add("Seasonal", new List<string> { recipeDto.Season });
             initalCategoryList.Add("Cooking Technique", new List<string> { recipeDto.CookingTechnique });
 
@@ -631,7 +630,7 @@ namespace OurRecipes.Services
 
             foreach (var category in initalCategoryList)
             {
-                foreach(var categoryItem in category.Value)
+                foreach (var categoryItem in category.Value)
                 {
                     if (!String.IsNullOrEmpty(categoryItem))
                     {
@@ -645,24 +644,28 @@ namespace OurRecipes.Services
         private List<string> CompareIngredients(ICollection<string> source, ICollection<string> destination)
         {
             var result = new List<string>();
-            var isMatch = true;
-            foreach (var sourceItem in source)
+            foreach (var sourceItem in source.Where(x => !String.IsNullOrEmpty(x)))
             {
-                foreach (var destinationItem in destination)
+                foreach (string destinationItem in destination.Where(x => !String.IsNullOrEmpty(x)))
                 {
-                    if (destinationItem.Contains(sourceItem) || sourceItem.Contains(destinationItem))
+                    if (sourceItem.ToLower().Contains(destinationItem.ToLower()) || destinationItem.ToLower().Contains(sourceItem.ToLower()))
                     {
-                        result.Add(sourceItem);
-                    }
-                    else
-                    {
-                        isMatch = false;
-                        continue;
+                        if (!result.Any(x => x.ToLower().Contains(sourceItem.ToLower())))
+                        {
+                            result.Add(destinationItem);
+                        }
                     }
                 }
             }
-            return result;
+
+            if (result.Count() == source.Count)
+            {
+                return result.ToList();
+            }
+            else
+            {
+                return null;
+            }
         }
-        
     }
 }

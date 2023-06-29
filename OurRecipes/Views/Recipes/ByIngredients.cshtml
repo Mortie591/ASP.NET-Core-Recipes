@@ -1,13 +1,14 @@
 ﻿@using OurRecipes.Models.Recipes;
 @model List<RecipeCardViewModel>;
 @{
-    ViewData["Title"] = "All recipes by ingredients";
+    string ingredientsInput = String.Join(", ",Context.Request.Query.Where(x => x.Key == "ingredientsInput").Select(x=>x.Value));
+    ViewData["Title"] = $"All recipes by {ingredientsInput}";
 }
 
 <section id="recipe-cards" class="cards section-bg">
     <div class="container" data-aos="fade-up">
         <div class="section-header">
-            <p>Recipes by <span>Ingredients</span></p>
+            <p>Recipes With <span>@ingredientsInput</span></p>
             <h2>Recipes by ingredients</h2>
             <h2>@Model.Count</h2>
         </div>

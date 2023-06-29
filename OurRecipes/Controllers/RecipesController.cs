@@ -23,7 +23,6 @@ namespace OurRecipes.Controllers
         }
         public IActionResult Details(string id)
         {
-            //TODO: Add subcategories
             var recipe = recipeService.GetRecipeViewModel(id);
             return this.View(recipe);
         }
@@ -33,7 +32,7 @@ namespace OurRecipes.Controllers
             var recipeAuthor = this.recipeService.GetRecipeById(id)?.AuthorId??
                 throw new NullReferenceException(nameof(id));
 
-            if (userManager.GetUserId(User) == recipeAuthor)
+            if (signInManager.IsSignedIn(User) && userManager.GetUserId(User) == recipeAuthor)
             {
                 recipeService.Delete(id);
                 return RedirectToAction("MyRecipes", "Recipes");
@@ -45,7 +44,6 @@ namespace OurRecipes.Controllers
             var recipes = this.recipeService.GetRecipesByCategory(categoryName);
             return this.View(recipes);
         }
-        
         public IActionResult ByIngredients(string ingredientsInput)
         {
             string[] ingredients = ingredientsInput.Split(',',StringSplitOptions.RemoveEmptyEntries);
@@ -79,8 +77,16 @@ namespace OurRecipes.Controllers
         public IActionResult MyRecipes()
         {
             string userId = userManager.GetUserId(User);
-            var recipes = recipeService.GetMyRecipes(userId);
-            return this.View(recipes);
+            if (signInManager.IsSignedIn(User))
+            {
+                var recipes = recipeService.GetMyRecipes(userId);
+                return this.View(recipes);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
         [Authorize]
         public IActionResult MyFavouriteRecipes()
